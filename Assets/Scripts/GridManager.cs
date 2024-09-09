@@ -8,8 +8,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform maxPos;
     [SerializeField] private MyGrid gridPrefab;
 
-    [ContextMenu("Spawn Grid")]
-    private void SpawnGrid()
+    public void SpawnGrid()
     {
         var lenghtX = maxPos.position.x - minPos.position.x;
         var lengthY = maxPos.position.y - minPos.position.y;
@@ -36,6 +35,14 @@ public class GridManager : MonoBehaviour
             }
             gridPositionY++;
             currentPosY++;
+        }
+    }
+
+    public void ClearGrid()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
 }
