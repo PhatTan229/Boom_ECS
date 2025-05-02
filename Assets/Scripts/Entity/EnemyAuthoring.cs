@@ -15,7 +15,7 @@ public struct Enemy : IComponentData, IKillable
         Hp = maxHp;
     }
 
-    public void TakeDamge(float damge)
+    public void TakeDamge(RefRW<StatData> stat, float damge)
     {
         Hp -= damge;
         DebugUtils.Log($"Enemy take {damge} damage, {Hp} remain");

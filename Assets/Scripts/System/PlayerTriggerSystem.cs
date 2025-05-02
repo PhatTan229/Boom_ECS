@@ -84,9 +84,11 @@ public partial struct PlayerTriggerSystem : ISystem, IOnTrigger
 
         if (SystemAPI.HasComponent<Enemy>(entityPair.EntityA) || SystemAPI.HasComponent<Enemy>(entityPair.EntityB))
         {
-            var refPlayer = SystemAPI.HasComponent<Player>(entityPair.EntityA) ? 
-                SystemAPI.GetComponentRW<Player>(entityPair.EntityA) : SystemAPI.GetComponentRW<Player>(entityPair.EntityB);
-            refPlayer.ValueRW.TakeDamge(1f);
+            var playerEntity = SystemAPI.HasComponent<Player>(entityPair.EntityA) ? entityPair.EntityA : entityPair.EntityB;
+            
+            //var refPlayer = SystemAPI.GetComponentRW<Player>(playerEntity);
+            //var currentStat = SystemAPI.GetComponentRW<StatData>(playerEntity);
+            //refPlayer.ValueRW.TakeDamge(currentStat.ValueRW.currentStat, 1f);
         }
     }
 

@@ -71,4 +71,17 @@ public static class Utils
         return collider;
     }
 
+    public static Entity CreateSingleton<T>(string name) where T : unmanaged, IComponentData
+    {
+        var query = EntityManager.CreateEntityQuery(typeof(T));
+        if (query.IsEmpty)
+        {
+            var entity = EntityManager.CreateSingleton<T>(name);
+            return entity;
+        }
+        else
+        {
+            return query.GetSingletonEntity();
+        }
+    }
 }

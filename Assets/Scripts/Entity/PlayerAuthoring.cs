@@ -4,22 +4,26 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
+public struct StatData : IComponentData
+{
+    public readonly StatValue baseStat;
+    public StatValue currentStat;
+
+    public StatData(StatValue value)
+    {
+        baseStat = value;
+        currentStat = value;
+    }
+}
+
+
 public struct Player : IComponentData, IKillable
 {
-    [field: SerializeField] public float MaxHp { get; set; }
-    [field: SerializeField] public float Hp { get; set; }
-
-    public Player(float maxHp)
+    public void TakeDamge(RefRW<StatData> stat, float damge)
     {
-        MaxHp = maxHp;
-        Hp = maxHp;
-    }
-
-    public void TakeDamge(float damge)
-    {
-        Hp -= damge;
-        Debug.Log($"Player take {damge} damage, {Hp} remain");
-        if (Hp <= 0) Die();
+        stat.ValueRW.currentStat.HP -= damge;
+        Debug.Log($"Player take {damge} damage, {stat.ValueRW.currentStat.HP} remain");
+        if (stat.ValueRW.currentStat.HP <= 0) Die();
     }
 
     public void Die()
@@ -30,13 +34,14 @@ public struct Player : IComponentData, IKillable
 
 public class PlayerAuthoring : MonoBehaviour
 {
-    public float maxHp;
+    public StatValue stat;
     class PlayerAuthoringBaker : Baker<PlayerAuthoring>
     {
         public override void Bake(PlayerAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new Player(authoring.maxHp));
+            AddComponent<Player>(entity);
+            AddComponent(entity, new StatData(authoring.stat));
         }
     }
 }
