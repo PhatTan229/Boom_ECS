@@ -27,7 +27,6 @@ public partial struct InputSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        Debug.Log("CreateSingleton");
         Utils.CreateSingleton<InputStorage>("InputStorage");
     }
 
