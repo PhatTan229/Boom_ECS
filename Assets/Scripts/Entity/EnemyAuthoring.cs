@@ -6,20 +6,11 @@ using UnityEngine;
 
 public struct Enemy : IComponentData, IKillable
 {
-    [field: SerializeField] public float MaxHp { get; set; }
-    [field: SerializeField] public float Hp {  set; get; }
-
-    public Enemy(float maxHp)
-    {
-        MaxHp = maxHp;
-        Hp = maxHp;
-    }
-
     public void TakeDamge(RefRW<StatData> stat, float damge)
     {
-        Hp -= damge;
-        DebugUtils.Log($"Enemy take {damge} damage, {Hp} remain");
-        if (Hp <= 0) Die();
+        stat.ValueRW.currentStat.HP -= damge;
+        DebugUtils.Log($"Enemy take {damge} damage, {stat.ValueRW.currentStat.HP} remain");
+        if (stat.ValueRW.currentStat.HP <= 0) Die();
     }
 
     public void Die()
@@ -31,13 +22,14 @@ public struct Enemy : IComponentData, IKillable
 
 public class EnemyAuthoring : MonoBehaviour
 {
-    public float maxHp;
+    public StatValue stat;
     class EnemyAthoringBaker : Baker<EnemyAuthoring>
     {
         public override void Bake(EnemyAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new Enemy(authoring.maxHp));
+            AddComponent<Enemy>(entity);
+            AddComponent(entity, new StatData(authoring.stat));
         }
     }
 }

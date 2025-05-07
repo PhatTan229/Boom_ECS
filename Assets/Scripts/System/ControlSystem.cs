@@ -6,6 +6,10 @@ public partial struct ControlSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        foreach (var kvp in SystemAPI.Query<RefRW<PhysicsVelocity>, RefRO<Controlable>>()) { }
+        foreach (var (velocity, control, stat) in SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<Controlable>, RefRO<StatData>>())
+        {
+            var input = SystemAPI.GetSingletonRW<InputStorage>();
+            control.ValueRW.ControlMovement(velocity, input.ValueRW.direction, stat.ValueRO.currentStat.speed);
+        }
     }
 }

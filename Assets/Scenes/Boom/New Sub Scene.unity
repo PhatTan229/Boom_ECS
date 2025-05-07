@@ -3517,7 +3517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat:
     HP: 0
-    speed: 0
+    speed: 1
 --- !u!114 &401090111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10893,7 +10893,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa86ddaba0bea64e888b6abc02b2900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 0
+  stat:
+    HP: 10
+    speed: 5
 --- !u!114 &1217658502
 MonoBehaviour:
   m_ObjectHideFlags: 0

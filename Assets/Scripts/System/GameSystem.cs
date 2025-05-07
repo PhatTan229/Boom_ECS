@@ -5,6 +5,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static MoveKey;
+
 
 //class này chạy trên mainthread
 [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
@@ -24,9 +26,5 @@ public partial class GameSystem : SystemBase
             pos.y = 0;
             mousePos.ValueRW.value = pos;
         }
-        //Entities.ForEach((ref MousePosition mousePos) =>
-        //{
-        //    mousePos.value = mousePosition;
-        //}).ScheduleParallel();
     }
 }

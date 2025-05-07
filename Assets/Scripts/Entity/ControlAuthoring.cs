@@ -5,12 +5,13 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public struct Controlable : IComponentData
 {
     public void ControlMovement(RefRW<PhysicsVelocity> velocity, float3 direction, float speed)
     {
-        velocity.ValueRW.Linear = math.normalize(direction) * speed;
+        velocity.ValueRW.Linear = direction * speed;
     }
 }
 

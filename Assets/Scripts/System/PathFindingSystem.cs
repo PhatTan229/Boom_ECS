@@ -36,22 +36,41 @@ public partial struct PathFindingSystem : ISystem
         }
     }
 
+    private BufferLookup<Path> pathBufferLookup;
+    private ComponentLookup<LocalTransform> transformLookup;
+    private BufferLookup<GridNeighbour> neighbourLookup;
+    private ComponentLookup<Grid> gridLookup;
+
+    public void OnCreate(ref SystemState state)
+    {
+        pathBufferLookup = state.GetBufferLookup<Path>();
+        transformLookup = state.GetComponentLookup<LocalTransform>(true);
+        neighbourLookup = state.GetBufferLookup<GridNeighbour>(true);
+        gridLookup = state.GetComponentLookup<Grid>();
+    }
 
     public void OnUpdate(ref SystemState state)
     {
+        pathBufferLookup.Update(ref state);
+        transformLookup.Update(ref state);
+        neighbourLookup.Update(ref state);
+        gridLookup.Update(ref state);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             var player = SystemAPI.GetSingletonEntity<Player>();
-            var playerTranform = SystemAPI.GetComponentRO<LocalTransform>(player);
-            var playerGrid = GridUtils.Instance.GetGridCoordination(playerTranform.ValueRO.Position);
-            DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
+            var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
+            var playerGrid = GridUtils.Instance.GetGridCoordination(playerTransform.ValueRO.Position);
+
+            //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
+
             var job = new PathFindingJob()
             {
                 End = playerGrid,
-                PathBufferLookup = state.GetBufferLookup<Path>(),
-                transformLookup = state.GetComponentLookup<LocalTransform>(),
-                neibourLookup = state.GetBufferLookup<GridNeighbour>(),
-                gridLookup = state.GetComponentLookup<Grid>(),
+                PathBufferLookup = pathBufferLookup,
+                transformLookup = transformLookup,
+                neibourLookup = neighbourLookup,
+                gridLookup = gridLookup,
             };
 
             state.Dependency = job.ScheduleParallel(state.Dependency);
