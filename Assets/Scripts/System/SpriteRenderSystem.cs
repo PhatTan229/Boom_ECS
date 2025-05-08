@@ -1,18 +1,13 @@
-﻿using System.Linq;
-using Unity.Burst;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
-using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
-//class này chạy trên mainthread
-[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-public partial class GameSystem : SystemBase
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+public partial struct SpriteRenderSystem : ISystem
 {
-    private void InitializeRender()
+    private void Init(ref SystemState state)
     {
         if (SpriteRenderData.Instance != null) return;
         Debug.Log("OnStartRunning");
@@ -33,15 +28,8 @@ public partial class GameSystem : SystemBase
         ecb.Dispose();
     }
 
-    protected override void OnUpdate()
+    public void OnUpdate(ref SystemState state)
     {
-        var mousePosition = Input.mousePosition;
-
-        foreach (var mousePos in SystemAPI.Query<RefRW<MousePosition>>())
-        {
-            var pos = Camera.main.ScreenToWorldPoint(mousePosition);
-            pos.y = 0;
-            mousePos.ValueRW.value = pos;
-        }
+        Init(ref state);
     }
 }

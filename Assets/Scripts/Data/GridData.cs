@@ -7,9 +7,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-public class GridUtils : IDisposable
+public class GridData : IDisposable
 {
-    private static GridUtils instance;
+    private static GridData instance;
 
     private Dictionary<GridPosition, Entity> cellDic = new Dictionary<GridPosition, Entity>();
     private Dictionary<float3, GridPosition> posToGrid = new Dictionary<float3, GridPosition>();
@@ -29,16 +29,16 @@ public class GridUtils : IDisposable
 
     public int MapSize => cellEntities.Count();
 
-    public static GridUtils Instance
+    public static GridData Instance
     {
         get
         {
-            if (instance == null) instance = new GridUtils();
+            if (instance == null) instance = new GridData();
             return instance;
         }
     }
 
-    private GridUtils()
+    private GridData()
     {
         var query = Utils.EntityManager.CreateEntityQuery(typeof(Grid));
         allCells = query.ToComponentDataArray<Grid>(Allocator.Persistent);

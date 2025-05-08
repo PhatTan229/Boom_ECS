@@ -16,10 +16,10 @@ public partial struct PathFindingSystem : ISystem
         void Execute([ChunkIndexInQuery] int index, Entity SelfEntity, ref PathFinding pathFinding)
         {
             var position = transformLookup[SelfEntity].Position;
-            var start = GridUtils.Instance.GetGridCoordination(position);
+            var start = GridData.Instance.GetGridCoordination(position);
             //Debug.Log($"Position {Position} Start At : {GridUtils.Instance.WorldToGrid(Position)}");
             var path = new NativeList<Entity>(Allocator.Temp);
-            var connections = new NativeHashMap<Entity, Entity>(GridUtils.Instance.MapSize, Allocator.Temp);
+            var connections = new NativeHashMap<Entity, Entity>(GridData.Instance.MapSize, Allocator.Temp);
             AStar.FindPath(start, End, path, ref neibourLookup, ref gridLookup, ref connections);
             if (PathBufferLookup.HasBuffer(SelfEntity))
             {
@@ -60,7 +60,7 @@ public partial struct PathFindingSystem : ISystem
         {
             var player = SystemAPI.GetSingletonEntity<Player>();
             var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
-            var playerGrid = GridUtils.Instance.GetGridCoordination(playerTransform.ValueRO.Position);
+            var playerGrid = GridData.Instance.GetGridCoordination(playerTransform.ValueRO.Position);
 
             //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
 
