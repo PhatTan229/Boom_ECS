@@ -6,6 +6,7 @@ using Unity.Entities;
 using Unity.Rendering;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SpriteRenderData : IDisposable
 {
@@ -14,11 +15,14 @@ public class SpriteRenderData : IDisposable
     private RenderMeshArray renderMeshArray;
     private RenderMeshDescription description;
 
+    private Dictionary<Material, BatchMaterialID> materialIds = new Dictionary<Material, BatchMaterialID>();
+    private Dictionary<Mesh, BatchMeshID> meshIds = new Dictionary<Mesh, BatchMeshID>();
+
     public SpriteRenderData(NativeList<RefRW<SpriteRenderInfo>> infos)
     {
         Instance = this;
         description = new RenderMeshDescription(
-               shadowCastingMode: UnityEngine.Rendering.ShadowCastingMode.Off,
+               shadowCastingMode: ShadowCastingMode.Off,
                receiveShadows: false
         );
         var meshes = new List<Mesh>();
@@ -27,17 +31,39 @@ public class SpriteRenderData : IDisposable
         {
             if(!meshes.Contains(info.ValueRW.mesh.Value)) meshes.Add(info.ValueRW.mesh.Value);
             info.ValueRW.meshIndex = meshes.IndexOf(info.ValueRW.mesh.Value);
+
             if(!material.Contains(info.ValueRW.material.Value)) material.Add(info.ValueRW.material.Value);
             info.ValueRW.materialIndex = material.IndexOf(info.ValueRW.material.Value);
         }
-        Debug.Log($"Mesh Count: {meshes.ToArray().Length}, Material Count: {material.ToArray().Length}");
+
+        var egs = Utils.EntityManager.World.GetExistingSystemManaged<EntitiesGraphicsSystem>();
+        foreach (var item in meshes)
+        {
+            var batchId = egs.RegisterMesh(item);
+            meshIds.Add(item, batchId);
+        }
+
+        foreach (var item in material)
+        {
+            var batchId = egs.RegisterMaterial(item);
+            materialIds.Add(item, batchId);
+        }
+
+        //Debug.Log($"Mesh Count: {meshes.ToArray().Length}, Material Count: {material.ToArray().Length}");
         renderMeshArray = new RenderMeshArray(material.ToArray(), meshes.ToArray());
     }
 
-    public void SetRenderInfo(RefRW<SpriteRenderInfo> info, Entity entity, EntityCommandBuffer ecb)
+    public void SetRenderInfo(RefRW<SpriteRenderInfo> info, Entity entity)
     {
-        Debug.Log($"SetRenderInfo: materialIndex={info.ValueRO.materialIndex}, meshIndex={info.ValueRO.meshIndex}, entity={entity.Index}");
-        RenderMeshUtility.AddComponents(entity, Utils.EntityManager, description, renderMeshArray, new MaterialMeshInfo() { Material = info.ValueRO.materialIndex, Mesh = info.ValueRO.meshIndex});
+        var materialMeshInfo = new MaterialMeshInfo()
+        {
+            Material = 0,
+            MaterialID = materialIds[info.ValueRW.material.Value],
+            Mesh = 0,
+            MeshID = meshIds[info.ValueRW.mesh.Value]
+        };
+        RenderMeshUtility.AddComponents(entity, Utils.EntityManager, description, materialMeshInfo);
+        Utils.EntityManager.AddSharedComponentManaged(entity, renderMeshArray);
     }
     public void Dispose()
     {

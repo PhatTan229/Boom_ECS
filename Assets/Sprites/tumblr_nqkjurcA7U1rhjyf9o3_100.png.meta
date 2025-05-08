@@ -9,7 +9,7 @@ TextureImporter:
     enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
-    fadeOut: 0
+    fadeOut: 1
     borderMipMap: 0
     mipMapsPreserveCoverage: 0
     alphaTestReferenceValue: 0.5
@@ -24,7 +24,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
-  vTOnly: 0
+  vTOnly: 1
   ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6

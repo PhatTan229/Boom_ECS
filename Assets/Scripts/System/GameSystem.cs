@@ -27,7 +27,7 @@ public partial class GameSystem : SystemBase
         foreach (var (info, entity) in SystemAPI.Query<RefRW<SpriteRenderInfo>>().WithEntityAccess())
         {
             Debug.Log("AA");
-            SpriteRenderData.Instance.SetRenderInfo(info, entity, ecb);
+            SpriteRenderData.Instance.SetRenderInfo(info, entity);
         }
         ecb.Playback(Utils.EntityManager);
         ecb.Dispose();

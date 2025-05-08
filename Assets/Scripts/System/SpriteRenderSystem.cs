@@ -1,35 +1,45 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
-public partial struct SpriteRenderSystem : ISystem
+public partial struct SpriteRenderSystem : ISystem, ISystemStartStop
 {
-    private void Init(ref SystemState state)
+    public void OnStartRunning(ref SystemState state)
     {
-        if (SpriteRenderData.Instance != null) return;
-        Debug.Log("OnStartRunning");
-        var list = new NativeList<RefRW<SpriteRenderInfo>>(Allocator.Temp);
+        var list = new NativeList<RefRW<SpriteRenderInfo>>(Allocator.Persistent);
         foreach (var info in SystemAPI.Query<RefRW<SpriteRenderInfo>>())
         {
             list.Add(info);
         }
         SpriteRenderData.Instance = new SpriteRenderData(list);
         list.Dispose();
-        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        var toSet = new NativeList<(RefRW<SpriteRenderInfo>, Entity)>(Allocator.Temp);
+
         foreach (var (info, entity) in SystemAPI.Query<RefRW<SpriteRenderInfo>>().WithEntityAccess())
         {
-            Debug.Log("AA");
-            SpriteRenderData.Instance.SetRenderInfo(info, entity, ecb);
+            toSet.Add((info, entity));
         }
-        ecb.Playback(Utils.EntityManager);
-        ecb.Dispose();
+        foreach (var pair in toSet)
+        {
+            SpriteRenderData.Instance.SetRenderInfo(pair.Item1, pair.Item2); 
+        }
+        toSet.Dispose();
     }
 
     public void OnUpdate(ref SystemState state)
     {
-        Init(ref state);
+        foreach (var (info, tranform) in SystemAPI.Query<RefRO<SpriteRenderInfo>, RefRO<LocalToWorld>>())
+        {
+            Graphics.DrawMesh(info.ValueRO.mesh, tranform.ValueRO.Position, tranform.ValueRO.Rotation ,info.ValueRO.material, 0);
+        }
+    }
+
+
+    public void OnStopRunning(ref SystemState state)
+    {
     }
 }

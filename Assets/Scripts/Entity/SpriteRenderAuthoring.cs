@@ -5,6 +5,14 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
+[MaterialProperty("_Tiling")]
+[MaterialProperty("_Offset")]
+public struct SpriteSheetUV : IComponentData
+{
+    public float4 Tiling;
+    public float4 Offset;
+}
+
 public struct SpriteRenderInfo : IComponentData
 {
     public UnityObjectRef<Material> material;
@@ -28,6 +36,7 @@ public class SpriteRenderAuthoring : MonoBehaviour
                 material = authoring.material,
                 mesh = authoring.mesh,
             });
+            AddComponent(entity, new SpriteSheetUV());
             //AddComponent(entity, new MaterialMeshInfo { Material = 0, Mesh = 0 });
             //AddComponent(entity, new RenderBounds { Value = authoring.mesh.bounds.ToAABB() });
         }
