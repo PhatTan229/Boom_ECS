@@ -1664,10 +1664,10 @@
     "m_Guid": {
         "m_GuidSerialized": "8c11d8e7-d0eb-4837-8e1d-93586c6547f2"
     },
-    "m_Name": "_Yindex",
+    "m_Name": "_YIndex",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "_Yindex",
-    "m_DefaultReferenceName": "_Yindex",
+    "m_RefNameGeneratedByDisplayName": "_YIndex",
+    "m_DefaultReferenceName": "_YIndex",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -2109,7 +2109,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "cc2616c371614001ac0a8c11e5062554",
     "m_Id": 0,
-    "m_DisplayName": "_Yindex",
+    "m_DisplayName": "_YIndex",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
