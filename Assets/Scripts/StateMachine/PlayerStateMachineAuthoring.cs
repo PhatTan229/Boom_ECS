@@ -32,7 +32,7 @@ public class PlayerStateMachineAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             var buffer = AddBuffer<PlayerStateMachine>(entity);
-            if(authoring.animation == null) authoring.animation = authoring.GetComponent<SpriteAnimationAuthoring>();
+            if(authoring.animation == null) authoring.animation = authoring.GetComponent<SpriteAnimationAuthoring>();   
             foreach (var item in authoring.animation.animationStates)
             {
                 buffer.Add(new PlayerStateMachine() { stateName = item.name });
