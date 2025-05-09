@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public partial struct SpriteRenderSystem : ISystem, ISystemStartStop
 {
     public void OnStartRunning(ref SystemState state)
     {
-        var list = new NativeList<RefRW<SpriteRenderInfo>>(Allocator.Persistent);
+        var list = new NativeList<RefRW<SpriteRenderInfo>>(Allocator.Temp);
         foreach (var info in SystemAPI.Query<RefRW<SpriteRenderInfo>>())
         {
             list.Add(info);
@@ -29,15 +30,6 @@ public partial struct SpriteRenderSystem : ISystem, ISystemStartStop
         }
         toSet.Dispose();
     }
-
-    public void OnUpdate(ref SystemState state)
-    {
-        foreach (var (info, tranform) in SystemAPI.Query<RefRO<SpriteRenderInfo>, RefRO<LocalToWorld>>())
-        {
-            Graphics.DrawMesh(info.ValueRO.mesh, tranform.ValueRO.Position, tranform.ValueRO.Rotation ,info.ValueRO.material, 0);
-        }
-    }
-
 
     public void OnStopRunning(ref SystemState state)
     {
