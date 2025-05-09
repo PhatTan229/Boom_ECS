@@ -3296,6 +3296,8 @@ GameObject:
   m_Component:
   - component: {fileID: 372706171}
   - component: {fileID: 372706172}
+  - component: {fileID: 372706173}
+  - component: {fileID: 372706174}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -3332,6 +3334,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 4300000, guid: c88f4a81fd3d62f4699188a031872c7e, type: 2}
   material: {fileID: 2100000, guid: 1eec89a6873ed7b428ec4eb4a2d04468, type: 2}
+--- !u!114 &372706173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372706170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0870b6e52b63661468957300d1ecc2ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteAuthoring: {fileID: 372706172}
+--- !u!114 &372706174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372706170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac448591432a17c48b99593ef2e5d2c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animation: {fileID: 372706173}
 --- !u!1 &382588483
 GameObject:
   m_ObjectHideFlags: 0
