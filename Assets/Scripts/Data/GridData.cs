@@ -66,7 +66,20 @@ public class GridData : IDisposable
 
     public Entity GetGridCoordination(float3 position)
     {
-        var gridPos = WorldToGrid(position);
+        var nearestDistance = float.MaxValue;
+        var nearestPos = float3.zero;
+
+        foreach (var item in posToGrid)
+        {
+            var distance = math.distance(position, item.Key);
+            if(distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestPos = item.Key;
+            }
+        }
+
+        var gridPos = WorldToGrid(nearestPos);
         return GetCellEntityAt(gridPos);
     }
 

@@ -5,17 +5,12 @@ using Unity.Entities;
 using UnityEngine;
 using Unity.Collections;
 
-public partial struct GridSystem : ISystem
+public partial struct GridSystem : ISystem ,ISystemStartStop
 {
     private bool init;
-    public void OnUpdate(ref SystemState state)
-    {
-        Init(ref state);
-    }
 
-    private void Init(ref SystemState state)
+    public void OnStartRunning(ref SystemState state)
     {
-        if (init) return;
         var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (grid, entity) in SystemAPI.Query<RefRO<Grid>>().WithEntityAccess())
@@ -30,6 +25,9 @@ public partial struct GridSystem : ISystem
 
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
-        init = true;
+    }
+
+    public void OnStopRunning(ref SystemState state)
+    {
     }
 }

@@ -1,7 +1,9 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Physics;
 using Unity.Transforms;
 
+[BurstCompile]
 public partial struct FollowPathSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)

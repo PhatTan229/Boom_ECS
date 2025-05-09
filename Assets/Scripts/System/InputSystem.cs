@@ -27,7 +27,7 @@ public partial struct InputSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        Utils.CreateSingleton<InputStorage>("InputStorage");
+        Utils.CreateSingleton<InputStorage>(state.EntityManager, "InputStorage");
     }
 
     public void OnUpdate(ref SystemState state)

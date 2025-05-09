@@ -126,14 +126,14 @@ public static class AStar
                 //path.Reverse();
                 searching.Dispose();
                 processed.Dispose();
-                var str = string.Empty;
-                foreach (var item in path)
-                {
-                    //var position = Utils.EntityManager.GetComponentData<Grid>(item).gridPosition;
-                    var position = gridLookup[item].gridPosition;
-                    str += position.ToString() + "\n";
-                }
-                DebugUtils.Log(str);
+                //var str = string.Empty;
+                //foreach (var item in path)
+                //{
+                //    //var position = Utils.EntityManager.GetComponentData<Grid>(item).gridPosition;
+                //    var position = gridLookup[item].gridPosition;
+                //    str += position.ToString() + "\n";
+                //}
+                //DebugUtils.Log(str);
                 return;
             }
 
