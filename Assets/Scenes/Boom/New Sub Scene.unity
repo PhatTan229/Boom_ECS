@@ -3350,16 +3350,16 @@ MonoBehaviour:
   animationStates:
   - stateName: Down
     row: 0
-    fps: 5
+    fps: 3
   - stateName: Left
     row: 1
-    fps: 5
+    fps: 3
   - stateName: Right
     row: 2
-    fps: 5
+    fps: 3
   - stateName: Up
     row: 3
-    fps: 5
+    fps: 3
 --- !u!114 &372706174
 MonoBehaviour:
   m_ObjectHideFlags: 0
