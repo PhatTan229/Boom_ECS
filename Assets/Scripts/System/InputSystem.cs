@@ -9,14 +9,19 @@ using static MoveKey;
 
 public struct InputStorage : IComponentData
 {
+    public static readonly float3 Right = new float3(1, 0, 0);
+    public static readonly float3 Left = new float3(-1, 0, 0);
+    public static readonly float3 Up = new float3(0, 0, 1);
+    public static readonly float3 Down = new float3(0, 0, -1);
+
     public float3 direction;
 
     public void UpdateInput()
     {
-        if (Input.GetKey(KeyConfig.Move.up)) direction = new float3(0, 0, 1);
-        else if (Input.GetKey(KeyConfig.Move.down)) direction = new float3(0, 0, -1);
-        else if (Input.GetKey(KeyConfig.Move.left)) direction = new float3(-1, 0, 0);
-        else if (Input.GetKey(KeyConfig.Move.right)) direction = new float3(1, 0, 0);
+        if (Input.GetKey(KeyConfig.Move.up)) direction = Up;
+        else if (Input.GetKey(KeyConfig.Move.down)) direction = Down;
+        else if (Input.GetKey(KeyConfig.Move.left)) direction = Left;
+        else if (Input.GetKey(KeyConfig.Move.right)) direction = Right;
         else direction = float3.zero;
     }
 }

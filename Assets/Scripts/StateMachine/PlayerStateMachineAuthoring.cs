@@ -4,39 +4,45 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-public struct PlayerStateMachine : IBufferElementData, IStateMachine
+public class PlayerStateMachine : IStateMachine
 {
     public FixedString32Bytes stateName;
-    public void OnStateEnter(AnimationState state)
+    public void OnStateEnter(AnimationData state)
     {
         Debug.Log("OnStateEnter");
     }
-    public void OnStateUpdate(AnimationState state)
+    public void OnStateUpdate(AnimationData state)
     {
         Debug.Log("OnStateUpdate");
     }
 
-    public void OnStateExit(AnimationState state)
+    public void OnStateExit(AnimationData state)
     {
         Debug.Log("OnStateExit");
     }
 }
 
+public class StateMachine : IComponentData
+{
+    public List<IStateMachine> stateMachine;
+}
+
 [RequireComponent(typeof(SpriteAnimationAuthoring))]
 public class PlayerStateMachineAuthoring : MonoBehaviour
 {
-    public SpriteAnimationAuthoring animation;
+    public SpriteAnimationAuthoring spriteAnimation;
     class PlayerStateMachineBaker : Baker<PlayerStateMachineAuthoring>
     {
         public override void Bake(PlayerStateMachineAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            var buffer = AddBuffer<PlayerStateMachine>(entity);
-            if(authoring.animation == null) authoring.animation = authoring.GetComponent<SpriteAnimationAuthoring>();   
-            foreach (var item in authoring.animation.animationStates)
+            if (authoring.spriteAnimation == null) authoring.spriteAnimation = authoring.GetComponent<SpriteAnimationAuthoring>();
+            var stateMachines = new List<IStateMachine>();
+            foreach (var item in authoring.spriteAnimation.animationStates)
             {
-                buffer.Add(new PlayerStateMachine() { stateName = item.name });
+                stateMachines.Add(new PlayerStateMachine() { stateName = item.stateName } );
             }
+            AddComponentObject(entity, new StateMachine() { stateMachine = stateMachines});
         }
     }
 }

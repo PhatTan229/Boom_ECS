@@ -8,18 +8,18 @@ using UnityEngine;
 
 public struct EntityAnimationData
 {
-    public NativeHashMap<FixedString32Bytes, AnimationState> states;
+    public NativeHashMap<FixedString32Bytes, AnimationData> states;
     public Dictionary<FixedString32Bytes, IStateMachine> stateMachine;
 
-    public EntityAnimationData(IEnumerable<AnimationState> states)
-    {
-        this.states = new NativeHashMap<FixedString32Bytes, AnimationState>();
-        stateMachine = new Dictionary<FixedString32Bytes, IStateMachine>();
-        foreach (var state in states) 
-        {
-            this.states.Add(state.name, state);
-         }
-    }
+    //public EntityAnimationData(IEnumerable<AnimationState> states)
+    //{
+    //    this.states = new NativeHashMap<FixedString32Bytes, AnimationState>();
+    //    stateMachine = new Dictionary<FixedString32Bytes, IStateMachine>();
+    //    foreach (var state in states) 
+    //    {
+    //        this.states.Add(state.name, state);
+    //     }
+    //}
 }
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]

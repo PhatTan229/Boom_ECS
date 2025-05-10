@@ -12,27 +12,6 @@ using static UnityEngine.EventSystems.EventTrigger;
 [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
 public partial class GameSystem : SystemBase
 {
-    private void InitializeRender()
-    {
-        if (SpriteRenderData.Instance != null) return;
-        Debug.Log("OnStartRunning");
-        var list = new NativeList<RefRW<SpriteRenderInfo>>(Allocator.Temp);
-        foreach (var info in SystemAPI.Query<RefRW<SpriteRenderInfo>>())
-        {
-            list.Add(info);
-        }
-        SpriteRenderData.Instance = new SpriteRenderData(list);
-        list.Dispose();
-        var ecb = new EntityCommandBuffer(Allocator.Temp);
-        foreach (var (info, entity) in SystemAPI.Query<RefRW<SpriteRenderInfo>>().WithEntityAccess())
-        {
-            Debug.Log("AA");
-            SpriteRenderData.Instance.SetRenderInfo(info, entity);
-        }
-        ecb.Playback(Utils.EntityManager);
-        ecb.Dispose();
-    }
-
     protected override void OnUpdate()
     {
         var mousePosition = Input.mousePosition;

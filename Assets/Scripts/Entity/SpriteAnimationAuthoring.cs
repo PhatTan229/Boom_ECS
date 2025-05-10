@@ -1,35 +1,62 @@
+using System;
 using System.Linq;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
 public struct AnimationStateBuffer : IBufferElementData
 {
-    public AnimationState state;
+    public AnimationData state;
 }
 
 public struct SpriteAnimation : IComponentData
 {
     public UnityObjectRef<Material> material;
-    public int row;
-    public int col;
+    public FixedString32Bytes currentSate;
+    public readonly int row;
+    public readonly int col;
     public int _XIndex;
     public int _YIndex;
 
     public SpriteAnimation(Material material)
     {
         this.material = material;
-        row = (int)material.GetFloat("_Row");
-        col = (int)material.GetFloat("_Collum");
+        row = (int)material.GetFloat("_Row") - 1;
+        col = (int)material.GetFloat("_Collum") - 1;
         _XIndex = 0;
         _YIndex = 0;
+        currentSate = new FixedString32Bytes("");
+    }
+
+    public void UpdateAnimation(ref AnimationData data)
+    {
+        _YIndex = data.rowIndex;
+        material.Value.SetFloat("_YIndex", _YIndex);
+
+        _XIndex = (data.currentFrame + 1) % col;
+        material.Value.SetFloat("_XIndex", _XIndex);
+        data.currentFrame = _XIndex;
     }
 }
 
 [RequireComponent(typeof(SpriteRenderAuthoring))]
 public class SpriteAnimationAuthoring : MonoBehaviour
 {
+    [Serializable]
+    public class AnimationDataCreate
+    {
+        public string stateName;
+        public int row;
+
+        public AnimationDataCreate(string stateName, int row)
+        {
+            this.stateName = stateName;
+            this.row = row;
+        }
+    }
+
     public SpriteRenderAuthoring spriteAuthoring;
-    public AnimationState[] animationStates;
+    public AnimationDataCreate[] animationStates;
 
     class SpriteAnimationBaker : Baker<SpriteAnimationAuthoring>
     {
@@ -38,11 +65,11 @@ public class SpriteAnimationAuthoring : MonoBehaviour
             if(authoring.spriteAuthoring == null) authoring.spriteAuthoring = authoring.GetComponent<SpriteRenderAuthoring>();
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new SpriteAnimation(authoring.spriteAuthoring.material));
-            authoring.GetAniamtionStates();
+            //authoring.GetAniamtionStates();
             var buffer = AddBuffer<AnimationStateBuffer>(entity);
             foreach (var item in authoring.animationStates)
             {
-                buffer.Add(new AnimationStateBuffer() { state = item });
+                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row) });
             }
         }
     }
@@ -51,12 +78,12 @@ public class SpriteAnimationAuthoring : MonoBehaviour
     {
         var col = (int)spriteAuthoring.material.GetFloat("_Collum");
         var row = (int)spriteAuthoring.material.GetFloat("_Row");
-        animationStates = new AnimationState[row];
+        animationStates = new AnimationDataCreate[row];
         var arr = Enumerable.Range(0, col).ToArray();
 
         for (int i = 0; i < row; i++)
         {
-            animationStates[i] = new AnimationState("", arr);
+            animationStates[i] = new AnimationDataCreate("", i);
         }
     }
 }

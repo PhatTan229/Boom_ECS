@@ -1,6 +1,6 @@
 ﻿public interface IStateMachine
 {
-    public void OnStateEnter(AnimationState state);
-    public void OnStateUpdate(AnimationState state);
-    public void OnStateExit(AnimationState state);
+    public void OnStateEnter(AnimationData state);
+    public void OnStateUpdate(AnimationData state);
+    public void OnStateExit(AnimationData state);
 }
