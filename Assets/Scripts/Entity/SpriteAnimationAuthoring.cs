@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
@@ -18,6 +18,8 @@ public struct SpriteAnimation : IComponentData
     public int _XIndex;
     public int _YIndex;
 
+    public float elapsedTime;
+
     public SpriteAnimation(Material material)
     {
         this.material = material;
@@ -26,10 +28,15 @@ public struct SpriteAnimation : IComponentData
         _XIndex = 0;
         _YIndex = 0;
         currentSate = new FixedString32Bytes("");
+        elapsedTime = 0;
     }
 
-    public void UpdateAnimation(ref AnimationData data)
+    public void UpdateAnimation(ref AnimationData data, float deltaTime)
     {
+        var interval = 1 / data.fps;
+        elapsedTime += deltaTime;
+        if (elapsedTime < interval) return;
+        elapsedTime -= interval;
         _YIndex = data.rowIndex;
         material.Value.SetFloat("_YIndex", _YIndex);
 
@@ -47,11 +54,13 @@ public class SpriteAnimationAuthoring : MonoBehaviour
     {
         public string stateName;
         public int row;
+        public int fps;
 
-        public AnimationDataCreate(string stateName, int row)
+        public AnimationDataCreate(string stateName, int row, int fps)
         {
             this.stateName = stateName;
             this.row = row;
+            this.fps = fps;
         }
     }
 
@@ -69,7 +78,7 @@ public class SpriteAnimationAuthoring : MonoBehaviour
             var buffer = AddBuffer<AnimationStateBuffer>(entity);
             foreach (var item in authoring.animationStates)
             {
-                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row) });
+                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row, item.fps) });
             }
         }
     }
@@ -83,7 +92,7 @@ public class SpriteAnimationAuthoring : MonoBehaviour
 
         for (int i = 0; i < row; i++)
         {
-            animationStates[i] = new AnimationDataCreate("", i);
+            animationStates[i] = new AnimationDataCreate("", i, 0);
         }
     }
 }

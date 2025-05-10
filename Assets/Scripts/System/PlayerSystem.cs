@@ -37,7 +37,7 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
                 break;
             }
         }
-        animation.UpdateAnimation(ref data);
+        animation.UpdateAnimation(ref data, SystemAPI.Time.DeltaTime);
         for (int i = 0; i < allState.Length; i++)
         {
             if (allState[i].state.name == stateName)

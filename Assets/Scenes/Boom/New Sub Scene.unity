@@ -3347,6 +3347,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteAuthoring: {fileID: 372706172}
+  animationStates:
+  - stateName: Down
+    row: 0
+    fps: 5
+  - stateName: Left
+    row: 1
+    fps: 5
+  - stateName: Right
+    row: 2
+    fps: 5
+  - stateName: Up
+    row: 3
+    fps: 5
 --- !u!114 &372706174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3359,7 +3372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac448591432a17c48b99593ef2e5d2c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animation: {fileID: 372706173}
+  spriteAnimation: {fileID: 372706173}
 --- !u!1 &382588483
 GameObject:
   m_ObjectHideFlags: 0

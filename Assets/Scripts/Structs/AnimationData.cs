@@ -7,11 +7,13 @@ public struct AnimationData
     public FixedString32Bytes name;
     public readonly int rowIndex;
     public int currentFrame;
+    public int fps;
 
-    public AnimationData(FixedString32Bytes name, int rowIndex)
+    public AnimationData(FixedString32Bytes name, int rowIndex, int fps)
     {
         this.name = name;
         this.rowIndex = rowIndex;
         currentFrame = 0;
+        this.fps = fps;
     }
 }
