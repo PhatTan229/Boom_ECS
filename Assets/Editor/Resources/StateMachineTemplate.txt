@@ -1,0 +1,33 @@
+using System;
+using UnityEngine;
+
+[Serializable]
+public class {target.transform.root.name}StateMachine_{stateName} : IStateMachine
+{
+    public void OnStateEnter(AnimationData state)
+    {
+        Debug.Log("OnStateEnter");
+    }
+    public void OnStateUpdate(AnimationData state)
+    {
+        Debug.Log("OnStateUpdate");
+    }
+
+    public void OnStateExit(AnimationData state)
+    {
+        Debug.Log("OnStateExit");
+    }
+}
+
+[CreateAssetMenu(fileName = "{stateName}", menuName = "StateMachines/{target.transform.root.name}/{stateName}")]
+public class {target.transform.root.name}StateMachineScript_{stateName} : StateMachineScript
+{
+    public override IStateMachine StateMachine
+    {
+        get
+        {
+            if (stateMachine == null) stateMachine = new {target.transform.root.name}StateMachine_{stateName}();
+            return stateMachine;
+        }
+    }
+}
