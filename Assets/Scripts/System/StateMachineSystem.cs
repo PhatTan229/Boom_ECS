@@ -37,17 +37,17 @@ public partial struct StateMachineSystem : ISystem, ISystemStartStop
             if (state != animation.ValueRW.currentSate)
             {
                 var exitState = stateMachine.stateMachines[state];
-                var exitData = Utils.GetBufferElement(statesBuffer, x => x.state.name == state);
+                var exitData = statesBuffer.GetBufferElement(x => x.state.name == state);
                 exitState.OnStateExit(exitData.state);
 
                 var enterState = stateMachine.stateMachines[animation.ValueRW.currentSate];
-                var enterData = Utils.GetBufferElement(statesBuffer, x => x.state.name == animation.ValueRW.currentSate);
+                var enterData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.currentSate);
                 enterState.OnStateEnter(exitData.state);
             }
             else
             {
                 var currentState = stateMachine.stateMachines[animation.ValueRW.currentSate];
-                var updateData = Utils.GetBufferElement(statesBuffer, x => x.state.name == animation.ValueRW.currentSate);
+                var updateData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.currentSate);
                 currentState.OnStateUpdate(updateData.state);
             }
             currentStatesMap[entity] = animation.ValueRW.currentSate;

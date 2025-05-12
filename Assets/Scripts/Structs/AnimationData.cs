@@ -8,12 +8,14 @@ public struct AnimationData
     public readonly int rowIndex;
     public int currentFrame;
     public int fps;
+    public bool isDefault;
 
-    public AnimationData(FixedString32Bytes name, int rowIndex, int fps)
+    public AnimationData(FixedString32Bytes name, int rowIndex, int fps, bool isDefault)
     {
         this.name = name;
         this.rowIndex = rowIndex;
         currentFrame = 0;
         this.fps = fps;
+        this.isDefault = isDefault;
     }
 }

@@ -170,7 +170,7 @@ public static class Utils
         return default;
     }
 
-    public static T GetBufferElement<T>(DynamicBuffer<T> buffer, Func<T, bool> finder) where T : unmanaged, IBufferElementData
+    public static T GetBufferElement<T>(this DynamicBuffer<T> buffer, Func<T, bool> finder) where T : unmanaged, IBufferElementData
     {
         for (int i = 0; i < buffer.Length; i++)
         {

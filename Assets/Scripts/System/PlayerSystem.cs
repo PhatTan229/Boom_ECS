@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -17,28 +18,12 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
         var animation = Utils.GetComponentDataInChildren<SpriteAnimation>(player, state.EntityManager, out var child);
         var allState = state.EntityManager.GetBuffer<AnimationStateBuffer>(child);
-        var stateName = Utils.FixString32(nameof(InputStorage.Down));
-
-        AnimationData data = allState[0].state;
-        for (int i = 0; i < allState.Length; i++)
-        {
-            if (allState[i].state.name == stateName)
-            {
-                data = allState[i].state;
-                break;
-            }
-        }
-        animation.UpdateAnimation(ref data, SystemAPI.Time.DeltaTime);
-        for (int i = 0; i < allState.Length; i++)
-        {
-            if (allState[i].state.name == stateName)
-            {
-                var bufferElement = allState[i];
-                bufferElement.state = data;
-                allState[i] = bufferElement;
-                break;
-            }
-        }
+        var data = allState.GetBufferElement(x => x.state.isDefault);
+        var stateName = data.state.name;
+        animation.UpdateAnimation(ref data.state, SystemAPI.Time.DeltaTime);
+        var newBuffer = data;
+        newBuffer.state = data.state;
+        data = newBuffer;
         state.EntityManager.SetComponentData(child, animation);
     }
 
@@ -56,26 +41,14 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
         else if (math.all(input.ValueRO.direction == InputStorage.Left)) stateName = Utils.FixString32(nameof(InputStorage.Left));
         else stateName = Utils.FixString32(nameof(InputStorage.Right));
 
-        AnimationData data = allState[0].state;
-        for (int i = 0; i < allState.Length; i++)
-        {
-            if (allState[i].state.name == stateName)
-            {
-                data = allState[i].state;
-                break;
-            }
-        }
+        var stateBuffer = allState.GetBufferElement(x => x.state.name == stateName);
+        var data = stateBuffer.state;
         animation.UpdateAnimation(ref data, SystemAPI.Time.DeltaTime);
-        for (int i = 0; i < allState.Length; i++)
-        {
-            if (allState[i].state.name == stateName)
-            {
-                var bufferElement = allState[i]; 
-                bufferElement.state = data;          
-                allState[i] = bufferElement;              
-                break;
-            }
-        }
+
+        var newBuffer = stateBuffer;
+        newBuffer.state = data;
+        stateBuffer = newBuffer;
+
         state.EntityManager.SetComponentData(child, animation);
     }
 

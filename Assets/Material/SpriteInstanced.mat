@@ -71,8 +71,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Row: 4
-    - _XIndex: 0
-    - _YIndex: 2
+    - _XIndex: 1
+    - _YIndex: 0
     - _Yindex: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

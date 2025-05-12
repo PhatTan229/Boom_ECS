@@ -81,7 +81,7 @@ public class SpriteAnimationAuthoring : MonoBehaviour
             var buffer = AddBuffer<AnimationStateBuffer>(entity);
             foreach (var item in authoring.animationStates)
             {
-                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row, item.fps) });
+                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row, item.fps, item.defaultState) });
             }
         }
     }
