@@ -3351,15 +3351,19 @@ MonoBehaviour:
   - stateName: Down
     row: 0
     fps: 3
+    stateMachinescript: {fileID: 11400000, guid: ec43b7c155984fa4e905ba38c7abdac9, type: 2}
   - stateName: Left
     row: 1
     fps: 3
+    stateMachinescript: {fileID: 11400000, guid: 8406ae4143e0bd94cb29d8a1aa219f48, type: 2}
   - stateName: Right
     row: 2
     fps: 3
+    stateMachinescript: {fileID: 11400000, guid: 2eaa6d1e7cb848b4d9e3e5a9e7e4ed35, type: 2}
   - stateName: Up
     row: 3
     fps: 3
+    stateMachinescript: {fileID: 11400000, guid: eadf6cf58fcc5a84883560837c7a952b, type: 2}
 --- !u!114 &372706174
 MonoBehaviour:
   m_ObjectHideFlags: 0

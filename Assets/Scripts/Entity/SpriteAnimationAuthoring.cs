@@ -27,12 +27,13 @@ public struct SpriteAnimation : IComponentData
         col = (int)material.GetFloat("_Collum") - 1;
         _XIndex = 0;
         _YIndex = 0;
-        currentSate = new FixedString32Bytes("");
+        currentSate = Utils.FixString32_Emty;
         elapsedTime = 0;
     }
 
     public void UpdateAnimation(ref AnimationData data, float deltaTime)
     {
+        currentSate = data.name;
         var interval = 1 / data.fps;
         elapsedTime += deltaTime;
         if (elapsedTime < interval) return;
@@ -55,6 +56,8 @@ public class SpriteAnimationAuthoring : MonoBehaviour
         public string stateName;
         public int row;
         public int fps;
+        public bool defaultState;
+        public StateMachineScript stateMachinescript;
 
         public AnimationDataCreate(string stateName, int row, int fps)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -109,37 +110,73 @@ public static class Utils
         return new FixedString32Bytes(subStr);
     }
 
-    public static T GetComponentDataInChildren<T>(Entity entity) where T : unmanaged, IComponentData
+    public static T GetComponentDataInChildren<T>(Entity entity, out Entity child) where T : unmanaged, IComponentData
     {
-        return GetComponentDataInChildren<T>(entity, EntityManager);
+        return GetComponentDataInChildren<T>(entity, EntityManager, out child);
     }
 
-    public static T GetComponentDataInChildren<T>(Entity entity, EntityManager entityManager) where T : unmanaged, IComponentData
+    public static T GetComponentDataInChildren<T>(Entity entity, EntityManager entityManager, out Entity child) where T : unmanaged, IComponentData
     {
+        child = Entity.Null;
         var children = entityManager.GetBuffer<Child>(entity);
         for (int i = 0; i < children.Length; i++)
         {
             if (entityManager.HasComponent<T>(children[i].Value))
             {
+                child = children[i].Value;
                 return entityManager.GetComponentData<T>(children[i].Value);
             }
         }
         return default;
     }
 
-    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity) where T : unmanaged, IBufferElementData
+    public static void SetComponentDataInChildren<T>(Entity entity, T value, out Entity child) where T : unmanaged, IComponentData
     {
-        return GetBufferInChildren<T>(entity, EntityManager);
+        SetComponentDataInChildren<T>(entity, value, EntityManager, out child); 
     }
 
-    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity, EntityManager entityManager) where T : unmanaged, IBufferElementData
+    public static void SetComponentDataInChildren<T>(Entity entity, T value, EntityManager entityManager, out Entity child) where T : unmanaged, IComponentData
     {
+        child = Entity.Null;
+        var children = entityManager.GetBuffer<Child>(entity);
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (entityManager.HasComponent<T>(children[i].Value))
+            {
+                child = children[i].Value;
+                var component = entityManager.GetComponentData<T>(children[i].Value);
+                entityManager.SetComponentData<T>(children[i].Value, value);
+            }
+        }
+    }
+
+    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity, out Entity child) where T : unmanaged, IBufferElementData
+    {
+        return GetBufferInChildren<T>(entity, EntityManager, out child);
+    }
+
+    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity, EntityManager entityManager, out Entity child) where T : unmanaged, IBufferElementData
+    {
+        child = Entity.Null;
         var children = entityManager.GetBuffer<Child>(entity);
         for (int i = 0; i < children.Length; i++)
         {
             if (entityManager.HasBuffer<T>(children[i].Value))
             {
+                child = children[i].Value;
                 return entityManager.GetBuffer<T>(children[i].Value);
+            }
+        }
+        return default;
+    }
+
+    public static T GetBufferElement<T>(DynamicBuffer<T> buffer, Func<T, bool> finder) where T : unmanaged, IBufferElementData
+    {
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            if (finder(buffer[i]))
+            {
+                return buffer[i];
             }
         }
         return default;
