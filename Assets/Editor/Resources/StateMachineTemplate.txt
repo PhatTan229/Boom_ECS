@@ -2,32 +2,32 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class {target.transform.root.name}StateMachine_{stateName} : IStateMachine
-{
+public class {0}StateMachine_{1} : IStateMachine
+{{
     public void OnStateEnter(AnimationData state)
-    {
+    {{
         Debug.Log("OnStateEnter");
-    }
+    }}
     public void OnStateUpdate(AnimationData state)
-    {
+    {{
         Debug.Log("OnStateUpdate");
-    }
+    }}
 
     public void OnStateExit(AnimationData state)
-    {
+    {{
         Debug.Log("OnStateExit");
-    }
-}
+    }}
+}}
 
-[CreateAssetMenu(fileName = "{stateName}", menuName = "StateMachines/{target.transform.root.name}/{stateName}")]
-public class {target.transform.root.name}StateMachineScript_{stateName} : StateMachineScript
-{
+[CreateAssetMenu(fileName = "{1}", menuName = "StateMachines/{0}/{1}")]
+public class {0}StateMachineScript_{1} : StateMachineScript
+{{
     public override IStateMachine StateMachine
-    {
+    {{
         get
-        {
-            if (stateMachine == null) stateMachine = new {target.transform.root.name}StateMachine_{stateName}();
+        {{
+            if (stateMachine == null) stateMachine = new {0}StateMachine_{1}();
             return stateMachine;
-        }
-    }
-}
+        }}
+    }}
+}}

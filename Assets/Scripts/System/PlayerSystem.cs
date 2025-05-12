@@ -45,9 +45,16 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
         var data = stateBuffer.state;
         animation.UpdateAnimation(ref data, SystemAPI.Time.DeltaTime);
 
-        var newBuffer = stateBuffer;
-        newBuffer.state = data;
-        stateBuffer = newBuffer;
+        for (int i = 0; i < allState.Length; i++)
+        {
+            if (allState[i].state.name == stateName)
+            {
+                var bufferElement = allState[i]; 
+                bufferElement.state = data;          
+                allState[i] = bufferElement;              
+                break;
+            }
+        }
 
         state.EntityManager.SetComponentData(child, animation);
     }

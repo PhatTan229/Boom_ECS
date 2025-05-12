@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,48 +20,51 @@ public class SpriteAnimationEditor : Editor
     public override void OnInspectorGUI()
     {
         var target = (SpriteAnimationAuthoring)this.target;
-        
-        base.OnInspectorGUI();
+
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(data, new GUIContent("Animation States"), includeChildren: true);
+
+        EditorGUILayout.Space();
 
         if (GUILayout.Button("Read Material"))
         {
             target.GetAniamtionStates();
         }
-        serializedObject.Update();
 
-        lastDefaultIndex = 0; 
+        lastDefaultIndex = 0;
+        int defaultCount = 0;
+
+        // Loop and draw custom GUI for each element
         for (int i = 0; i < data.arraySize; i++)
         {
             var element = data.GetArrayElementAtIndex(i);
-            var isDefault = element.FindPropertyRelative("defaultState").boolValue;
+            var stateNameProp = element.FindPropertyRelative("stateName");
+            var isDefaultProp = element.FindPropertyRelative("defaultState");
 
-            if (isDefault)
+            EditorGUILayout.BeginVertical("box");
+            if (GUILayout.Button($"Create {stateNameProp.stringValue} StateMachine"))
             {
+                string stateName = stateNameProp.stringValue;
+                CreateStateMachine(stateName);
+            }
+            EditorGUILayout.EndVertical();
+
+            if (isDefaultProp.boolValue)
+            {
+                defaultCount++;
                 lastDefaultIndex = i;
-                break;
             }
         }
 
-        var defaultCount = 0;
-        for (int i = 0; i < data.arraySize; i++)
-        {
-            var element = data.GetArrayElementAtIndex(i);
-            var isDefault = element.FindPropertyRelative("defaultState").boolValue;
-            if (isDefault) defaultCount++;
-        }
-
+        // Ensure only one default
         if (defaultCount >= 2)
         {
-            Debug.LogError("Only one default is allow");
+            Debug.LogError("Only one default is allowed");
+
             for (int i = 0; i < data.arraySize; i++)
             {
-                if (i == lastDefaultIndex)
-                {
-                    data.GetArrayElementAtIndex(lastDefaultIndex).FindPropertyRelative("defaultState").boolValue = true;
-                    continue;
-                }
-                var element = data.GetArrayElementAtIndex(i);
-                element.FindPropertyRelative("defaultState").boolValue = false;
+                var isDefaultProp = data.GetArrayElementAtIndex(i).FindPropertyRelative("defaultState");
+                isDefaultProp.boolValue = (i == lastDefaultIndex);
             }
         }
 
@@ -70,15 +74,25 @@ public class SpriteAnimationEditor : Editor
     public void CreateStateMachine(string stateName)
     {
         var target = (SpriteAnimationAuthoring)this.target;
-        var rootPath = System.IO.Path.Combine(Application.dataPath, "Script");
-        var allSubdirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+        if (!target.TryGetComponent<StateMachineAuthoring>(out var stateMachineAuthoring)) target.AddComponent<StateMachineAuthoring>();
 
-        foreach (var subDirectory in allSubdirectories) 
+        var rootPath = System.IO.Path.Combine(Application.dataPath, "Scripts", "StateMachine");
+        var stateMachineFolder = System.IO.Path.Combine(rootPath, $"{target.transform.root.name}StateMachine");
+        if (!Directory.Exists(stateMachineFolder))
         {
-            if(File.Exists(System.IO.Path.Combine(subDirectory, $"{target.transform.root.name}StateMachineScript_{stateName}")))
-            {
-                Debug.Log("Exist");
-            }
+            Directory.CreateDirectory(stateMachineFolder);
+            Directory.CreateDirectory(System.IO.Path.Combine(stateMachineFolder, "Scripts"));
         }
+        var scriptFolder = System.IO.Path.Combine(stateMachineFolder, "Scripts");
+        var file = System.IO.Path.Combine(scriptFolder, $"{target.transform.root.name}StateMachineScript_{stateName}.cs");
+        if (!File.Exists(file))
+        {
+            var template = AssetDatabase.LoadAssetAtPath<TextAsset>(System.IO.Path.Combine("Assets", "Editor", "Resources", "StateMachineTemplate.txt"));
+            File.WriteAllText(file, string.Format(template.text, target.transform.root.name, stateName));
+            AssetDatabase.Refresh();
+            UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(file, 1);
+        }
+        var scriptAsset = AssetDatabase.LoadAssetAtPath<MonoScript>(file.Substring(Application.dataPath.Length - "Assets".Length).Replace("\\", "/"));
+        EditorGUIUtility.PingObject(scriptAsset);
     }
 }
