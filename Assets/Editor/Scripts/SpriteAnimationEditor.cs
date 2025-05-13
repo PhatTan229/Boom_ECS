@@ -87,7 +87,7 @@ public class SpriteAnimationEditor : Editor
         var file = System.IO.Path.Combine(scriptFolder, $"{target.transform.root.name}StateMachineScript_{stateName}.cs");
         if (!File.Exists(file))
         {
-            var template = AssetDatabase.LoadAssetAtPath<TextAsset>(System.IO.Path.Combine("Assets", "Editor", "Resources", "StateMachineTemplate.txt"));
+            var template = AssetDatabase.LoadAssetAtPath<TextAsset>(System.IO.Path.Combine("Assets", "Editor", "StateMachineTemplate.txt"));
             File.WriteAllText(file, string.Format(template.text, target.transform.root.name, stateName));
             AssetDatabase.Refresh();
             UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(file, 1);

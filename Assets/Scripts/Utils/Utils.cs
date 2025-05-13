@@ -12,7 +12,7 @@ using UnityEngine;
 public static class Utils
 {
     public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
-    public static FixedString32Bytes FixString32_Emty => new FixedString32Bytes(string.Empty);
+    public static FixedString32Bytes FixString32_Emty => new FixedString32Bytes();
 
     public static float2 ToFloat2(this Vector2 vector)
     {
@@ -194,6 +194,34 @@ public static class Utils
             {
                 child = children[i].Value;
                 return entityManager.GetBuffer<T>(children[i].Value);
+            }
+        }
+        return default;
+    }
+
+    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity, BufferLookup<Child> childLookup, BufferLookup<T> bufferLookup, out Entity child) where T : unmanaged, IBufferElementData
+    {
+        child = Entity.Null;
+        var children = childLookup[entity];
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (bufferLookup.HasBuffer(children[i].Value))
+            {
+                child = children[i].Value;
+                return bufferLookup[children[i].Value];
+            }
+        }
+        return default;
+    }
+
+    public static DynamicBuffer<T> GetBufferInChildren<T>(Entity entity, BufferLookup<Child> childLookup, BufferLookup<T> bufferLookup) where T : unmanaged, IBufferElementData
+    {
+        var children = childLookup[entity];
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (bufferLookup.HasBuffer(children[i].Value))
+            {
+                return bufferLookup[children[i].Value];
             }
         }
         return default;

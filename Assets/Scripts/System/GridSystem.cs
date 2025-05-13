@@ -7,8 +7,6 @@ using Unity.Collections;
 
 public partial struct GridSystem : ISystem ,ISystemStartStop
 {
-    private bool init;
-
     public void OnStartRunning(ref SystemState state)
     {
         var ecb = new EntityCommandBuffer(Allocator.Temp);
