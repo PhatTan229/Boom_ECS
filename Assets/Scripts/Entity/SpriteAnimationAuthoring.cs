@@ -39,11 +39,17 @@ public struct SpriteAnimation : IComponentData
         if (elapsedTime < interval) return;
         elapsedTime -= interval;
         _YIndex = data.rowIndex;
-        material.Value.SetFloat("_YIndex", _YIndex);
+        //material.Value.SetFloat("_YIndex", _YIndex);
 
         _XIndex = (data.currentFrame + 1) % col;
-        material.Value.SetFloat("_XIndex", _XIndex);
+        //material.Value.SetFloat("_XIndex", _XIndex);
         data.currentFrame = _XIndex;
+    }
+
+    public void SetValue()
+    {
+        material.Value.SetFloat("_YIndex", _YIndex);
+        material.Value.SetFloat("_XIndex", _XIndex);
     }
 }
 

@@ -130,6 +130,35 @@ public static class Utils
         return default;
     }
 
+    public static T GetComponentDataInChildren<T>(Entity entity, BufferLookup<Child> childLookup, ComponentLookup<T> lookup, out Entity child) where T : unmanaged, IComponentData
+    {
+        child = Entity.Null;
+        var children = childLookup[entity];
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (lookup.HasComponent(children[i].Value))
+            {
+                child = children[i].Value;
+                return lookup[children[i].Value];
+            }
+        }
+        return default;
+    }
+
+    public static T GetComponentDataInChildren<T>(Entity entity, BufferLookup<Child> childLookup, ComponentLookup<T> lookup) where T : unmanaged, IComponentData
+    {
+        var children = childLookup[entity];
+        for (int i = 0; i < children.Length; i++)
+        {
+            if (lookup.HasComponent(children[i].Value))
+            {
+                return lookup[children[i].Value];
+            }
+        }
+        return default;
+    }
+
+
     public static void SetComponentDataInChildren<T>(Entity entity, T value, out Entity child) where T : unmanaged, IComponentData
     {
         SetComponentDataInChildren<T>(entity, value, EntityManager, out child); 
