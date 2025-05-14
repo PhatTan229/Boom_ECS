@@ -9,7 +9,7 @@ public partial struct SpriteAnimationSystem : ISystem
     {
         foreach (var item in SystemAPI.Query<RefRW<SpriteAnimation>>())
         {
-            item.ValueRW.SetValue();
+            //item.ValueRW.SetValue();
         }
     }
 }

@@ -10,11 +10,15 @@ using UnityEngine;
 public class SpriteAnimationEditor : Editor
 {
     private SerializedProperty data;
+    private SerializedProperty row;
+    private SerializedProperty col;
     private int lastDefaultIndex;
 
     private void OnEnable()
     {
         data = serializedObject.FindProperty("animationStates");
+        row = serializedObject.FindProperty("row");
+        col = serializedObject.FindProperty("col");
     }
 
     public override void OnInspectorGUI()
@@ -24,7 +28,8 @@ public class SpriteAnimationEditor : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(data, new GUIContent("Animation States"), includeChildren: true);
 
-        EditorGUILayout.Space();
+        EditorGUILayout.IntField("Row", row.intValue);
+        EditorGUILayout.IntField("Col", col.intValue);
 
         if (GUILayout.Button("Read Material"))
         {

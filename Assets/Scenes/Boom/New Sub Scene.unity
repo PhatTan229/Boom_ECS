@@ -3368,6 +3368,8 @@ MonoBehaviour:
     fps: 3
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: eadf6cf58fcc5a84883560837c7a952b, type: 2}
+  row: 3
+  col: 2
 --- !u!114 &372706174
 MonoBehaviour:
   m_ObjectHideFlags: 0

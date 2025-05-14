@@ -15,7 +15,7 @@ public partial struct SpawnSytem : ISystem
     public void OnStartRunning(ref SystemState state)
     {
         var query = SystemAPI.QueryBuilder()
-            .WithAll<EntityPrefab>()
+            .WithAll<PrefabReference>()
             .WithNone<PrefabLoadResult>().Build();
         state.EntityManager.AddComponent<RequestEntityPrefabLoaded>(query);
     }
@@ -25,13 +25,18 @@ public partial struct SpawnSytem : ISystem
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            var prefab = SystemAPI.GetSingletonRW<EntityPrefab>();
+            Debug.Log("Spawm");
             var ecb = new EntityCommandBuffer(Allocator.Temp);
-            var entity = ecb.Instantiate(prefab.ValueRO.Value);
-            ecb.SetComponent(entity, LocalTransform.FromPosition(float3.zero));
-            ecb.RemoveComponent<RequestEntityPrefabLoaded>(entity);
-            ecb.RemoveComponent<PrefabLoadResult>(entity);
+            foreach (var (prefab, entity) in
+                     SystemAPI.Query<RefRO<PrefabLoadResult>>().WithEntityAccess())
+            {
+                var instance = ecb.Instantiate(prefab.ValueRO.PrefabRoot);
+                ecb.RemoveComponent<RequestEntityPrefabLoaded>(entity);
+                ecb.RemoveComponent<PrefabLoadResult>(entity);
+            }
+
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
         }
-}}
+    }
+}

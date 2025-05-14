@@ -2,13 +2,15 @@
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Rendering;
 using UnityEngine;
 
 public struct AnimationStateBuffer : IBufferElementData
 {
     public AnimationData state;
 }
-
+[MaterialProperty("_XIndex")]
+[MaterialProperty("_YIndex")]
 public struct SpriteAnimation : IComponentData
 {
     public UnityObjectRef<Material> material;
@@ -20,11 +22,11 @@ public struct SpriteAnimation : IComponentData
 
     public float elapsedTime;
 
-    public SpriteAnimation(Material material)
+    public SpriteAnimation(Material material, int row, int col)
     {
         this.material = material;
-        row = (int)material.GetFloat("_Row") - 1;
-        col = (int)material.GetFloat("_Collum") - 1;
+        this.row = row;
+        this.col = col;
         _XIndex = 0;
         _YIndex = 0;
         currentSate = Utils.FixString32_Emty;
@@ -46,11 +48,11 @@ public struct SpriteAnimation : IComponentData
         data.currentFrame = _XIndex;
     }
 
-    public void SetValue()
-    {
-        material.Value.SetFloat("_YIndex", _YIndex);
-        material.Value.SetFloat("_XIndex", _XIndex);
-    }
+    //public void SetValue()
+    //{
+    //    material.Value.SetFloat("_YIndex", _YIndex);
+    //    material.Value.SetFloat("_XIndex", _XIndex);
+    //}
 }
 
 [RequireComponent(typeof(SpriteRenderAuthoring))]
@@ -75,14 +77,15 @@ public class SpriteAnimationAuthoring : MonoBehaviour
 
     public SpriteRenderAuthoring spriteAuthoring;
     public AnimationDataCreate[] animationStates;
-
+    public int row;
+    public int col;
     class SpriteAnimationBaker : Baker<SpriteAnimationAuthoring>
     {
         public override void Bake(SpriteAnimationAuthoring authoring)
         {
             if(authoring.spriteAuthoring == null) authoring.spriteAuthoring = authoring.GetComponent<SpriteRenderAuthoring>();
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new SpriteAnimation(authoring.spriteAuthoring.material));
+            AddComponent(entity, new SpriteAnimation(authoring.spriteAuthoring.material, authoring.row, authoring.col));
             //authoring.GetAniamtionStates();
             var buffer = AddBuffer<AnimationStateBuffer>(entity);
             foreach (var item in authoring.animationStates)
@@ -94,8 +97,8 @@ public class SpriteAnimationAuthoring : MonoBehaviour
 
     public void GetAniamtionStates()
     {
-        var col = (int)spriteAuthoring.material.GetFloat("_Collum");
-        var row = (int)spriteAuthoring.material.GetFloat("_Row");
+        col = (int)spriteAuthoring.material.GetFloat("_Collum") -1;
+        row = (int)spriteAuthoring.material.GetFloat("_Row") - 1;
         animationStates = new AnimationDataCreate[row];
         var arr = Enumerable.Range(0, col).ToArray();
 
