@@ -7,9 +7,9 @@ public partial struct SpriteAnimationSystem : ISystem
 {
     public void OnUpdate(ref SystemState state) 
     {
-        foreach (var item in SystemAPI.Query<RefRW<SpriteAnimation>>())
+        foreach (var (update, animation) in SystemAPI.Query<RefRW<SpriteAnimationUpdate>, RefRO<SpriteAnimation>>())
         {
-            //item.ValueRW.SetValue();
+            update.ValueRW.Value = (float)animation.ValueRO.index;
         }
     }
 }

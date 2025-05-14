@@ -9,17 +9,20 @@ public struct AnimationStateBuffer : IBufferElementData
 {
     public AnimationData state;
 }
-[MaterialProperty("_XIndex")]
-[MaterialProperty("_YIndex")]
+
+[MaterialProperty("_Index")]
+public struct SpriteAnimationUpdate : IComponentData
+{
+    public float Value;
+}
+
 public struct SpriteAnimation : IComponentData
 {
     public UnityObjectRef<Material> material;
     public FixedString32Bytes currentSate;
     public readonly int row;
     public readonly int col;
-    public int _XIndex;
-    public int _YIndex;
-
+    public int index;
     public float elapsedTime;
 
     public SpriteAnimation(Material material, int row, int col)
@@ -27,25 +30,22 @@ public struct SpriteAnimation : IComponentData
         this.material = material;
         this.row = row;
         this.col = col;
-        _XIndex = 0;
-        _YIndex = 0;
         currentSate = Utils.FixString32_Emty;
         elapsedTime = 0;
+        index = 0;
     }
 
     public void UpdateAnimation(ref AnimationData data, float deltaTime)
     {
+        index = data.currentFrame;
         currentSate = data.name;
         var interval = 1 / data.fps;
         elapsedTime += deltaTime;
         if (elapsedTime < interval) return;
         elapsedTime -= interval;
-        _YIndex = data.rowIndex;
-        //material.Value.SetFloat("_YIndex", _YIndex);
-
-        _XIndex = (data.currentFrame + 1) % col;
-        //material.Value.SetFloat("_XIndex", _XIndex);
-        data.currentFrame = _XIndex;
+        if (index < data.endFrame) index++;
+        else index = data.startFrame;
+        data.currentFrame = index;
     }
 
     //public void SetValue()
@@ -62,15 +62,15 @@ public class SpriteAnimationAuthoring : MonoBehaviour
     public class AnimationDataCreate
     {
         public string stateName;
-        public int row;
+        public int[] frames;
         public int fps;
         public bool defaultState;
         public StateMachineScript stateMachinescript;
 
-        public AnimationDataCreate(string stateName, int row, int fps)
+        public AnimationDataCreate(string stateName, int[] frames, int fps)
         {
             this.stateName = stateName;
-            this.row = row;
+            this.frames = frames;
             this.fps = fps;
         }
     }
@@ -90,21 +90,29 @@ public class SpriteAnimationAuthoring : MonoBehaviour
             var buffer = AddBuffer<AnimationStateBuffer>(entity);
             foreach (var item in authoring.animationStates)
             {
-                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.row, item.fps, item.defaultState) });
+                buffer.Add(new AnimationStateBuffer() { state = new AnimationData(Utils.FixString32(item.stateName), item.frames[0], item.frames[item.frames.Length - 1], item.fps, item.defaultState) });
             }
+            AddComponent<SpriteAnimationUpdate>(entity);
         }
     }
 
     public void GetAniamtionStates()
     {
-        col = (int)spriteAuthoring.material.GetFloat("_Collum") -1;
-        row = (int)spriteAuthoring.material.GetFloat("_Row") - 1;
+        col = (int)spriteAuthoring.material.GetFloat("_Collum");
+        row = (int)spriteAuthoring.material.GetFloat("_Row");
         animationStates = new AnimationDataCreate[row];
-        var arr = Enumerable.Range(0, col).ToArray();
+        var arr = Enumerable.Range(0, col * row).ToArray();
 
+        var index = 0;
         for (int i = 0; i < row; i++)
         {
-            animationStates[i] = new AnimationDataCreate("", i, 0);
+            var frames = new int[col];
+            for (int j = 0; j < frames.Length; j++)
+            {
+                frames[j] = arr[index];
+                index++;
+            }
+            animationStates[i] = new AnimationDataCreate("", frames, 0);
         }
     }
 }

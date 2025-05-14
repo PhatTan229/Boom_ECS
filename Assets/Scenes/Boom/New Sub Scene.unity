@@ -3349,22 +3349,22 @@ MonoBehaviour:
   spriteAuthoring: {fileID: 372706172}
   animationStates:
   - stateName: Down
-    row: 0
+    frames: 000000000100000002000000
     fps: 3
     defaultState: 1
     stateMachinescript: {fileID: 11400000, guid: ec43b7c155984fa4e905ba38c7abdac9, type: 2}
   - stateName: Left
-    row: 1
+    frames: 030000000400000005000000
     fps: 3
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: 8406ae4143e0bd94cb29d8a1aa219f48, type: 2}
   - stateName: Right
-    row: 2
+    frames: 060000000700000008000000
     fps: 3
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: 2eaa6d1e7cb848b4d9e3e5a9e7e4ed35, type: 2}
   - stateName: Up
-    row: 3
+    frames: 090000000a0000000b000000
     fps: 3
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: eadf6cf58fcc5a84883560837c7a952b, type: 2}
