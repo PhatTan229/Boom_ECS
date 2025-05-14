@@ -61,7 +61,7 @@ public partial struct PathFindingSystem : ISystem
         gridCoordination.Update(ref state);
         gridLookup.Update(ref state);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             var player = SystemAPI.GetSingletonEntity<Player>();
             var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);

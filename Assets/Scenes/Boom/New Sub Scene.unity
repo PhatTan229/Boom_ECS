@@ -3529,7 +3529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat:
     HP: 0
-    speed: 1
+    speed: 2
 --- !u!114 &401090111
 MonoBehaviour:
   m_ObjectHideFlags: 0

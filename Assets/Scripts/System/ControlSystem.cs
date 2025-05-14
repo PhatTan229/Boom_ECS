@@ -13,10 +13,12 @@ public partial struct ControlSystem : ISystem
     {
         public float speed;
         public float3 direction;
+        public bool pressBomb;
 
         void Execute([ChunkIndexInQuery] int index, RefRW<Controlable> control, RefRW<PhysicsVelocity> velocity)
         {
             control.ValueRW.ControlMovement(velocity, direction, speed);
+            if (pressBomb) Debug.Log("BOM");
         }
     }
 
@@ -29,7 +31,8 @@ public partial struct ControlSystem : ISystem
             var job = new ControlJob()
             {
                 speed = stat.ValueRO.currentStat.speed,
-                direction = input.ValueRO.direction
+                direction = input.ValueRO.direction,
+                pressBomb = input.ValueRW.pressBomb
             };
 
             state.Dependency = job.ScheduleParallel(state.Dependency);

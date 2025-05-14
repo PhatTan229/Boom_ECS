@@ -15,6 +15,7 @@ public struct InputStorage : IComponentData
     public static readonly float3 Down = new float3(0, 0, -1);
 
     public float3 direction;
+    public bool pressBomb;
 
     public void UpdateInput()
     {
@@ -39,5 +40,6 @@ public partial struct InputSystem : ISystem
     {
         var storage = SystemAPI.GetSingletonRW<InputStorage>();
         storage.ValueRW.UpdateInput();
+        storage.ValueRW.pressBomb = Input.GetKeyDown(KeyConfig.BomButton);
     }
 }

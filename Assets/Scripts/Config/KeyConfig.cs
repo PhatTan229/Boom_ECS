@@ -19,5 +19,6 @@ public class MoveKey
     public static class KeyConfig
     { 
         public static MoveKey Move {  get; private set; } = new MoveKey();
+        public static KeyCode BomButton { get; private set; } = KeyCode.Space;
     }
 }
