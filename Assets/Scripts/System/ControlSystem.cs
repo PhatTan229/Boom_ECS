@@ -12,7 +12,7 @@ using UnityEngine.Windows;
 [BurstCompile]
 public partial struct ControlSystem : ISystem, ISystemStartStop
 {
-    partial struct ControlJob : IJobEntity
+    partial struct MoveControlJob : IJobEntity
     {
         public EntityCommandBuffer.ParallelWriter ecbParallel;
         [NativeDisableParallelForRestriction] public ComponentLookup<Controlable> controlLookup;
@@ -20,14 +20,12 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
         [ReadOnly] public ComponentLookup<StatData> statLookup;
         public Entity entity;
         public float3 direction;
-        public bool pressBomb;
 
         void Execute([ChunkIndexInQuery] int index)
         {
             var control = controlLookup[entity];
             var velocity = velocityLookup.GetRefRW(entity);
             control.ControlMovement(velocity, direction, statLookup[entity].currentStat.speed);
-            if (pressBomb) Debug.Log("BOM");
         }
     }
 
@@ -40,7 +38,6 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
     public void OnStartRunning(ref SystemState state)
     {
         controlable = SystemAPI.GetSingletonEntity<Controlable>();
-
         controlLookup = state.GetComponentLookup<Controlable>();
         velocityLookup = state.GetComponentLookup<PhysicsVelocity>();
         statLookup = state.GetComponentLookup<StatData>();
@@ -54,7 +51,14 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
 
         var input = SystemAPI.GetSingletonRW<InputStorage>();
 
-        var job = new ControlJob()
+        if(input.ValueRO.pressBomb)
+        {
+            var ecb = GameSystem.ecbSystem.CreateCommandBuffer();
+            PoolData.GetEntity(new FixedString64Bytes("Bomb"), float3.zero, ecb, state.EntityManager);
+            ecb.Playback(state.EntityManager);
+        }
+
+        var job = new MoveControlJob()
         {
             ecbParallel = GameSystem.ecbSystem.CreateCommandBuffer().AsParallelWriter(),
             entity = controlable,
@@ -62,7 +66,6 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
             velocityLookup = velocityLookup,
             statLookup = statLookup,
             direction = input.ValueRO.direction,
-            pressBomb = input.ValueRW.pressBomb
         };
 
         state.Dependency = job.ScheduleParallel(state.Dependency);

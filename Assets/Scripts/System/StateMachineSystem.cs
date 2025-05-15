@@ -25,10 +25,8 @@ public partial struct StateMachineSystem : ISystem, ISystemStartStop
 
     private void UpdateStateMachine(ref SystemState system)
     {
-        foreach (var (animation, statesBuffer, entity) in SystemAPI.Query<RefRW<SpriteAnimation>, DynamicBuffer<AnimationStateBuffer>>().WithEntityAccess())
+        foreach (var (animation, statesBuffer, stateMachine, entity) in SystemAPI.Query<RefRW<SpriteAnimation>, DynamicBuffer<AnimationStateBuffer>, StateMachine>().WithEntityAccess())
         {
-            if (!system.EntityManager.HasComponent<StateMachine>(entity)) continue;
-            var stateMachine = system.EntityManager.GetComponentObject<StateMachine>(entity);
             if (!currentStatesMap.ContainsKey(entity)) AddState(ref system, entity);
             var state = currentStatesMap[entity];
             if (state != animation.ValueRW.currentSate)

@@ -81,7 +81,6 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
     {
         var input = SystemAPI.GetSingletonRW<InputStorage>();
         if (math.all(input.ValueRO.direction == float3.zero)) return;
-        if (!state.Dependency.IsCompleted) return;
 
         stateLookup.Update(ref state);
         childLookup.Update(ref state);
@@ -104,7 +103,7 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
             outputData = data
         };
 
-        state.Dependency = job.Schedule(state.Dependency);  
+        state.Dependency = job.ScheduleParallel(state.Dependency);  
     }
 
     public void OnStopRunning(ref SystemState state)

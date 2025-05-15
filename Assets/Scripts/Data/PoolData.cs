@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
+using static UnityEditor.Progress;
 
-public sealed class PoolData 
+public sealed class PoolData
 {
     public const int DEFAULT_CAPICITY = 10;
 
@@ -27,10 +29,12 @@ public sealed class PoolData
         {
             if (entityManager.IsEnabled(item)) continue;
             ecb.SetEnabled(item, true);
+            ecb.SetComponent(item, LocalTransform.FromPosition(position));
             return item;
         }
 
         var newEntity = ecb.CreateEntity();
+        ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
         pool.Add(newEntity);
         return newEntity;
     }
