@@ -5,18 +5,22 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public sealed class PoolData
 {
     public const int DEFAULT_CAPICITY = 10;
 
     public static NativeHashMap<FixedString64Bytes, NativeList<Entity>> allPools;
-
+    public static NativeHashMap<FixedString64Bytes, Entity> prefabs;
     public static void Init()
     {
-        if (allPools.IsCreated) return;
         allPools = new NativeHashMap<FixedString64Bytes, NativeList<Entity>>(DEFAULT_CAPICITY, Allocator.Persistent);
+        prefabs = new NativeHashMap<FixedString64Bytes, Entity>(DEFAULT_CAPICITY, Allocator.Persistent);
+    }
+
+    public static void RegisterPrefab(EntityInfo info)
+    {
+        prefabs.Add(info.Name, info.entity);
     }
 
     public static Entity GetEntity(FixedString64Bytes name, float3 position, EntityCommandBuffer ecb, EntityManager entityManager)
@@ -33,7 +37,8 @@ public sealed class PoolData
             return item;
         }
 
-        var newEntity = ecb.CreateEntity();
+        var newEntity = ecb.Instantiate(prefabs[name]);
+        ecb.SetEnabled(newEntity, true);
         ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
         pool.Add(newEntity);
         return newEntity;

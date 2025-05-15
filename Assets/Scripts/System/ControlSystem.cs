@@ -34,7 +34,6 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
     private ComponentLookup<PhysicsVelocity> velocityLookup;
     private ComponentLookup<StatData> statLookup;
 
-
     public void OnStartRunning(ref SystemState state)
     {
         controlable = SystemAPI.GetSingletonEntity<Controlable>();
@@ -55,7 +54,6 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
         {
             var ecb = GameSystem.ecbSystem.CreateCommandBuffer();
             PoolData.GetEntity(new FixedString64Bytes("Bomb"), float3.zero, ecb, state.EntityManager);
-            ecb.Playback(state.EntityManager);
         }
 
         var job = new MoveControlJob()

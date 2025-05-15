@@ -7,7 +7,6 @@ using Unity.Rendering;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpriteRenderData : IDisposable
 {
@@ -28,12 +27,12 @@ public class SpriteRenderData : IDisposable
         );
         var meshes = new List<Mesh>();
         var material = new List<Material>();
-        foreach (var info in infos) 
+        foreach (var info in infos)
         {
-            if(!meshes.Contains(info.ValueRW.mesh.Value)) meshes.Add(info.ValueRW.mesh.Value);
+            if (!meshes.Contains(info.ValueRW.mesh.Value)) meshes.Add(info.ValueRW.mesh.Value);
             info.ValueRW.meshIndex = meshes.IndexOf(info.ValueRW.mesh.Value);
 
-            if(!material.Contains(info.ValueRW.material.Value)) material.Add(info.ValueRW.material.Value);
+            if (!material.Contains(info.ValueRW.material.Value)) material.Add(info.ValueRW.material.Value);
             info.ValueRW.materialIndex = material.IndexOf(info.ValueRW.material.Value);
         }
 
@@ -52,6 +51,21 @@ public class SpriteRenderData : IDisposable
 
         //Debug.Log($"Mesh Count: {meshes.ToArray().Length}, Material Count: {material.ToArray().Length}");
         renderMeshArray = new RenderMeshArray(material.ToArray(), meshes.ToArray());
+    }
+
+    public void RegisterData(RefRW<SpriteRenderInfo> info)
+    {
+        var egs = Utils.EntityManager.World.GetExistingSystemManaged<EntitiesGraphicsSystem>();
+        if (!meshIds.ContainsKey(info.ValueRO.mesh))
+        {
+            var batchId = egs.RegisterMesh(info.ValueRO.mesh);
+            meshIds.Add(info.ValueRO.mesh, batchId);
+        }
+        if (!materialIds.ContainsKey(info.ValueRO.material))
+        {
+            var batchId = egs.RegisterMaterial(info.ValueRO.material);
+            materialIds.Add(info.ValueRO.material, batchId);
+        }
     }
 
     public void SetRenderInfo(RefRW<SpriteRenderInfo> info, Entity entity)

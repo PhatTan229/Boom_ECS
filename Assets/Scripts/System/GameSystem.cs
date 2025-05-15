@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Scenes;
 using Unity.Transforms;
 using UnityEngine;
@@ -23,7 +24,14 @@ public partial class GameSystem : SystemBase
            .WithAll<PrefabReference>()
            .WithNone<PrefabLoadResult>().Build();
         EntityManager.AddComponent<RequestEntityPrefabLoaded>(query);
+
         PoolData.Init();
+
+        foreach(var info in SystemAPI.Query<PrefabReference>())
+        {
+            var prefabInfo = SystemAPI.GetComponentRO<EntityInfo>(info.value);
+            PoolData.RegisterPrefab(prefabInfo.ValueRO);
+        }
     }
 
     protected override void OnUpdate()
