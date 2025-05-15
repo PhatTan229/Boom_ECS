@@ -77,6 +77,7 @@ public partial struct PathFindingSystem : ISystem
                 neibourLookup = neighbourLookup,
                 gridCoordination = gridCoordination,
                 gridLookup = gridLookup,
+                mapSize = mapSize.value
             };
 
             state.Dependency = job.ScheduleParallel(state.Dependency);

@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 public struct MapSizeData : ISharedComponentData
 {
-    public int mapSize;
+    public int value;
 }
 
 public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
@@ -18,7 +18,7 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var (coord, entity) in SystemAPI.Query<GridCoordination>().WithEntityAccess())
         {
-            ecb.AddSharedComponent(entity, new MapSizeData() { mapSize = GridData.Instance.MapSize });
+            ecb.AddSharedComponent(entity, new MapSizeData() { value = GridData.Instance.MapSize });
         }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();

@@ -9,15 +9,11 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
-public partial struct SpawnSytem : ISystem
+public partial struct SpawnSystem : ISystem
 {
     [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
-        var query = SystemAPI.QueryBuilder()
-            .WithAll<PrefabReference>()
-            .WithNone<PrefabLoadResult>().Build();
-        state.EntityManager.AddComponent<RequestEntityPrefabLoaded>(query);
     }
 
     [BurstCompile]

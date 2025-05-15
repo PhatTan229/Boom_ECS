@@ -18,15 +18,18 @@ public partial struct SpriteRenderSystem : ISystem, ISystemStartStop
         }
         SpriteRenderData.Instance = new SpriteRenderData(list);
         list.Dispose();
-        var toSet = new NativeList<(RefRW<SpriteRenderInfo>, Entity)>(Allocator.Temp);
+        var toSet = new NativeList<Entity>(Allocator.Temp);
 
-        foreach (var (info, entity) in SystemAPI.Query<RefRW<SpriteRenderInfo>>().WithEntityAccess())
+        foreach (var (_, entity) in SystemAPI.Query<RefRW<SpriteRenderInfo>>().WithEntityAccess())
         {
-            toSet.Add((info, entity));
+            toSet.Add(entity);
         }
-        foreach (var pair in toSet)
+
+        //var lookup = state.GetComponentLookup<SpriteRenderInfo>();
+        foreach (var item in toSet)
         {
-            SpriteRenderData.Instance.SetRenderInfo(pair.Item1, pair.Item2); 
+            var info = SystemAPI.GetComponentRW<SpriteRenderInfo>(item);
+            SpriteRenderData.Instance.SetRenderInfo(info, item); 
         }
         toSet.Dispose();
     }

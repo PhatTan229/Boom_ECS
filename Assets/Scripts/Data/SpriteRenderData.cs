@@ -7,6 +7,7 @@ using Unity.Rendering;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpriteRenderData : IDisposable
 {
@@ -65,6 +66,7 @@ public class SpriteRenderData : IDisposable
         RenderMeshUtility.AddComponents(entity, Utils.EntityManager, description, materialMeshInfo);
         Utils.EntityManager.AddSharedComponentManaged(entity, renderMeshArray);
     }
+
     public void Dispose()
     {
         Instance = null;
