@@ -31,18 +31,26 @@ public partial struct SpriteAnimationSystem : ISystem, ISystemStartStop
     }
 
     private EntityQuery query;
+    private ComponentTypeHandle<SpriteAnimationUpdate> updateHandler;
+    private ComponentTypeHandle<SpriteAnimation> animationHandler;
+
 
     public void OnStartRunning(ref SystemState state)
     {
         query = state.GetEntityQuery(ComponentType.ReadWrite<SpriteAnimationUpdate>(), ComponentType.ReadOnly<SpriteAnimation>());
+        updateHandler = state.GetComponentTypeHandle<SpriteAnimationUpdate>();
+        animationHandler = state.GetComponentTypeHandle<SpriteAnimation>(true);
     }
 
     public void OnUpdate(ref SystemState state)
     {
+        updateHandler.Update(ref state);
+        animationHandler.Update(ref state);
+
         var job = new AnimaitonUpdateJob()
         {
-            updateHandler = state.GetComponentTypeHandle<SpriteAnimationUpdate>(),
-            animtionHandler =state.GetComponentTypeHandle<SpriteAnimation>(true),
+            updateHandler = updateHandler,
+            animtionHandler = animationHandler,
         };
         state.Dependency = job.ScheduleParallel(query, state.Dependency);
     }

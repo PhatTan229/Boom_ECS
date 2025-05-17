@@ -87,10 +87,10 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
         animaitonLookup.Update(ref state);
 
         var stateName = Utils.FixString32_Emty;
-        if (math.all(input.ValueRO.direction == InputStorage.Up)) stateName = Utils.FixString32(nameof(InputStorage.Up));
-        else if (math.all(input.ValueRO.direction == InputStorage.Down)) stateName = Utils.FixString32(nameof(InputStorage.Down));
-        else if (math.all(input.ValueRO.direction == InputStorage.Left)) stateName = Utils.FixString32(nameof(InputStorage.Left));
-        else stateName = Utils.FixString32(nameof(InputStorage.Right));
+        if (math.all(input.ValueRO.direction == Direction.Up)) stateName = Utils.FixString32(nameof(Direction.Up));
+        else if (math.all(input.ValueRO.direction == Direction.Down)) stateName = Utils.FixString32(nameof(Direction.Down));
+        else if (math.all(input.ValueRO.direction == Direction.Left)) stateName = Utils.FixString32(nameof(Direction.Left));
+        else stateName = Utils.FixString32(nameof(Direction.Right));
 
         var job = new SetAnimationJob()
         {

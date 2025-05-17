@@ -44,5 +44,6 @@ public partial class GameSystem : SystemBase
             pos.y = 0;
             mousePos.ValueRW.value = pos;
         }
+        ecbSystem.Update();
     }
 }

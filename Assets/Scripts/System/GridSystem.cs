@@ -27,5 +27,6 @@ public partial struct GridSystem : ISystem ,ISystemStartStop
 
     public void OnStopRunning(ref SystemState state)
     {
+        GridData.Instance.Dispose();
     }
 }

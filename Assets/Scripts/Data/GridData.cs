@@ -92,5 +92,6 @@ public class GridData : IDisposable
     {
         if (allCells.IsCreated) allCells.Dispose();
         if (cellEntities.IsCreated) cellEntities.Dispose();
+        instance = null;
     }
 }
