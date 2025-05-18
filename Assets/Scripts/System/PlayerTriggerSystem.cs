@@ -105,6 +105,7 @@ public partial struct PlayerTriggerSystem : ISystem, IOnTrigger
     [BurstCompile]
     public void OnDestroy(ref SystemState state)
     {
+        _enter.Dispose();
         _current.Dispose();
         _previous.Dispose();
     }

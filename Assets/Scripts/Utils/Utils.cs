@@ -41,7 +41,7 @@ public static class Utils
         var filter = new CollisionFilter()
         {
             BelongsTo = 1u << collider2D.gameObject.layer,
-            CollidesWith = UintLayer.GetCollisonMask(collider2D.gameObject.layer)
+            CollidesWith = PhysicLayerUtils.GetCollisonMask(collider2D.gameObject.layer)
         };
 
         var collider = Unity.Physics.BoxCollider.Create(
@@ -63,7 +63,7 @@ public static class Utils
         var filter = new CollisionFilter()
         {
             BelongsTo = 1u << collider2D.gameObject.layer,
-            CollidesWith = UintLayer.GetCollisonMask(collider2D.gameObject.layer)
+            CollidesWith = PhysicLayerUtils.GetCollisonMask(collider2D.gameObject.layer)
         };
         var collider = Unity.Physics.SphereCollider.Create(
             new Unity.Physics.SphereGeometry
@@ -237,5 +237,14 @@ public static class Utils
             }
         }
         return default;
+    }
+
+    public static bool ContainsEx<T>(this DynamicBuffer<T> buffer, T element) where T : unmanaged, IBufferElementData
+    {
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            if (buffer[i].Equals(element)) return true;
+        }
+        return false;
     }
 }

@@ -41,6 +41,16 @@ public struct PhysicEntityPair : IEquatable<PhysicEntityPair>
         ColliderKeyB = colliderKeyB;
     }
 
+    public Entity GetEntity<T>(ComponentLookup<T> lookup) where T : unmanaged, IComponentData
+    {
+        return pair.GetEntity(lookup);
+    }
+
+    public bool TryGetEntity<T>(ComponentLookup<T> lookup, out Entity entity, out Entity other) where T : unmanaged, IComponentData
+    {
+        return pair.TryGetEntity(lookup, out entity, out other);
+    }
+
     public bool Equals(PhysicEntityPair other) => pair.Equals(other.pair);
 
     public override int GetHashCode() => pair.GetHashCode();

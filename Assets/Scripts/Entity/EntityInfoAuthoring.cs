@@ -8,6 +8,7 @@ public struct EntityInfo : IComponentData
 {
     public FixedString64Bytes ID;
     public FixedString64Bytes Name;
+    public int layer;
     public Entity entity;
 }
 

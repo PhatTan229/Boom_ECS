@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -127,6 +128,17 @@ public class GridSpawner : MonoBehaviour
         foreach (var item in cells)
         {
             item.transform.SetParent(parent);
+        }
+    }
+
+    [ContextMenu("Test")]
+    public void Test()
+    {
+        var category = (PhysicsCategory[])Enum.GetValues(typeof(PhysicsCategory));
+
+        foreach (var item in category)
+        {
+            Debug.Log($"Name {item.ToString()} : {(uint)item}");
         }
     }
 }

@@ -78,7 +78,10 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
         var transform = transformLookUp[controlable];
         var grid = GridData.Instance.GetGridCoordination(transform.Position);
         var gridPosition = transformLookUp[grid];
-        PoolData.GetEntity(new FixedString64Bytes("Bomb"), gridPosition.Position, ecb, state.EntityManager);
+        PoolData.GetEntity<InTrigger>(new FixedString64Bytes("Bomb"), gridPosition.Position, ecb, state.EntityManager, (arg) =>
+        {
+            arg.Clear();
+        });
     }
 
     public void OnStopRunning(ref SystemState state)
