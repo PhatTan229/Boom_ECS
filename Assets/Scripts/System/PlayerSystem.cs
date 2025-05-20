@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 [BurstCompile]
@@ -80,6 +81,8 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnUpdate(ref SystemState state)
     {
+        OnTrigger(ref state);
+
         var input = SystemAPI.GetSingletonRW<InputStorage>();
         if (math.all(input.ValueRO.direction == float3.zero)) return;
 
