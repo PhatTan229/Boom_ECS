@@ -12,7 +12,6 @@ public struct OnTriggerData : IComponentData
     public NativeHashSet<PhysicEntityPair> _previous;
 }
 
-[BurstCompile]
 public partial struct TriggerSystem : ISystem, ISystemStartStop
 {
     [BurstCompile]
@@ -21,12 +20,9 @@ public partial struct TriggerSystem : ISystem, ISystemStartStop
         public NativeHashSet<PhysicEntityPair> EnterTrigger;
         public NativeHashSet<PhysicEntityPair> CurrentTrigger;
         public NativeHashSet<PhysicEntityPair> PreviousTrigger;
-        //[ReadOnly] public ComponentLookup<Player> lookup;
 
         public void Execute(TriggerEvent triggerEvent)
         {
-            //if (!lookup.HasComponent(triggerEvent.EntityA) && !lookup.HasComponent(triggerEvent.EntityB)) return;
-
             var pair = new PhysicEntityPair(triggerEvent);
 
             if (!PreviousTrigger.Contains(pair))
@@ -39,7 +35,6 @@ public partial struct TriggerSystem : ISystem, ISystemStartStop
     }
 
 
-    [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
         state.EntityManager.AddComponent<OnTriggerData>(state.SystemHandle);
@@ -51,7 +46,6 @@ public partial struct TriggerSystem : ISystem, ISystemStartStop
         });
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var data = state.EntityManager.GetComponentDataRW<OnTriggerData>(state.SystemHandle);
@@ -68,17 +62,15 @@ public partial struct TriggerSystem : ISystem, ISystemStartStop
 
         state.Dependency = job.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
         state.Dependency.Complete();
-    
+
+        OnTriggerContainer.Trigger(ref state, data.ValueRO);
+
         data.ValueRW._enter.Clear();
         data.ValueRW._previous.Clear();
         data.ValueRW._previous.UnionWith(data.ValueRW._current);
     }
 
-    [BurstCompile]
     public void OnStopRunning(ref SystemState state)
     {
-        //_enter.Dispose();
-        //_current.Dispose();
-        //_previous.Dispose();
     }
 }

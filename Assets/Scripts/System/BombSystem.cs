@@ -6,7 +6,7 @@ using Unity.Entities;
 using Unity.Physics;
 using UnityEngine;
 
-public partial struct BombSystem : ISystem, ISystemStartStop, IOnTrigger
+public partial struct BombSystem : ISystem, ISystemStartStop
 {
     struct TriggerJob : ITriggerEventsJob
     {

@@ -77,12 +77,12 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
         };
         state.Dependency = job.ScheduleParallel(state.Dependency);
+
+        OnTriggerContainer.Subscribe(new PlayerTrigger());
     }
 
     public void OnUpdate(ref SystemState state)
     {
-        OnTrigger(ref state);
-
         var input = SystemAPI.GetSingletonRW<InputStorage>();
         if (math.all(input.ValueRO.direction == float3.zero)) return;
 

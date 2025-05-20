@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public partial struct PlayerSystem : IOnTrigger
+public class PlayerTrigger : IOnTrigger
 {
     private void OnTrigger(ref SystemState state)
     {
