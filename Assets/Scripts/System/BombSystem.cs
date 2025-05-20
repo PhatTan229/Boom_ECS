@@ -46,36 +46,36 @@ public partial struct BombSystem : ISystem, ISystemStartStop, IOnTrigger
 
     public void OnUpdate(ref SystemState state) 
     {
-        bombLookup.Update(ref state);
-        playerLookup.Update(ref state);
-        enemyLookup.Update(ref state);
+        //bombLookup.Update(ref state);
+        //playerLookup.Update(ref state);
+        //enemyLookup.Update(ref state);
 
-        _current.Clear();
+        //_current.Clear();
 
-        var job = new TriggerJob()
-        {
-            EnterTrigger = _enter,
-            CurrentTrigger = _current,
-            PreviousTrigger = _previous,
-            lookup = bombLookup,
-        };
+        //var job = new TriggerJob()
+        //{
+        //    EnterTrigger = _enter,
+        //    CurrentTrigger = _current,
+        //    PreviousTrigger = _previous,
+        //    lookup = bombLookup,
+        //};
 
-        state.Dependency = job.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
-        state.Dependency.Complete();
+        //state.Dependency = job.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
+        //state.Dependency.Complete();
 
-        foreach (var pair in _enter)
-        {
-            OnEnter(ref state, pair);
-        }
+        //foreach (var pair in _enter)
+        //{
+        //    OnEnter(ref state, pair);
+        //}
 
-        foreach (var pair in _previous)
-        {
-            if (!_current.Contains(pair)) OnExit(ref state, pair);
-        }
+        //foreach (var pair in _previous)
+        //{
+        //    if (!_current.Contains(pair)) OnExit(ref state, pair);
+        //}
 
-        _enter.Clear();
-        _previous.Clear();
-        _previous.UnionWith(_current);
+        //_enter.Clear();
+        //_previous.Clear();
+        //_previous.UnionWith(_current);
     }
 
     public void OnEnter(ref SystemState state, PhysicEntityPair entityPair)

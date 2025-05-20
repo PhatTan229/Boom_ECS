@@ -1,12 +1,20 @@
-﻿using Unity.Burst;
+﻿using System.Linq;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 using UnityEngine;
 
 [BurstCompile]
-public partial struct PlayerTriggerSystem : ISystem, IOnTrigger
+public partial struct PlayerTriggerSystem : ISystem, ISystemStartStop, IOnTrigger
 {
+    struct PlayerTriggerSystemData : IComponentData
+    {
+        public NativeHashSet<PhysicEntityPair> _enter;
+        public NativeHashSet<PhysicEntityPair> _current;
+        public NativeHashSet<PhysicEntityPair> _previous;
+    }
+
     [BurstCompile]
     struct PlayerTriggerEventJob : ITriggerEventsJob
     {
@@ -30,52 +38,55 @@ public partial struct PlayerTriggerSystem : ISystem, IOnTrigger
         }
     }
 
-    public NativeHashSet<PhysicEntityPair> _enter;
-    public NativeHashSet<PhysicEntityPair> _current;
-    public NativeHashSet<PhysicEntityPair> _previous;
 
     [BurstCompile]
-    public void OnCreate(ref SystemState state)
+    public void OnStartRunning(ref SystemState state)
     {
-        _enter = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent);
-        _current = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent);
-        _previous = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent);
+        state.EntityManager.AddComponent<PlayerTriggerSystemData>(state.SystemHandle);
+        state.EntityManager.SetComponentData(state.SystemHandle, new PlayerTriggerSystemData()
+        {
+            _enter = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent),
+            _current = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent),
+            _previous = new NativeHashSet<PhysicEntityPair>(128, Allocator.Persistent),
+        });
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        _current.Clear();
+        var data = state.EntityManager.GetComponentDataRW<PlayerTriggerSystemData>(state.SystemHandle);
+
+        data.ValueRW._current.Clear();
 
         var job = new PlayerTriggerEventJob()
         {
-            EnterTrigger = _enter,
-            CurrentTrigger = _current,
-            PreviousTrigger = _previous,
+            EnterTrigger = data.ValueRW._enter,
+            CurrentTrigger = data.ValueRW._current,
+            PreviousTrigger = data.ValueRW._previous,
             lookup = SystemAPI.GetComponentLookup<Player>(),
         };
 
         state.Dependency = job.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
         state.Dependency.Complete();
 
-        foreach (var pair in _enter) 
+        foreach (var pair in data.ValueRW._enter) 
         {
             OnEnter(ref state, pair);
         }
 
-        foreach (var pair in _current)
+        foreach (var pair in data.ValueRW._current)
         {
             OnStay(ref state, pair);
         }
 
-        foreach (var pair in _previous)
+        foreach (var pair in data.ValueRW._previous)
         {
-            if (!_current.Contains(pair)) OnExit(ref state, pair);
+            if (!data.ValueRW._current.Contains(pair)) OnExit(ref state, pair);
         }
 
-        _enter.Clear();
-        _previous.Clear();
-        _previous.UnionWith(_current);
+        data.ValueRW._enter.Clear();
+        data.ValueRW._previous.Clear();
+        data.ValueRW._previous.UnionWith(data.ValueRW._current);
     }
 
     public void OnEnter(ref SystemState state, PhysicEntityPair entityPair)
@@ -103,10 +114,10 @@ public partial struct PlayerTriggerSystem : ISystem, IOnTrigger
     }
 
     [BurstCompile]
-    public void OnDestroy(ref SystemState state)
+    public void OnStopRunning(ref SystemState state)
     {
-        _enter.Dispose();
-        _current.Dispose();
-        _previous.Dispose();
+        //_enter.Dispose();
+        //_current.Dispose();
+        //_previous.Dispose();
     }
 }

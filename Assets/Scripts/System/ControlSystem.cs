@@ -7,6 +7,10 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Windows;
 
+public struct ControlSystemData : IComponentData
+{
+
+}
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 [BurstCompile]
