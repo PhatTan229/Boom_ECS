@@ -46,6 +46,11 @@ public struct PhysicEntityPair : IEquatable<PhysicEntityPair>
         return pair.GetEntity(lookup);
     }
 
+    public bool TryGetEntity<T>(ComponentLookup<T> lookup, out Entity entity) where T : unmanaged, IComponentData
+    {
+        return pair.TryGetEntity(lookup, out entity);
+    }
+
     public bool TryGetEntity<T>(ComponentLookup<T> lookup, out Entity entity, out Entity other) where T : unmanaged, IComponentData
     {
         return pair.TryGetEntity(lookup, out entity, out other);

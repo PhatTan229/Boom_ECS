@@ -247,4 +247,17 @@ public static class Utils
         }
         return false;
     }
+    public static bool ContainsEx<T>(this DynamicBuffer<T> buffer, T element, out int index) where T : unmanaged, IBufferElementData
+    {
+        index = -1;
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            if (buffer[i].Equals(element))
+            {
+                index = i;
+                return true;
+            }
+        }
+        return false;
+    }
 }

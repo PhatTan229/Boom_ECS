@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
 
-public struct PhysicCollider : IComponentData
+public struct MyPhysicCollider : IComponentData
 {
     public BlobAssetReference<Unity.Physics.Collider> collider;
 }
@@ -23,7 +23,7 @@ public class PhysicColliderAuhoring : MonoBehaviour
             if(authoring.col == null) authoring.col = authoring.GetComponent<Collider2D>();
             var newCollider = authoring.col is CircleCollider2D ? authoring.col.ConvertToBlobCollider_Circle() : authoring.col.ConvertToBlobCollider_Box();
             AddBlobAsset(ref newCollider, out var hash);
-            AddComponent(entity, new PhysicCollider { collider = newCollider });
+            AddComponent(entity, new MyPhysicCollider { collider = newCollider });
         }
     }
 }

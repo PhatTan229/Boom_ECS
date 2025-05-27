@@ -19,6 +19,22 @@ public struct EntityPair : IEquatable<EntityPair>
         throw new Exception($"Can't find component {nameof(T)}");
     }
 
+    public bool TryGetEntity<T>(ComponentLookup<T> lookup, out Entity entity) where T : unmanaged, IComponentData
+    {
+        entity = Entity.Null;
+        if (lookup.HasComponent(EntityA))
+        {
+            entity = EntityA;
+            return true;
+        }
+        if (lookup.HasComponent(EntityB))
+        {
+            entity = EntityB;
+            return true;
+        }
+        return false;
+    }
+
     public bool TryGetEntity<T>(ComponentLookup<T> lookup, out Entity entity, out Entity other ) where T : unmanaged, IComponentData
     {
         entity = Entity.Null;

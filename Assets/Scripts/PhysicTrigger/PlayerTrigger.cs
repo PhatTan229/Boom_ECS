@@ -5,26 +5,6 @@ using UnityEngine;
 
 public class PlayerTrigger : IOnTrigger
 {
-    private void OnTrigger(ref SystemState state)
-    {
-        var data = state.EntityManager.GetComponentDataRW<OnTriggerData>(state.SystemHandle);
-
-        foreach (var entity in data.ValueRO._enter)
-        {
-            OnEnter(ref state, entity);
-        }
-
-        foreach (var entity in data.ValueRO._current)
-        {
-            OnStay(ref state, entity);
-        }
-
-        foreach (var item in data.ValueRO._previous)
-        {
-            if (!data.ValueRO._current.Contains(item)) OnExit(ref state, item);
-        }
-    }
-
     public void OnEnter(ref SystemState state, PhysicEntityPair entityPair)
     {
         Debug.Log("Enter");

@@ -3740,7 +3740,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  m_GravityFactor: 1
+  m_GravityFactor: 0
   m_OverrideDefaultMassDistribution: 1
   m_CenterOfMass:
     x: 0
@@ -3961,12 +3961,12 @@ MonoBehaviour:
   m_ShapeType: 2
   m_PrimitiveCenter:
     x: 0
-    y: 0
+    y: 0.5
     z: 0
   m_PrimitiveSize:
-    x: 0.8
-    y: 0.8
-    z: 0.8
+    x: 1
+    y: 1
+    z: 1
   m_PrimitiveOrientation:
     Value:
       x: 0
@@ -3974,15 +3974,15 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 0.8
-    Radius: 0.4
+    Height: 1
+    Radius: 0.5
     Axis: 2
   m_Cylinder:
-    Height: 0.8
-    Radius: 0.4
+    Height: 1
+    Radius: 0.5
     Axis: 2
   m_CylinderSideCount: 20
-  m_SphereRadius: 0.4
+  m_SphereRadius: 0.5
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.015
