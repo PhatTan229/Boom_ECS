@@ -13,13 +13,20 @@ public struct InTrigger : IBufferElementData
 public struct Bomb : IComponentData, IEquatable<Bomb>
 {
     public Entity entity;
+    public readonly int lenght;
     public float lifeTime;
     public float currentLifeTime;
 
-    public Bomb(Entity entity, float lifeTime)
+    public Bomb(Entity entity, float lifeTime, int lenght)
     {
         this.entity = entity;
         this.lifeTime = lifeTime;
+        currentLifeTime = lifeTime;
+        this.lenght = lenght;
+    }
+
+    public void ResetLifeTime()
+    {
         currentLifeTime = lifeTime;
     }
 
@@ -31,7 +38,6 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
 
     public void SetStatic(RefRW<PhysicsCollider> collider)
     {
-        currentLifeTime = lifeTime;
         collider.ValueRW.Value.Value.SetCollisionResponse(CollisionResponsePolicy.Collide);
     }
 
@@ -44,13 +50,14 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
 public class BombAuthoring : MonoBehaviour
 {
     public float lifeTime;
+    public int lenght;
 
     class BombBaker : Baker<BombAuthoring>
     {
         public override void Bake(BombAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new Bomb(entity, authoring.lifeTime));
+            AddComponent(entity, new Bomb(entity, authoring.lifeTime, authoring.lenght));
             AddBuffer<InTrigger>(entity);
         }
     }

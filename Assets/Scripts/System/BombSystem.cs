@@ -6,6 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Transforms;
 using UnityEngine;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
@@ -20,6 +21,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         void Execute([ChunkIndexInQuery] int index, Bomb bomb)
         {
+            if (bomb.lifeTime - bomb.currentLifeTime < 0.2f) return; 
             var refCollider = colliderLookup.GetRefRW(bomb.entity);
             var bodyType = refCollider.ValueRO.Value.Value.GetCollisionResponse();
             if (bodyType == CollisionResponsePolicy.Collide) return;
@@ -28,23 +30,20 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         }
     }
 
-    partial struct CountDownJob : IJobEntity
+    [BurstCompile]
+    partial struct ResetBombJob : IJobEntity
     {
+        [ReadOnly] public NativeParallelHashSet<Entity> activeEntities;
         [NativeDisableParallelForRestriction] public ComponentLookup<PhysicsCollider> colliderLookup;
-        [NativeDisableParallelForRestriction] public BufferLookup<InTrigger> inTriggerLookup;
-        public EntityCommandBuffer ecb;
-        public float deltaTime;
+        [ReadOnly] public BufferLookup<InTrigger> inTriggerLookup;
 
-        void Execute([ChunkIndexInQuery] int index, Entity entity, ref Bomb bomb)
+        void Execute([ChunkIndexInQuery] int index, Bomb bomb)
         {
+            if (activeEntities.Contains(bomb.entity)) return;
             var refCollider = colliderLookup.GetRefRW(bomb.entity);
-            var refBuffer = inTriggerLookup[bomb.entity];
-            bomb.currentLifeTime -= deltaTime;
-            if(bomb.currentLifeTime <= 0)
-            {
-                ecb.SetEnabled(entity, false);
-                bomb.SetDefault(refCollider, refBuffer);
-            }
+            var trigger = inTriggerLookup[bomb.entity];
+            bomb.SetDefault(refCollider, trigger);
+            bomb.ResetLifeTime();
         }
     }
 
@@ -71,27 +70,54 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-        foreach (var (bomb, collider, triggers, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>>().WithEntityAccess())
+        foreach (var (bomb, collider, triggers, transform, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>>().WithEntityAccess())
         {
-            bomb.ValueRW.lifeTime -= SystemAPI.Time.DeltaTime;
-            if(bomb.ValueRW.lifeTime <= 0)
+            bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
+            if(bomb.ValueRW.currentLifeTime <= 0)
             {
                 ecb.SetEnabled(entity, false);
                 bomb.ValueRO.SetDefault(collider, triggers);
-                
+                bomb.ValueRW.ResetLifeTime();
+                PoolData.GetEntity(new FixedString64Bytes("Flame"), transform.ValueRO.Position, ecb, state.EntityManager);
             }
         }
         ecb.Playback(state.EntityManager);
 
-        var job = new SetStaticJob()
+        var setStaticjob = new SetStaticJob()
         {
             ecb = GameSystem.ecbSystem.CreateCommandBuffer().AsParallelWriter(),
             inTriggerLookup = inTriggerLookup,
             colliderLookup = colliderLookup
         };
 
-        state.Dependency = job.ScheduleParallel(state.Dependency);
+        var activeBomb = new NativeList<Entity>(Allocator.Temp);
+        foreach (var item in SystemAPI.Query<Bomb>())
+        {
+            activeBomb.Add(item.entity);
+        }
+
+        if(activeBomb.Length > 0)
+        {
+            var parallelSet = new NativeParallelHashSet<Entity>(activeBomb.Length, Allocator.TempJob);
+            foreach (var item in activeBomb)
+            {
+                parallelSet.Add(item);
+            }
+
+            var resetJob = new ResetBombJob()
+            {
+                activeEntities = parallelSet,
+                colliderLookup = colliderLookup,
+                inTriggerLookup = inTriggerLookup
+            };
+            var resetJobHandle = resetJob.ScheduleParallel(state.Dependency);
+
+            state.Dependency = setStaticjob.ScheduleParallel(resetJobHandle);
+            state.Dependency = parallelSet.Dispose(state.Dependency);
+        }
+        else state.Dependency = setStaticjob.ScheduleParallel(state.Dependency);
         GameSystem.ecbSystem.AddJobHandleForProducer(state.Dependency);
+        activeBomb.Dispose();
     }
 
     public void OnStopRunning(ref SystemState state)

@@ -26,16 +26,16 @@ public partial class GameSystem : SystemBase
         EntityManager.AddComponent<RequestEntityPrefabLoaded>(query);
 
         PoolData.Init();
-
-        foreach(var info in SystemAPI.Query<PrefabReference>())
-        {
-            var prefabInfo = SystemAPI.GetComponentRO<EntityInfo>(info.value);
-            PoolData.RegisterPrefab(prefabInfo.ValueRO);
-        }
     }
 
     protected override void OnUpdate()
     {
+        foreach (var info in SystemAPI.Query<PrefabReference>())
+        {
+            var prefabInfo = SystemAPI.GetComponentRO<EntityInfo>(info.value);
+            PoolData.RegisterPrefab(prefabInfo.ValueRO);
+        }
+
         var mousePosition = Input.mousePosition;
 
         foreach (var mousePos in SystemAPI.Query<RefRW<MousePosition>>())

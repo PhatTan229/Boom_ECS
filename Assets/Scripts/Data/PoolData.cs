@@ -27,6 +27,7 @@ public sealed class PoolData
 
     public static void RegisterPrefab(EntityInfo info)
     {
+        if (prefabs.ContainsKey(info.Name)) return;
         prefabs.Add(info.Name, info.entity);
     }
 
@@ -39,15 +40,14 @@ public sealed class PoolData
         foreach (var item in pool)
         {
             if (entityManager.IsEnabled(item)) continue;
-            Debug.Log("Has pool");
-            ecb.SetEnabled(item, true);
             ecb.SetComponent(item, LocalTransform.FromPosition(position));
+            ecb.SetEnabled(item, true);
             return item;
         }
         var newEntity = ecb.Instantiate(prefabs[name]);
-        ecb.SetEnabled(newEntity, true);
         ecb.AddComponent(newEntity, new PoolEnity() { name = name, entity = newEntity });
         ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
+        ecb.SetEnabled(newEntity, true);
         return newEntity;
     }
 
@@ -61,16 +61,16 @@ public sealed class PoolData
         {
             if (entityManager.IsEnabled(item)) continue;
             Debug.Log("Has pool");
-            ecb.SetEnabled(item, true);
             ecb.SetComponent(item, LocalTransform.FromPosition(position));
+            ecb.SetEnabled(item, true);
             onDone?.Invoke(entityManager.GetBuffer<T>(item));
             return item;
         }
         var newEntity = ecb.Instantiate(prefabs[name]);
-        ecb.SetEnabled(newEntity, true);
         ecb.AddComponent(newEntity, new PoolEnity() { name = name, entity = newEntity });
         ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
         var buffer = ecb.AddBuffer<T>(newEntity);
+        ecb.SetEnabled(newEntity, true);
         onDone?.Invoke(buffer);
         return newEntity;
     }
