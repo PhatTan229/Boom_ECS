@@ -1,13 +1,11 @@
 ﻿using Unity.Entities;
 using UnityEngine;
-using UnityEngine.LowLevel;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class BombTrigger : IOnTrigger
 {
     private ComponentLookup<Player> playerLookup;
     private ComponentLookup<Enemy> enemyLookup;
-
+  
     public BombTrigger(ComponentLookup<Player> playerLookup, ComponentLookup<Enemy> enemyLookup)
     {
         this.playerLookup = playerLookup;
