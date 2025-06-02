@@ -81,6 +81,8 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
         var ecb = GameSystem.ecbSystem.CreateCommandBuffer();
         var transform = transformLookUp[controlable];
         var grid = GridData.Instance.GetGridCoordination(transform.Position);
+        var refGrid = SystemAPI.GetComponentRW<Grid>(grid);
+        refGrid.ValueRW.travelable = false;
         var gridPosition = transformLookUp[grid];
         PoolData.GetEntity(new FixedString64Bytes("Bomb"), gridPosition.Position, ecb, state.EntityManager);
     }

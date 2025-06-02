@@ -88,6 +88,13 @@ public class GridData : IDisposable
         return posToGrid[position];
     }
 
+    public bool WorldToGrid(float3 position, out GridPosition? gridPosition)
+    {
+        if (posToGrid.ContainsKey(position)) gridPosition = posToGrid[position];
+        else gridPosition = null;
+        return posToGrid.ContainsKey(position);
+    }
+
     public void Dispose()
     {
         if (allCells.IsCreated) allCells.Dispose();

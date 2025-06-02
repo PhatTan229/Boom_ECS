@@ -4,10 +4,12 @@ using System.Linq;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct BombSystem : ISystem, ISystemStartStop
@@ -78,7 +80,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 ecb.SetEnabled(entity, false);
                 bomb.ValueRO.SetDefault(collider, triggers);
                 bomb.ValueRW.ResetLifeTime();
-                PoolData.GetEntity(new FixedString64Bytes("Flame"), transform.ValueRO.Position, ecb, state.EntityManager);
+                var position = transform.ValueRO.Position;
+                bomb.ValueRW.Explode(position, ecb, state.EntityManager);
             }
         }
         ecb.Playback(state.EntityManager);
