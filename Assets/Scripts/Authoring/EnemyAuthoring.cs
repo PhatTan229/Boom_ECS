@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public struct Enemy : IComponentData, IKillable
+public struct Enemy : IComponentData
 {
     public void TakeDamge(RefRW<StatData> stat, float damge)
     {

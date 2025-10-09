@@ -18,19 +18,8 @@ public struct StatData : IComponentData
 }
 
 
-public struct Player : IComponentData, IKillable
+public struct Player : IComponentData
 {
-    public void TakeDamge(RefRW<StatData> stat, float damge)
-    {
-        stat.ValueRW.currentStat.HP -= damge;
-        Debug.Log($"Player take {damge} damage, {stat.ValueRW.currentStat.HP} remain");
-        if (stat.ValueRW.currentStat.HP <= 0) Die();
-    }
-
-    public void Die()
-    {
-        Debug.Log("PLAYER DIE");
-    }
 }
 
 public class PlayerAuthoring : MonoBehaviour

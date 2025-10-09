@@ -3546,22 +3546,22 @@ MonoBehaviour:
   animationStates:
   - stateName: Down
     frames: 000000000100000002000000
-    fps: 1
+    fps: 0.1
     defaultState: 1
     stateMachinescript: {fileID: 11400000, guid: ec43b7c155984fa4e905ba38c7abdac9, type: 2}
   - stateName: Left
     frames: 030000000400000005000000
-    fps: 1
+    fps: 0.1
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: 8406ae4143e0bd94cb29d8a1aa219f48, type: 2}
   - stateName: Right
     frames: 060000000700000008000000
-    fps: 1
+    fps: 0.1
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: 2eaa6d1e7cb848b4d9e3e5a9e7e4ed35, type: 2}
   - stateName: Up
     frames: 090000000a0000000b000000
-    fps: 1
+    fps: 0.1
     defaultState: 0
     stateMachinescript: {fileID: 11400000, guid: eadf6cf58fcc5a84883560837c7a952b, type: 2}
   row: 3
@@ -3680,6 +3680,8 @@ GameObject:
   - component: {fileID: 401090115}
   - component: {fileID: 401090116}
   - component: {fileID: 401090117}
+  - component: {fileID: 401090118}
+  - component: {fileID: 401090119}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4102,8 +4104,100 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stat:
-    HP: 0
+    name:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+    HP: 10
     speed: 2
+--- !u!114 &401090118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401090105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ae91b001bc86b47998533d8c5e4565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &401090119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401090105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8802fc25a6f14542a1e579c5669fdbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &407122810
 GameObject:
   m_ObjectHideFlags: 0
@@ -11216,6 +11310,8 @@ GameObject:
   - component: {fileID: 1217658502}
   - component: {fileID: 1217658504}
   - component: {fileID: 1217658505}
+  - component: {fileID: 1217658506}
+  - component: {fileID: 1217658507}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -11276,6 +11372,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stat:
+    name:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
     HP: 10
     speed: 5
 --- !u!114 &1217658502
@@ -11627,6 +11791,30 @@ MonoBehaviour:
         Tag07: 0
     m_SerializedVersion: 1
   m_SerializedVersion: 1
+--- !u!114 &1217658506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217658496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8802fc25a6f14542a1e579c5669fdbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1217658507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217658496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ae91b001bc86b47998533d8c5e4565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1220202248
 GameObject:
   m_ObjectHideFlags: 0

@@ -110,6 +110,14 @@ public static class Utils
         return new FixedString32Bytes(subStr);
     }
 
+    public static FixedString64Bytes FixString64(string str)
+    {
+        if (str.Length <= 64) return new FixedString64Bytes(str);
+        var subStr = str.Substring(0, 64);
+        return new FixedString64Bytes(subStr);
+    }
+
+
     public static T GetComponentDataInChildren<T>(Entity entity, out Entity child) where T : unmanaged, IComponentData
     {
         return GetComponentDataInChildren<T>(entity, EntityManager, out child);

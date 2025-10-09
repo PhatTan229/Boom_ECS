@@ -63,7 +63,7 @@ public class SpriteAnimationAuthoring : MonoBehaviour
     {
         public string stateName;
         public int[] frames;
-        public int fps;
+        public float fps;
         public bool defaultState;
         public StateMachineScript stateMachinescript;
 

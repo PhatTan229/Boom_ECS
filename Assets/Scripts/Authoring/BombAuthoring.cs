@@ -8,11 +8,6 @@ using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 
-public struct InTrigger : IBufferElementData
-{
-    public Entity value;
-}
-
 public struct Bomb : IComponentData, IEquatable<Bomb>
 {
     public Entity entity;
@@ -94,7 +89,6 @@ public class BombAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new Bomb(entity, authoring.lifeTime, authoring.lenght));
-            AddBuffer<InTrigger>(entity);
         }
     }
 }

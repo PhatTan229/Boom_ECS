@@ -8,10 +8,10 @@ public struct AnimationData
     public readonly int startFrame;
     public readonly int endFrame;
     public int currentFrame;
-    public int fps;
+    public float fps;
     public bool isDefault;
 
-    public AnimationData(FixedString32Bytes name, int startFrame, int endFrame, int fps, bool isDefault)
+    public AnimationData(FixedString32Bytes name, int startFrame, int endFrame, float fps, bool isDefault)
     {
         this.name = name;
         this.startFrame = startFrame;

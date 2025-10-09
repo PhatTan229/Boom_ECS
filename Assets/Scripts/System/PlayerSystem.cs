@@ -78,7 +78,10 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
         };
         state.Dependency = job.ScheduleParallel(state.Dependency);
 
-        OnTriggerContainer.Subscribe(new PlayerTrigger());
+        var enemyLookup = SystemAPI.GetComponentLookup<Enemy>();
+        var killableLookup = SystemAPI.GetComponentLookup<Killable>();
+        var statLookup = SystemAPI.GetComponentLookup<StatData>();
+        OnTriggerContainer.Subscribe(new PlayerTrigger(enemyLookup, killableLookup, statLookup));
     }
 
     public void OnUpdate(ref SystemState state)
