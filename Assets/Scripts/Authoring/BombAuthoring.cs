@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -8,19 +9,29 @@ using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 
+[Serializable]
+internal class BombData
+{
+    public float lifeTime;
+    public int lenght;
+    public PhysicsCategory targetLayer;
+}
+
 public struct Bomb : IComponentData, IEquatable<Bomb>
 {
     public Entity entity;
     public readonly int length;
     public float lifeTime;
     public float currentLifeTime;
+    public PhysicsCategory targetLayer;
 
-    public Bomb(Entity entity, float lifeTime, int lenght)
+    internal Bomb(Entity entity, BombData data)
     {
         this.entity = entity;
-        this.lifeTime = lifeTime;
+        lifeTime = data.lifeTime;
         currentLifeTime = lifeTime;
-        this.length = lenght;
+        length = data.lenght;
+        targetLayer = data.targetLayer;
     }
 
     public void ResetLifeTime()
@@ -57,11 +68,20 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
-        var wall = PhysicsUtils.Raycast(position, position + (direction * length), (uint)PhysicsCategory.Wall, collider.Value.Value.GetCollisionFilter().BelongsTo, out var hit);
-        if (wall != Entity.Null)
+        var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
+        PhysicsUtils.RaycastAll(position, position + (direction * length), (uint)targetLayer, collider.Value.Value.GetCollisionFilter().BelongsTo, ref hits);
+
+        var hitEntity = Entity.Null;
+        foreach (var item in hits)
         {
-            var wallTransform = entityManager.GetComponentData<LocalTransform>(wall);
-            fireLength = (int)math.distance(position, hit.Position);
+            if (item.Entity.Equals(entity)) continue;
+            hitEntity = item.Entity;
+            break;
+        }
+        if (!hitEntity.Equals(Entity.Null))
+        {
+            var wallTransform = entityManager.GetComponentData<LocalTransform>(hitEntity);
+            fireLength = (int)math.distance(position, wallTransform.Position);
         }
         for (int i = 1; i < fireLength; i++)
         {
@@ -80,15 +100,14 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
 
 public class BombAuthoring : MonoBehaviour
 {
-    public float lifeTime;
-    public int lenght;
+    [SerializeField] internal BombData data;
 
     class BombBaker : Baker<BombAuthoring>
     {
         public override void Bake(BombAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new Bomb(entity, authoring.lifeTime, authoring.lenght));
+            AddComponent(entity, new Bomb(entity, authoring.data));
         }
     }
 }

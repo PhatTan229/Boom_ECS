@@ -53,7 +53,7 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
         controlLookup.Update(ref state);
         velocityLookup.Update(ref state);
         statLookup.Update(ref state);
-        transformLookUp.Update(ref state);   
+        transformLookUp.Update(ref state);
 
         var input = SystemAPI.GetSingletonRW<InputStorage>();
 
