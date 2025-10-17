@@ -3783,7 +3783,7 @@ MonoBehaviour:
   m_ShapeType: 2
   m_PrimitiveCenter:
     x: 0
-    y: -0.5
+    y: 1
     z: 0
   m_PrimitiveSize:
     x: 1

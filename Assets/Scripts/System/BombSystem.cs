@@ -72,7 +72,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-        foreach (var (bomb, collider, triggers, transform, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>>().WithEntityAccess())
+        foreach (var (bomb, collider, triggers, transform, range, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>, ExplosionRange>().WithEntityAccess())
         {
             bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
             if(bomb.ValueRW.currentLifeTime <= 0)
@@ -81,7 +81,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 bomb.ValueRO.SetDefault(collider, triggers);
                 bomb.ValueRW.ResetLifeTime();
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, ecb, state.EntityManager);
+                bomb.ValueRW.Explode(position, range, ecb, state.EntityManager);
             }
         }
         ecb.Playback(state.EntityManager);

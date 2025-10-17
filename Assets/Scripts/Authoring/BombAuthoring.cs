@@ -50,7 +50,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         collider.ValueRW.Value.Value.SetCollisionResponse(CollisionResponsePolicy.Collide);
     }
 
-    public void Explode(float3 position, EntityCommandBuffer ecb, EntityManager entityManager)
+    public void Explode(float3 position, ExplosionRange range, EntityCommandBuffer ecb, EntityManager entityManager)
     {
         var gridEntity = GridData.Instance.GetGridCoordination(position);
         var grid = entityManager.GetComponentData<Grid>(gridEntity);
@@ -58,39 +58,49 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         ecb.SetComponent(gridEntity, grid);
         PoolData.GetEntity(new FixedString64Bytes("Flame"), position, ecb, entityManager);
 
-        SpawnFire(position, Direction.Up, ecb, entityManager);
-        SpawnFire(position, Direction.Down, ecb, entityManager);
-        SpawnFire(position, Direction.Left, ecb, entityManager);
-        SpawnFire(position, Direction.Right, ecb, entityManager);
-    }
+        var hitData = range.exploseRange.CheckRange(entity, position, ecb, entityManager, (uint)targetLayer, length, Allocator.Temp);
 
-    private void SpawnFire(float3 position, float3 direction, EntityCommandBuffer ecb, EntityManager entityManager)
-    {
-        var fireLength = length;
-        var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
-        var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
-        PhysicsUtils.RaycastAll(position, position + (direction * length), (uint)targetLayer, collider.Value.Value.GetCollisionFilter().BelongsTo, ref hits);
-
-        var hitEntity = Entity.Null;
-        foreach (var item in hits)
+        for (int i = 1; i < hitData.grids.Length; i++)
         {
-            if (item.Entity.Equals(entity)) continue;
-            hitEntity = item.Entity;
-            break;
-        }
-        if (!hitEntity.Equals(Entity.Null))
-        {
-            var wallTransform = entityManager.GetComponentData<LocalTransform>(hitEntity);
-            fireLength = (int)math.distance(position, wallTransform.Position);
-        }
-        for (int i = 1; i < fireLength; i++)
-        {
-            var spawnPosition = position + (direction * i);
+            var spawnPosition = entityManager.GetComponentData<LocalTransform>(hitData.grids[i]).Position;
             if (!GridData.Instance.WorldToGrid(spawnPosition, out var gridPos)) return;
-            var grid = GridData.Instance.GetCellEntityAt(gridPos.Value);
-            if (grid != null) PoolData.GetEntity(new FixedString64Bytes("Flame"), spawnPosition, ecb, entityManager);
+            var currentGrid = GridData.Instance.GetCellEntityAt(gridPos.Value);
+            if (currentGrid != null) PoolData.GetEntity(new FixedString64Bytes("Flame"), spawnPosition, ecb, entityManager);
         }
+
+        //SpawnFire(position, Direction.Up, ecb, entityManager);
+        //SpawnFire(position, Direction.Down, ecb, entityManager);
+        //SpawnFire(position, Direction.Left, ecb, entityManager);
+        //SpawnFire(position, Direction.Right, ecb, entityManager);
     }
+
+    //private void SpawnFire(float3 position, float3 direction, EntityCommandBuffer ecb, EntityManager entityManager)
+    //{
+    //    var fireLength = length;
+    //    var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
+    //    var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
+    //    PhysicsUtils.RaycastAll(position, position + (direction * length), (uint)targetLayer, collider.Value.Value.GetCollisionFilter().BelongsTo, ref hits);
+
+    //    var hitEntity = Entity.Null;
+    //    foreach (var item in hits)
+    //    {
+    //        if (item.Entity.Equals(entity)) continue;
+    //        hitEntity = item.Entity;
+    //        break;
+    //    }
+    //    if (!hitEntity.Equals(Entity.Null))
+    //    {
+    //        var wallTransform = entityManager.GetComponentData<LocalTransform>(hitEntity);
+    //        fireLength = (int)math.distance(position, wallTransform.Position);
+    //    }
+    //    for (int i = 1; i < fireLength; i++)
+    //    {
+    //        var spawnPosition = position + (direction * i);
+    //        if (!GridData.Instance.WorldToGrid(spawnPosition, out var gridPos)) return;
+    //        var grid = GridData.Instance.GetCellEntityAt(gridPos.Value);
+    //        if (grid != null) PoolData.GetEntity(new FixedString64Bytes("Flame"), spawnPosition, ecb, entityManager);
+    //    }
+    //}
 
     public bool Equals(Bomb other)
     {
