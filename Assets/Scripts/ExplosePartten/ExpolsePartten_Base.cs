@@ -25,7 +25,7 @@ public class ExplosionRange : IComponentData
 
 public interface IExploseRange
 {
-    public BombHitData CheckRange(Entity entity, float3 position, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
+    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
 }
 
 public abstract class ExpolsePartten_Base : MonoBehaviour

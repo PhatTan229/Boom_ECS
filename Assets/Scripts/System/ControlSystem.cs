@@ -80,7 +80,7 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
     {
         var ecb = GameSystem.ecbSystem.CreateCommandBuffer();
         var transform = transformLookUp[controlable];
-        var grid = GridData.Instance.GetGridCoordination(transform.Position);
+        var grid = GridData.Instance.GetGridCoordination_Entity(transform.Position);
         var refGrid = SystemAPI.GetComponentRW<Grid>(grid);
         refGrid.ValueRW.travelable = false;
         var gridPosition = transformLookUp[grid];

@@ -65,7 +65,7 @@ public partial struct PathFindingSystem : ISystem
         {
             var player = SystemAPI.GetSingletonEntity<Player>();
             var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
-            var playerGrid = GridData.Instance.GetGridCoordination(playerTransform.ValueRO.Position);
+            var playerGrid = GridData.Instance.GetGridCoordination_Entity(playerTransform.ValueRO.Position);
             var mapSize = state.EntityManager.GetSharedComponentManaged<MapSizeData>(player);
             //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
 

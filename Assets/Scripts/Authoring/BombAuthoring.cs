@@ -50,24 +50,24 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         collider.ValueRW.Value.Value.SetCollisionResponse(CollisionResponsePolicy.Collide);
     }
 
-    public void Explode(float3 position, ExplosionRange range, EntityCommandBuffer ecb, EntityManager entityManager)
+    public void Explode(float3 position, ExplosionRange range, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager)
     {
-        var gridEntity = GridData.Instance.GetGridCoordination(position);
+        var gridEntity = GridData.Instance.GetGridCoordination_Entity(position);
         var grid = entityManager.GetComponentData<Grid>(gridEntity);
         grid.travelable = true;
         ecb.SetComponent(gridEntity, grid);
         PoolData.GetEntity(new FixedString64Bytes("Flame"), position, ecb, entityManager);
 
-        var hitData = range.exploseRange.CheckRange(entity, position, ecb, entityManager, (uint)targetLayer, length, Allocator.Temp);
-
-        for (int i = 1; i < hitData.grids.Length; i++)
+        using (var hitData = range.exploseRange.CheckRange(entity, position, coordination, ecb, entityManager, (uint)targetLayer, length, Allocator.Temp))
         {
-            var spawnPosition = entityManager.GetComponentData<LocalTransform>(hitData.grids[i]).Position;
-            if (!GridData.Instance.WorldToGrid(spawnPosition, out var gridPos)) return;
-            var currentGrid = GridData.Instance.GetCellEntityAt(gridPos.Value);
-            if (currentGrid != null) PoolData.GetEntity(new FixedString64Bytes("Flame"), spawnPosition, ecb, entityManager);
+            for (int i = 1; i < hitData.grids.Length; i++)
+            {
+                var spawnPosition = entityManager.GetComponentData<LocalTransform>(hitData.grids[i]).Position;
+                if (!GridData.Instance.WorldToGrid(spawnPosition, out var gridPos)) return;
+                var currentGrid = GridData.Instance.GetCellEntityAt(gridPos.Value);
+                if (currentGrid != null) PoolData.GetEntity(new FixedString64Bytes("Flame"), spawnPosition, ecb, entityManager);
+            }
         }
-
         //SpawnFire(position, Direction.Up, ecb, entityManager);
         //SpawnFire(position, Direction.Down, ecb, entityManager);
         //SpawnFire(position, Direction.Left, ecb, entityManager);

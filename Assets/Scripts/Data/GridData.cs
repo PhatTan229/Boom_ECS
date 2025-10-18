@@ -64,7 +64,7 @@ public class GridData : IDisposable
         return entity;
     }
 
-    public Entity GetGridCoordination(float3 position)
+    public Entity GetGridCoordination_Entity(float3 position)
     {
         var nearestDistance = float.MaxValue;
         var nearestPos = float3.zero;
@@ -82,6 +82,28 @@ public class GridData : IDisposable
         var gridPos = WorldToGrid(nearestPos);
         return GetCellEntityAt(gridPos);
     }
+
+    public bool GetGridCoordination_Grid(float3 position, out Grid grid)
+    {
+        var nearestDistance = float.MaxValue;
+        var nearestPos = float3.zero;
+
+        foreach (var item in posToGrid)
+        {
+            var distance = math.distance(position, item.Key);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestPos = item.Key;
+            }
+        }
+
+        var gridPos = WorldToGrid(nearestPos);
+        var tmp = GetCellAt(gridPos);
+        grid = tmp.Value;
+        return tmp.HasValue;
+    }
+
 
     public GridPosition WorldToGrid(float3 position)
     {

@@ -81,7 +81,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 bomb.ValueRO.SetDefault(collider, triggers);
                 bomb.ValueRW.ResetLifeTime();
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, range, ecb, state.EntityManager);
+                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager);
             }
         }
         ecb.Playback(state.EntityManager);
