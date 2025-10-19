@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 using static UnityEngine.ParticleSystem;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -52,6 +53,30 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         }
     }
 
+    [BurstCompile]
+    partial struct SpawnExplodeJob : IJobEntity
+    {
+        public NativeList<float3> explodePosition;
+        public NativeList<Entity> inactiveExplosion;
+        public ComponentLookup<ParticleData> particleLookup;
+
+        void Execute([ChunkIndexInQuery] int index)
+        {
+            if (explodePosition.Length <= 0) return;
+            var i = explodePosition.Length - 1;
+            foreach (var item in inactiveExplosion)
+            {
+                if (explodePosition.Length <= 0) break;
+                var particle = particleLookup.GetRefRW(item);
+                if (particle.ValueRO.currentLifeTime > 0) continue;
+
+                particle.ValueRW.ResetLifeTime(explodePosition[i]);
+                explodePosition.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+
     private ComponentLookup<PhysicsMass> massLookup;
     private ComponentLookup<PhysicsCollider> colliderLookup;
     private BufferLookup<InTrigger> inTriggerLookup;
@@ -74,7 +99,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         inTriggerLookup.Update(ref state);
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
-        var explosion = new NativeList<float3>(Allocator.Temp);
+        var explosion = new NativeList<float3>(Allocator.TempJob);
         foreach (var (bomb, collider, triggers, transform, range, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>, ExplosionRange>().WithEntityAccess())
         {
             bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
@@ -92,13 +117,17 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         ecb.Dispose();
 
 
-        if(explosion.Length > 0)
+        if (explosion.Length > 0)
         {
-            var query = SystemAPI.QueryBuilder().WithAll<ParticleData>().WithOptions(EntityQueryOptions.IncludeDisabledEntities).Build().ToEntityArray(Allocator.Temp);
+            var query = SystemAPI.QueryBuilder().WithAll<ParticleData>().WithOptions(EntityQueryOptions.IncludeDisabledEntities).Build().ToEntityArray(Allocator.TempJob);
+            var inactiveExplosion = new NativeList<Entity>(Allocator.TempJob);
+ 
+            foreach (var item in query)
+            {
+                if (!state.EntityManager.IsEnabled(item)) inactiveExplosion.Add(item);
+            }
 
-            Debug.Log($"Query Lenght: {query.Length}");
-
-            if(query.Length == 0 || query.Length < explosion.Length)
+            if (inactiveExplosion.Length == 0 || inactiveExplosion.Length < explosion.Length)
             {
                 var newEcb = new EntityCommandBuffer(Allocator.Temp);
                 for (int i = explosion.Length - 1; i >= 0; i--)
@@ -110,23 +139,20 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             }
             else
             {
-                var i = explosion.Length - 1;
-                foreach (var item in query)
+                var spawnExplodeJob = new SpawnExplodeJob()
                 {
-                    if (explosion.Length <= 0) break;
-                    var particle = SystemAPI.GetComponentRW<ParticleData>(item);
-                    if (particle.ValueRO.currentLifeTime > 0) continue;
+                    explodePosition = explosion,
+                    inactiveExplosion = inactiveExplosion,
+                    particleLookup = state.GetComponentLookup<ParticleData>()
+                };
 
-                    var transform = SystemAPI.GetComponentRW<LocalTransform>(item);
+                state.Dependency = spawnExplodeJob.Schedule(state.Dependency);
+                state.Dependency.Complete();
+            }
 
-                    particle.ValueRW.ResetLifeTime(explosion[i]);
-                    explosion.RemoveAt(i);
-                    i--;
-                }
-            }   
+            query.Dispose();
+            inactiveExplosion.Dispose();
         }
-
-
 
         explosion.Dispose();
 
@@ -143,9 +169,9 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             activeBomb.Add(item.entity);
         }
 
+        var parallelSet = new NativeParallelHashSet<Entity>(activeBomb.Length, Allocator.TempJob);
         if (activeBomb.Length > 0)
         {
-            var parallelSet = new NativeParallelHashSet<Entity>(activeBomb.Length, Allocator.TempJob);
             foreach (var item in activeBomb)
             {
                 parallelSet.Add(item);
@@ -163,9 +189,10 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             state.Dependency = parallelSet.Dispose(state.Dependency);
         }
         else state.Dependency = setStaticjob.ScheduleParallel(state.Dependency);
-        GameSystem.ecbSystem.AddJobHandleForProducer(state.Dependency);
-        activeBomb.Dispose();
 
+        state.Dependency.Complete();
+        activeBomb.Dispose();
+        GameSystem.ecbSystem.AddJobHandleForProducer(state.Dependency);
     }
 
     public void OnStopRunning(ref SystemState state)
