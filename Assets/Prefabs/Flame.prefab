@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2383611780958788062}
   - component: {fileID: 2783832338313429678}
   - component: {fileID: 7316472530401783823}
+  - component: {fileID: 1784003938878051815}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -4928,6 +4929,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7476c7b66443bc54bb9004572aafc2f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1784003938878051815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78620282070850928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd2e80dae6b990478ed2b226bf25ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5032841125766448135

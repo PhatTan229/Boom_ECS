@@ -51,30 +51,6 @@ public sealed class PoolData
         return newEntity;
     }
 
-    public static Entity GetEntity<T>(FixedString64Bytes name, float3 position, EntityCommandBuffer ecb, EntityManager entityManager, Action<DynamicBuffer<T>> onDone) where T : unmanaged, IBufferElementData
-    {
-        if (!allPools.ContainsKey(name)) allPools.Add(name, new NativeList<Entity>(Allocator.Persistent));
-
-        var pool = allPools[name];
-
-        foreach (var item in pool)
-        {
-            if (entityManager.IsEnabled(item)) continue;
-            Debug.Log("Has pool");
-            ecb.SetComponent(item, LocalTransform.FromPosition(position));
-            ecb.SetEnabled(item, true);
-            onDone?.Invoke(entityManager.GetBuffer<T>(item));
-            return item;
-        }
-        var newEntity = ecb.Instantiate(prefabs[name]);
-        ecb.AddComponent(newEntity, new PoolEnity() { name = name, entity = newEntity });
-        ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
-        var buffer = ecb.AddBuffer<T>(newEntity);
-        ecb.SetEnabled(newEntity, true);
-        onDone?.Invoke(buffer);
-        return newEntity;
-    }
-
     public static void ProcessPool(RefRO<PoolEnity> poolEntity)
     {
         var pool = allPools[poolEntity.ValueRO.name];
