@@ -6,14 +6,14 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
-using static UnityEngine.ParticleSystem;
-using static UnityEngine.RuleTile.TilingRuleOutput;
+using static UnityEditor.Progress;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct BombSystem : ISystem, ISystemStartStop
@@ -56,24 +56,15 @@ public partial struct BombSystem : ISystem, ISystemStartStop
     [BurstCompile]
     partial struct SpawnExplodeJob : IJobEntity
     {
-        public NativeList<float3> explodePosition;
-        public NativeList<Entity> inactiveExplosion;
-        public ComponentLookup<ParticleData> particleLookup;
+        [ReadOnly] public NativeList<float3> explodePosition;
+        [ReadOnly] public NativeList<Entity> inactiveExplosion;
+        [NativeDisableParallelForRestriction] public ComponentLookup<ParticleData> particleLookup;
 
         void Execute([ChunkIndexInQuery] int index)
         {
-            if (explodePosition.Length <= 0) return;
-            var i = explodePosition.Length - 1;
-            foreach (var item in inactiveExplosion)
-            {
-                if (explodePosition.Length <= 0) break;
-                var particle = particleLookup.GetRefRW(item);
-                if (particle.ValueRO.currentLifeTime > 0) continue;
-
-                particle.ValueRW.ResetLifeTime(explodePosition[i]);
-                explodePosition.RemoveAt(i);
-                i--;
-            }
+            if (index > explodePosition.Length - 1) return;
+            var particle = particleLookup.GetRefRW(inactiveExplosion[index]);
+            particle.ValueRW.ResetLifeTime(explodePosition[index]);
         }
     }
 
@@ -116,7 +107,6 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
 
-
         if (explosion.Length > 0)
         {
             var query = SystemAPI.QueryBuilder().WithAll<ParticleData>().WithOptions(EntityQueryOptions.IncludeDisabledEntities).Build().ToEntityArray(Allocator.TempJob);
@@ -132,7 +122,9 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 var newEcb = new EntityCommandBuffer(Allocator.Temp);
                 for (int i = explosion.Length - 1; i >= 0; i--)
                 {
-                    PoolData.GetEntity(new FixedString64Bytes("Flame"), explosion[i], newEcb, state.EntityManager);
+                    var position = explosion[i];
+                    PoolData.GetEntity(new FixedString64Bytes("Flame"), position, newEcb, state.EntityManager);
+                    explosion.RemoveAt(i);
                 }
                 newEcb.Playback(state.EntityManager);
                 newEcb.Dispose();
@@ -146,7 +138,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                     particleLookup = state.GetComponentLookup<ParticleData>()
                 };
 
-                state.Dependency = spawnExplodeJob.Schedule(state.Dependency);
+                state.Dependency = spawnExplodeJob.ScheduleParallel(state.Dependency);
                 state.Dependency.Complete();
             }
 
@@ -168,6 +160,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         {
             activeBomb.Add(item.entity);
         }
+
 
         var parallelSet = new NativeParallelHashSet<Entity>(activeBomb.Length, Allocator.TempJob);
         if (activeBomb.Length > 0)
