@@ -4,6 +4,7 @@ using UnityEngine;
 
 public struct ParticleData : IComponentData
 {
+    public bool shouldActive;
     public float lifeTime { get; private set; }
     public float currentLifeTime;
     public float3 position;
@@ -13,10 +14,12 @@ public struct ParticleData : IComponentData
         this.lifeTime = lifeTime + 0.2f;
         currentLifeTime = lifeTime;
         position = new float3(1f, 1f, 1f) * -99f;
+        shouldActive = false;
     }
 
     public void ResetLifeTime(float3 position)
     {
+        shouldActive = true;
         currentLifeTime = lifeTime;
         this.position = position;
     }

@@ -10,6 +10,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
@@ -26,16 +27,15 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         [ReadOnly] public BufferLookup<InTrigger> inTriggerLookup;
         [NativeDisableParallelForRestriction] public ComponentLookup<PhysicsCollider> colliderLookup;
 
-        public void Execute([ChunkIndexInQuery] int index, Bomb bomb)
+        public void Execute([EntityIndexInQuery] int index, Bomb entity)
         {
-            SetStatic(bomb);
-            ResetBomb(bomb);
+            SetStatic(entity);
+            ResetBomb(entity);
         }
-
 
         private void SetStatic(Bomb bomb)
         {
-            if (bomb.lifeTime - bomb.currentLifeTime < 0.2f) return;
+            if (bomb.currentLifeTime > bomb.lifeTime - 2f) return;
             var refCollider = colliderLookup.GetRefRW(bomb.entity);
             var bodyType = refCollider.ValueRO.Value.Value.GetCollisionResponse();
             if (bodyType == CollisionResponsePolicy.Collide) return;
@@ -70,6 +70,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
     private ComponentLookup<PhysicsMass> massLookup;
     private ComponentLookup<PhysicsCollider> colliderLookup;
+    private ComponentLookup<Bomb> bombLookup;
     private BufferLookup<InTrigger> inTriggerLookup;
 
     public void OnStartRunning(ref SystemState state)
@@ -77,6 +78,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         massLookup = SystemAPI.GetComponentLookup<PhysicsMass>();
         colliderLookup = SystemAPI.GetComponentLookup<PhysicsCollider>();
         inTriggerLookup = SystemAPI.GetBufferLookup<InTrigger>();
+        bombLookup = SystemAPI.GetComponentLookup<Bomb>();
 
         var playerLookup = SystemAPI.GetComponentLookup<Player>();
         var enemyLookup = SystemAPI.GetComponentLookup<Enemy>();
@@ -88,6 +90,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         massLookup.Update(ref state);
         colliderLookup.Update(ref state);
         inTriggerLookup.Update(ref state);
+        bombLookup.Update(ref state);
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var explosion = new NativeList<float3>(Allocator.TempJob);
@@ -120,15 +123,12 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
             if (inactiveExplosion.Length == 0 || inactiveExplosion.Length < explosion.Length)
             {
-                //var newEcb = GameSystem.ecbSystem.CreateCommandBuffer();
                 for (int i = explosion.Length - 1; i >= 0; i--)
                 {
                     var position = explosion[i];
                     PoolData.GetEntity(new FixedString64Bytes("Flame"), position, ecb, state.EntityManager);
                     explosion.RemoveAt(i);
                 }
-                //newEcb.Playback(state.EntityManager);
-                //newEcb.Dispose();
             }
             else
             {
@@ -151,7 +151,6 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             activeBomb.Add(item.entity);
         }
 
-
         var parallelSet = new NativeParallelHashSet<Entity>(activeBomb.Length, Allocator.TempJob);
         if (activeBomb.Length > 0)
         {
@@ -167,11 +166,18 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             inTriggerLookup = inTriggerLookup,
             ecb = GameSystem.ecbSystem.CreateCommandBuffer().AsParallelWriter(),
         };
-        var posProcessHandle = posProcessJob.ScheduleParallel(state.Dependency);
+        posProcessJob.Run();
+        if(spawn)
+        {
+            state.Dependency = spawnJobHandle;
+            state.Dependency.Complete();
+        }
 
-        if (spawn) state.Dependency = JobHandle.CombineDependencies(spawnJobHandle, posProcessHandle);
-        else state.Dependency = posProcessHandle;
-        state.Dependency.Complete();
+        //var posProcessHandle = posProcessJob.ScheduleParallel(state.Dependency);
+
+        //if (spawn) state.Dependency = JobHandle.CombineDependencies(spawnJobHandle, posProcessHandle);
+        //else state.Dependency = posProcessHandle;
+        //state.Dependency.Complete();
 
         ecb.Playback(state.EntityManager);
         ecb.Dispose();

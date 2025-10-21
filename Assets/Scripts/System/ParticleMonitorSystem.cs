@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public partial struct ParticleMonitorSystem : ISystem
@@ -12,16 +13,18 @@ public partial struct ParticleMonitorSystem : ISystem
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var (ps, data, transform, entity) in SystemAPI.Query<ParticleSystemRef, RefRW<ParticleData>, RefRW<LocalTransform>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
         {
-            data.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
+            if(state.EntityManager.IsEnabled(entity)) data.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
             if (data.ValueRO.currentLifeTime <= 0)
             {
                 ecb.SetEnabled(entity, false);
+                data.ValueRW.shouldActive = false;
+                data.ValueRW.currentLifeTime = data.ValueRO.lifeTime;
             }
-            else
+            else if(data.ValueRO.currentLifeTime > 0 && data.ValueRO.shouldActive)
             {
                 ecb.SetEnabled(entity, true);
                 ps.particleSystem.Play(true);
-                if(data.ValueRO.position.y != -99f) transform.ValueRW.Position = data.ValueRO.position;
+                transform.ValueRW.Position = data.ValueRO.position;
             }
         }
 
