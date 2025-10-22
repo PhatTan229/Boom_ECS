@@ -39,15 +39,9 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         currentLifeTime = lifeTime;
     }
 
-    public void SetDefault(RefRW<PhysicsCollider> collider, DynamicBuffer<InTrigger> inTriggers)
+    public void SetDefault(DynamicBuffer<InTrigger> inTriggers)
     {
         inTriggers.Clear();
-        collider.ValueRW.Value.Value.SetCollisionResponse(CollisionResponsePolicy.RaiseTriggerEvents);
-    }
-
-    public void SetStatic(RefRW<PhysicsCollider> collider)
-    {
-        collider.ValueRW.Value.Value.SetCollisionResponse(CollisionResponsePolicy.Collide);
     }
 
     public void Explode(float3 position, ExplosionRange range, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ref NativeList<float3> explosion)

@@ -29,26 +29,31 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         public void Execute([EntityIndexInQuery] int index, Bomb entity)
         {
-            SetStatic(entity);
-            ResetBomb(entity);
+            SetStatic(entity, index);
+            ResetBomb(entity, index);
         }
 
-        private void SetStatic(Bomb bomb)
+        private void SetStatic(Bomb bomb, int index)
         {
             if (bomb.currentLifeTime > bomb.lifeTime - 2f) return;
             var refCollider = colliderLookup.GetRefRW(bomb.entity);
             var bodyType = refCollider.ValueRO.Value.Value.GetCollisionResponse();
             if (bodyType == CollisionResponsePolicy.Collide) return;
             if (inTriggerLookup[bomb.entity].Length > 0) return;
-            bomb.SetStatic(refCollider);
+            var newColliderData = refCollider.ValueRW.Value.Value.Clone();
+            newColliderData.Value.SetCollisionResponse(CollisionResponsePolicy.Collide);
+            ecb.SetComponent(index, bomb.entity, new PhysicsCollider { Value = newColliderData });
         }
 
-        private void ResetBomb(Bomb bomb)
+        private void ResetBomb(Bomb bomb, int index)
         {
             if (activeEntities.Contains(bomb.entity)) return;
             var refCollider = colliderLookup.GetRefRW(bomb.entity);
             var trigger = inTriggerLookup[bomb.entity];
-            bomb.SetDefault(refCollider, trigger);
+            var newColliderData = refCollider.ValueRW.Value.Value.Clone();
+            newColliderData.Value.SetCollisionResponse(CollisionResponsePolicy.RaiseTriggerEvents);
+            ecb.SetComponent(index, bomb.entity, new PhysicsCollider { Value = newColliderData });
+            bomb.SetDefault(trigger);
             bomb.ResetLifeTime();
         }
     }
@@ -100,7 +105,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             if (bomb.ValueRW.currentLifeTime <= 0)
             {
                 ecb.SetEnabled(entity, false);
-                bomb.ValueRO.SetDefault(collider, triggers);
+                bomb.ValueRO.SetDefault(triggers);
                 bomb.ValueRW.ResetLifeTime();
                 var position = transform.ValueRO.Position;
                 bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, ref explosion);
@@ -166,18 +171,18 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             inTriggerLookup = inTriggerLookup,
             ecb = GameSystem.ecbSystem.CreateCommandBuffer().AsParallelWriter(),
         };
-        posProcessJob.Run();
-        if(spawn)
-        {
-            state.Dependency = spawnJobHandle;
-            state.Dependency.Complete();
-        }
+        //posProcessJob.Run();
+        //if(spawn)
+        //{
+        //    state.Dependency = spawnJobHandle;
+        //    state.Dependency.Complete();
+        //}
 
-        //var posProcessHandle = posProcessJob.ScheduleParallel(state.Dependency);
+        var posProcessHandle = posProcessJob.ScheduleParallel(state.Dependency);
 
-        //if (spawn) state.Dependency = JobHandle.CombineDependencies(spawnJobHandle, posProcessHandle);
-        //else state.Dependency = posProcessHandle;
-        //state.Dependency.Complete();
+        if (spawn) state.Dependency = JobHandle.CombineDependencies(spawnJobHandle, posProcessHandle);
+        else state.Dependency = posProcessHandle;
+        state.Dependency.Complete();
 
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
