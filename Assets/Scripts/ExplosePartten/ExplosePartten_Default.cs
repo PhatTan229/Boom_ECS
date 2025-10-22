@@ -76,34 +76,6 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
             }
             if (stop) return;
         }
-
-        //PhysicsUtils.RaycastAll(position, position + (direction * length), targetLayer, collider.Value.Value.GetCollisionFilter().BelongsTo, ref hits);
-        //var hitEntity = Entity.Null;
-        //foreach (var item in hits)
-        //{
-        //    if (item.Entity.Equals(entity)) continue;
-        //    hitEntity = item.Entity;
-        //    break;
-        //}
-
-        //if (!hitEntity.Equals(Entity.Null))
-        //{
-        //    var wallTransform = entityManager.GetComponentData<LocalTransform>(hitEntity);
-        //    fireLength = (int)math.distance(position, wallTransform.Position);
-        //    if (entityManager.HasComponent<Killable>(hitEntity))
-        //    {
-        //        Debug.Log("Hit Killable");
-        //        fireLength += 1;
-        //        collection.Item1.Add(hitEntity);
-        //    }
-        //}
-
-        //for (int i = 1; i < fireLength; i++)
-        //{
-        //    var spawnPosition = position + (direction * i);
-        //    if (!GridData.Instance.WorldToGrid(spawnPosition, out var gridPos)) break;
-        //    collection.Item2.Add(GridData.Instance.GetCellEntityAt(gridPos.Value));
-        //}
     }
 
 
