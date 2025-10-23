@@ -17,37 +17,41 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
     private (NativeList<Entity>, NativeList<Entity>) leftCollection;
     private (NativeList<Entity>, NativeList<Entity>) rightCollection;
 
-    public BombHitData CheckRange(Entity entity, float3 position, float3 excludeDirection, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
+    public BombHitData CheckRange(Entity entity, float3 excludeDirection, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
         var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
-
-        //if(!Direction.Up.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Up, ecb, entityManager, targetLayer, length, allocator, ref upCollection);
-        //if (!Direction.Down.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Down, ecb, entityManager, targetLayer, length, allocator, ref downCollection);
-        //if (!Direction.Left.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Left, ecb, entityManager, targetLayer, length, allocator, ref leftCollection);
-        //if (!Direction.Right.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Right, ecb, entityManager, targetLayer, length, allocator, ref rightCollection);
-
-        CheckDirection(entity, position, coordination, Direction.Up, ecb, entityManager, targetLayer, length, allocator, ref upCollection);
-        CheckDirection(entity, position, coordination, Direction.Down, ecb, entityManager, targetLayer, length, allocator, ref downCollection);
-        CheckDirection(entity, position, coordination, Direction.Left, ecb, entityManager, targetLayer, length, allocator, ref leftCollection);
-        CheckDirection(entity, position, coordination, Direction.Right, ecb, entityManager, targetLayer, length, allocator, ref rightCollection);
-
         var killables = new NativeList<Entity>(allocator);
         var grids = new NativeList<Entity>(allocator);
 
         var origin = GridData.Instance.GetGridCoordination_Entity(position);
         grids.Add(origin);
 
-        killables.AddRange(upCollection.Item1.AsArray());
-        killables.AddRange(downCollection.Item1.AsArray());
-        killables.AddRange(leftCollection.Item1.AsArray());
-        killables.AddRange(rightCollection.Item1.AsArray());
-
-        grids.AddRange(upCollection.Item2.AsArray());
-        grids.AddRange(downCollection.Item2.AsArray());
-        grids.AddRange(leftCollection.Item2.AsArray());
-        grids.AddRange(rightCollection.Item2.AsArray());
+        if (!Direction.Up.IsEqual(excludeDirection))
+        {
+            CheckDirection(entity, position, coordination, Direction.Up, ecb, entityManager, targetLayer, length, allocator, ref upCollection);
+            killables.AddRange(upCollection.Item1.AsArray());
+            grids.AddRange(upCollection.Item2.AsArray());
+        }
+        if (!Direction.Down.IsEqual(excludeDirection))
+        {
+            CheckDirection(entity, position, coordination, Direction.Down, ecb, entityManager, targetLayer, length, allocator, ref downCollection);
+            killables.AddRange(downCollection.Item1.AsArray());
+            grids.AddRange(downCollection.Item2.AsArray());
+        }
+        if (!Direction.Left.IsEqual(excludeDirection))
+        {
+            CheckDirection(entity, position, coordination, Direction.Left, ecb, entityManager, targetLayer, length, allocator, ref leftCollection);
+            killables.AddRange(leftCollection.Item1.AsArray());
+            grids.AddRange(leftCollection.Item2.AsArray());
+        }
+        if (!Direction.Right.IsEqual(excludeDirection))
+        {
+            CheckDirection(entity, position, coordination, Direction.Right, ecb, entityManager, targetLayer, length, allocator, ref rightCollection);
+            killables.AddRange(rightCollection.Item1.AsArray());
+            grids.AddRange(rightCollection.Item2.AsArray());
+        }
 
         return new BombHitData()
         {
@@ -72,19 +76,19 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
             var grid = entityManager.GetComponentData<Grid>(gridEntity);
             if (!grid.travelable)
             {
-                //foreach (var item in coordination[grid])
-                //{
-                //    if (entityManager.HasComponent<Bomb>(item) && item != entity)
-                //    {
-                //        collection.Item1.Add(item);
-                //    }
-                //}
+                foreach (var item in coordination[grid])
+                {
+                    if (entityManager.HasComponent<Bomb>(item) && item != entity)
+                    {
+                        collection.Item1.Add(item);
+                    }
+                }
                 return;
             }
             collection.Item2.Add(gridEntity);
             foreach (var item in coordination[grid])
             {
-                if(entityManager.HasComponent<Killable>(item))
+                if (entityManager.HasComponent<Killable>(item))
                 {
                     collection.Item1.Add(item);
                     stop = true;
@@ -116,7 +120,7 @@ public class ExplosePartten_Default : ExpolsePartten_Base
         public override void Bake(ExplosePartten_Default authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponentObject(entity, new ExplosionRange() { exploseRange = new ExploseRange_Default()});
+            AddComponentObject(entity, new ExplosionRange() { exploseRange = new ExploseRange_Default() });
         }
     }
 }

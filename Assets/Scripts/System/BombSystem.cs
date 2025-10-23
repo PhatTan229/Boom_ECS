@@ -81,13 +81,6 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
             if (bomb.ValueRW.currentLifeTime <= 0)
             {
-                ecb.SetEnabled(entity, false);
-                var newColliderData = collider.ValueRW.Value.Value.Clone();
-                newColliderData.Value.SetCollisionResponse(CollisionResponsePolicy.RaiseTriggerEvents);
-                ecb.SetComponent(entity, new PhysicsCollider { Value = newColliderData });
-                bomb.ValueRO.SetDefault(triggers);
-                bomb.ValueRW.ResetLifeTime();
-                //range.excludeDirection = Direction.None;
                 var position = transform.ValueRO.Position;
                 bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, ref explosion);
             }
