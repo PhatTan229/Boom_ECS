@@ -20,12 +20,18 @@ public struct BombHitData : IDisposable
 
 public class ExplosionRange : IComponentData
 {
+    public float3 excludeDirection;
     public IExploseRange exploseRange;
+
+    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
+    {
+        return exploseRange.CheckRange(entity, excludeDirection, position, coordination, ecb, entityManager, targetLayer, length, allocator);
+    }
 }
 
 public interface IExploseRange
 {
-    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
+    BombHitData CheckRange(Entity entity, float3 excludeDirection, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
 }
 
 public abstract class ExpolsePartten_Base : MonoBehaviour

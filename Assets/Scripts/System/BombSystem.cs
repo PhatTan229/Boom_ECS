@@ -87,8 +87,9 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 ecb.SetComponent(entity, new PhysicsCollider { Value = newColliderData });
                 bomb.ValueRO.SetDefault(triggers);
                 bomb.ValueRW.ResetLifeTime();
+                //range.excludeDirection = Direction.None;
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, ref explosion);
+                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, ref explosion);
             }
         }
 

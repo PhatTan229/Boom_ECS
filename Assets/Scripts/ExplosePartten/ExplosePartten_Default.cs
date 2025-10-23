@@ -16,11 +16,17 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
     private (NativeList<Entity>, NativeList<Entity>) downCollection;
     private (NativeList<Entity>, NativeList<Entity>) leftCollection;
     private (NativeList<Entity>, NativeList<Entity>) rightCollection;
-    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
+
+    public BombHitData CheckRange(Entity entity, float3 position, float3 excludeDirection, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
         var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
+
+        //if(!Direction.Up.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Up, ecb, entityManager, targetLayer, length, allocator, ref upCollection);
+        //if (!Direction.Down.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Down, ecb, entityManager, targetLayer, length, allocator, ref downCollection);
+        //if (!Direction.Left.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Left, ecb, entityManager, targetLayer, length, allocator, ref leftCollection);
+        //if (!Direction.Right.IsEqual(excludeDirection)) CheckDirection(entity, position, coordination, Direction.Right, ecb, entityManager, targetLayer, length, allocator, ref rightCollection);
 
         CheckDirection(entity, position, coordination, Direction.Up, ecb, entityManager, targetLayer, length, allocator, ref upCollection);
         CheckDirection(entity, position, coordination, Direction.Down, ecb, entityManager, targetLayer, length, allocator, ref downCollection);
@@ -64,7 +70,17 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
             var stop = false;
             var gridEntity = GridData.Instance.GetGridCoordination_Entity(position + (direction * i));
             var grid = entityManager.GetComponentData<Grid>(gridEntity);
-            if (!grid.travelable) return;
+            if (!grid.travelable)
+            {
+                //foreach (var item in coordination[grid])
+                //{
+                //    if (entityManager.HasComponent<Bomb>(item) && item != entity)
+                //    {
+                //        collection.Item1.Add(item);
+                //    }
+                //}
+                return;
+            }
             collection.Item2.Add(gridEntity);
             foreach (var item in coordination[grid])
             {

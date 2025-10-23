@@ -35,6 +35,10 @@ public static class Utils
         return new float3(vector.x, vector.y, vector.z);
     }
 
+    public static bool IsEqual(this float3 origin, float3 other)
+    {
+        return origin.x == other.x && origin.y == other.y && origin.z == other.z;
+    }
     public static BlobAssetReference<Unity.Physics.Collider> ConvertToBlobCollider_Box(this Collider2D collider2D)
     {
         var box = (BoxCollider2D)collider2D;
