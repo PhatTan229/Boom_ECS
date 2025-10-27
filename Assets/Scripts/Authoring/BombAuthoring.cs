@@ -44,7 +44,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         inTriggers.Clear();
     }
 
-    public void Explode(float3 position, ExplosionRange range, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ref NativeList<float3> explosion)
+    public void Explode(float3 position, ExplosionRange range, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
     {
         ecb.SetEnabled(entity, false);
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
@@ -78,27 +78,18 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
             {
                 if (bombLookup.HasComponent(hitData.hits[i]))
                 {
+                    if (chainedBomb.Contains(hitData.hits[i])) continue;
+                    chainedBomb.Add(hitData.hits[i]);
                     var exploseRange = entityManager.GetComponentObject<ExplosionRange>(hitData.hits[i]);
                     var bombPosition = entityManager.GetComponentData<LocalTransform>(hitData.hits[i]).Position;
-                    var exclude = Direction.None;
-                    if (bombPosition.z == position.z)
-                    {
-                        if (bombPosition.x > position.x) exclude = Direction.Left;
-                        else exclude = Direction.Right;
-                    }
-                    else if (bombPosition.x == position.x)
-                    {
-                        if (bombPosition.z > position.z) exclude = Direction.Down;
-                        else exclude = Direction.Up;
-                    }
-                    exploseRange.excludeDirection = exclude;
-                    var bom = entityManager.GetComponentData<Bomb>(hitData.hits[i]);
-                    bom.currentLifeTime = 0f;
-                    ecb.SetComponent(hitData.hits[i], bom);
+                    //var bom = entityManager.GetComponentData<Bomb>(hitData.hits[i]);
+                    //bom.currentLifeTime = 0f;
+                    //ecb.SetComponent(hitData.hits[i], bom);
+                    var bomb = bombLookup.GetRefRW(hitData.hits[i]);
+                    bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, ref explosion, ref chainedBomb);
                 }
             }
         }
-        range.excludeDirection = Direction.None;
     }
 
     public bool Equals(Bomb other)

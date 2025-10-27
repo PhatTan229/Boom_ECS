@@ -76,16 +76,19 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var explosion = new NativeList<float3>(Allocator.TempJob);
+        var chainedBomb = new NativeList<Entity>(Allocator.Temp);
         foreach (var (bomb, collider, triggers, transform, range, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>, ExplosionRange>().WithEntityAccess())
         {
             bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
             if (bomb.ValueRW.currentLifeTime <= 0)
             {
+                chainedBomb.Add(entity);
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, ref explosion);
+                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, ref explosion, ref chainedBomb);
             }
         }
 
+        chainedBomb.Dispose();
 
         JobHandle spawnJobHandle = new JobHandle();
         var spawn = false;
@@ -105,8 +108,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 for (int i = explosion.Length - 1; i >= 0; i--)
                 {
                     var position = explosion[i];
-                    PoolData.GetEntity(new FixedString64Bytes("Flame"), position, ecb, state.EntityManager);
-                    explosion.RemoveAt(i);
+                    PoolData.Instantiate(new FixedString64Bytes("Flame"), position, ecb, state.EntityManager);
+                    explosion.RemoveAt(i); 
                 }
             }
             else

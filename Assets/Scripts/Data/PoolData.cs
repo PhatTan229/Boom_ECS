@@ -44,6 +44,12 @@ public sealed class PoolData
             ecb.SetEnabled(item, true);
             return item;
         }
+        return Instantiate(name, position, ecb, entityManager);
+    }
+
+    public static Entity Instantiate(FixedString64Bytes name, float3 position, EntityCommandBuffer ecb, EntityManager entityManager)
+    {
+        if (!allPools.ContainsKey(name)) allPools.Add(name, new NativeList<Entity>(Allocator.Persistent));
         var newEntity = ecb.Instantiate(prefabs[name]);
         ecb.AddComponent(newEntity, new PoolEnity() { name = name, entity = newEntity });
         ecb.SetComponent(newEntity, LocalTransform.FromPosition(position));
