@@ -54,6 +54,11 @@ public struct GridPosition : IEquatable<GridPosition>
         return new GridPosition(l.x - r.x, l.y - r.y);
     }
 
+    public static GridPosition operator *(GridPosition grid, int num)
+    {
+        return new GridPosition(grid.x * num, grid.y * num);
+    }
+
     public static bool operator ==(GridPosition l, GridPosition r)
     {
         return l.x == r.x && l.y == r.y;

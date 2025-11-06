@@ -17,7 +17,7 @@ public struct MapSizeData : ISharedComponentData
 
 public static class GridCooridnateCollecttion
 {
-    public static NativeHashMap<Grid, NativeList<Entity>> coordination;
+    public static NativeHashMap<GridPosition, NativeList<Entity>> coordination;
 
     public static void Dispose()
     {
@@ -35,7 +35,7 @@ public static class GridCooridnateCollecttion
 
 public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
 {
-    private NativeHashMap<Grid, NativeList<Entity>> _coordination;
+    private NativeHashMap<GridPosition, NativeList<Entity>> _coordination;
 
     public void OnStartRunning(ref SystemState state)
     {
@@ -44,7 +44,7 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
             // Dispose inner lists
             foreach (var key in GridData.Instance.allCells)
             {
-                if (_coordination.TryGetValue(key, out var oldList))
+                if (_coordination.TryGetValue(key.gridPosition, out var oldList))
                 {
                     if (oldList.IsCreated) oldList.Dispose();
                 }
@@ -53,10 +53,10 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
             _coordination = default;
         }
 
-        _coordination = new NativeHashMap<Grid, NativeList<Entity>>(GridData.Instance.MapSize, Allocator.Persistent);
+        _coordination = new NativeHashMap<GridPosition, NativeList<Entity>>(GridData.Instance.MapSize, Allocator.Persistent);
         foreach (var item in GridData.Instance.allCells)
         {
-            _coordination.Add(item, new NativeList<Entity>(Allocator.Persistent));
+            _coordination.Add(item.gridPosition, new NativeList<Entity>(Allocator.Persistent));
         }
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
@@ -72,7 +72,7 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
     {
         foreach (var item in GridData.Instance.allCells)
         {
-            if (_coordination.TryGetValue(item, out var list))
+            if (_coordination.TryGetValue(item.gridPosition, out var list))
             {
                 if (list.IsCreated)
                     list.Clear();
@@ -84,7 +84,7 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
             coord.ValueRW.CurrentGrid = GridData.Instance.GetGridCoordination_Entity(transform.ValueRO.Position);
             if (GridData.Instance.GetGridCoordination_Grid(transform.ValueRO.Position, out var grid))
             {
-                _coordination[grid].Add(entity);
+                _coordination[grid.gridPosition].Add(entity);
             }
         }
 

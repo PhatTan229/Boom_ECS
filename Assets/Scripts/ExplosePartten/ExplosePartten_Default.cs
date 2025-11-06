@@ -11,7 +11,7 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
     private (NativeList<Entity>, NativeList<Entity>) leftCollection;
     private (NativeList<Entity>, NativeList<Entity>) rightCollection;
 
-    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
+    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
@@ -43,7 +43,7 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
         };
     }
 
-    private void CheckDirection(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, float3 direction, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator, ref (NativeList<Entity>, NativeList<Entity>) collection)
+    private void CheckDirection(Entity entity, float3 position, NativeHashMap<GridPosition, NativeList<Entity>> coordination, float3 direction, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator, ref (NativeList<Entity>, NativeList<Entity>) collection)
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
@@ -59,7 +59,7 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
             var grid = entityManager.GetComponentData<Grid>(gridEntity);
             if (!grid.travelable)
             {
-                foreach (var item in coordination[grid])
+                foreach (var item in coordination[grid.gridPosition])
                 {
                     if (entityManager.HasComponent<Bomb>(item) && item != entity)
                     {
@@ -69,7 +69,7 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
                 return;
             }
             collection.Item2.Add(gridEntity);
-            foreach (var item in coordination[grid])
+            foreach (var item in coordination[grid.gridPosition])
             {
                 if (entityManager.HasComponent<Killable>(item))
                 {

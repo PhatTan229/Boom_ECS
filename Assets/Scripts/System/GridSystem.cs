@@ -14,7 +14,7 @@ public partial struct GridSystem : ISystem ,ISystemStartStop
         foreach (var (grid, entity) in SystemAPI.Query<RefRO<Grid>>().WithEntityAccess())
         {
             var buffer = ecb.SetBuffer<GridNeighbour>(entity);
-            foreach (var offset in GridData.neighbourGridPosition)
+            foreach (var offset in GridData.ajectionNeighbourGridPosition)
             {
                 var neighborEntity = GridData.Instance.GetCellEntityAt(grid.ValueRO.gridPosition + offset);
                 if (neighborEntity != Entity.Null) buffer.Add(new GridNeighbour { value = neighborEntity });

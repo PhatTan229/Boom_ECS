@@ -44,7 +44,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         inTriggers.Clear();
     }
 
-    public void Explode(float3 position, ExplosionRange range, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
+    public void Explode(float3 position, ExplosionRange range, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
     {
         ecb.SetEnabled(entity, false);
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);

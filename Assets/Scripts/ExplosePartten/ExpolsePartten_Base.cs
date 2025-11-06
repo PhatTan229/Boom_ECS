@@ -22,7 +22,7 @@ public class ExplosionRange : IComponentData
 {
     public IExploseRange exploseRange;
 
-    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
+    public BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator)
     {
         return exploseRange.CheckRange(entity, position, coordination, ecb, entityManager, targetLayer, length, allocator);
     }
@@ -30,7 +30,7 @@ public class ExplosionRange : IComponentData
 
 public interface IExploseRange
 {
-    BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<Grid, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
+    BombHitData CheckRange(Entity entity, float3 position, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, uint targetLayer, int length, Allocator allocator);
 }
 
 public abstract class ExpolsePartten_Base : MonoBehaviour

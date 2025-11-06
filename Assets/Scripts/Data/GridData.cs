@@ -15,17 +15,25 @@ public class GridData : IDisposable
     private Dictionary<float3, GridPosition> posToGrid = new Dictionary<float3, GridPosition>();
     public NativeArray<Grid> allCells;
     public NativeArray<Entity> cellEntities;
-    public static readonly GridPosition[] neighbourGridPosition = new GridPosition[]
+    public static readonly GridPosition[] ajectionNeighbourGridPosition = new GridPosition[]
     {
         new GridPosition(0, 1),
-        //new GridPosition (1,1),
         new GridPosition(1, 0),
-        //new GridPosition(1,-1),
         new GridPosition(0, -1),
-        //new GridPosition(-1, -1),
         new GridPosition(-1, 0),
-        //new GridPosition(-1,1)
     };
+
+    public static readonly GridPosition[] neighbourGridPosition = new GridPosition[]
+{
+        new GridPosition(0, 1),
+        new GridPosition (1,1),
+        new GridPosition(1, 0),
+        new GridPosition(1,-1),
+        new GridPosition(0, -1),
+        new GridPosition(-1, -1),
+        new GridPosition(-1, 0),
+        new GridPosition(-1,1)
+};
 
     public int MapSize => cellEntities.Count();
 
@@ -72,7 +80,7 @@ public class GridData : IDisposable
         foreach (var item in posToGrid)
         {
             var distance = math.distance(position, item.Key);
-            if(distance < nearestDistance)
+            if (distance < nearestDistance)
             {
                 nearestDistance = distance;
                 nearestPos = item.Key;
