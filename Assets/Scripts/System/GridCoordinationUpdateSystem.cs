@@ -9,6 +9,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public struct MapSizeData : ISharedComponentData
 {
@@ -54,12 +55,14 @@ public partial struct GridCoordinationUpdateSystem : ISystem, ISystemStartStop
         }
 
         _coordination = new NativeHashMap<GridPosition, NativeList<Entity>>(GridData.Instance.MapSize, Allocator.Persistent);
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var item in GridData.Instance.allCells)
         {
+            var entity = GridData.Instance.GetCellEntityAt(item.gridPosition);
+            ecb.AddSharedComponent(entity, new MapSizeData() { value = GridData.Instance.MapSize });
             _coordination.Add(item.gridPosition, new NativeList<Entity>(Allocator.Persistent));
         }
 
-        var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var (coord, entity) in SystemAPI.Query<GridCoordination>().WithEntityAccess())
         {
             ecb.AddSharedComponent(entity, new MapSizeData() { value = GridData.Instance.MapSize });

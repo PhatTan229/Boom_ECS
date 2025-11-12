@@ -6,16 +6,16 @@ public class PlayerStateMachine_Down : IStateMachine
 {
     public void OnStateEnter(AnimationData state)
     {
-        Debug.Log("Start Moving Down");
+        //Debug.Log("Start Moving Down");
     }
     public void OnStateUpdate(AnimationData state)
     {
-        Debug.Log("Moving Down");
+        //Debug.Log("Moving Down");
     }
 
     public void OnStateExit(AnimationData state)
     {
-        Debug.Log("Stop Moving Down");
+        //Debug.Log("Stop Moving Down");
     }
 }
 

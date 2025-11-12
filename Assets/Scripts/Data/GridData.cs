@@ -15,6 +15,8 @@ public class GridData : IDisposable
     private Dictionary<float3, GridPosition> posToGrid = new Dictionary<float3, GridPosition>();
     public NativeArray<Grid> allCells;
     public NativeArray<Entity> cellEntities;
+    public readonly int MaxRow;
+    public readonly int MaxCol;
     public static readonly GridPosition[] ajectionNeighbourGridPosition = new GridPosition[]
     {
         new GridPosition(0, 1),
@@ -54,6 +56,8 @@ public class GridData : IDisposable
         for (int i = 0; i < allCells.Length; i++)
         {
             var grid = Utils.EntityManager.GetComponentData<Grid>(cellEntities[i]);
+            if (grid.gridPosition.x > MaxRow) MaxRow = grid.gridPosition.x;
+            if (grid.gridPosition.y > MaxCol) MaxCol = grid.gridPosition.y;
             cellDic.Add(grid.gridPosition, cellEntities[i]);
             var pos = Utils.EntityManager.GetComponentData<LocalTransform>(cellEntities[i]);
             posToGrid.Add(pos.Position, grid.gridPosition);
@@ -123,6 +127,11 @@ public class GridData : IDisposable
         if (posToGrid.ContainsKey(position)) gridPosition = posToGrid[position];
         else gridPosition = null;
         return posToGrid.ContainsKey(position);
+    }
+
+    public Entity RandomGrid()
+    {
+        return cellEntities[UnityEngine.Random.Range(0, cellEntities.Length)];
     }
 
     public void Dispose()

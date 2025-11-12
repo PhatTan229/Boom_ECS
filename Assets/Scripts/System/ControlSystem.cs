@@ -41,6 +41,7 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
 
     public void OnStartRunning(ref SystemState state)
     {
+        return;
         controlable = SystemAPI.GetSingletonEntity<Controlable>();
         controlLookup = state.GetComponentLookup<Controlable>();
         velocityLookup = state.GetComponentLookup<PhysicsVelocity>();
@@ -50,6 +51,7 @@ public partial struct ControlSystem : ISystem, ISystemStartStop
 
     public void OnUpdate(ref SystemState state)
     {
+        return;
         controlLookup.Update(ref state);
         velocityLookup.Update(ref state);
         statLookup.Update(ref state);

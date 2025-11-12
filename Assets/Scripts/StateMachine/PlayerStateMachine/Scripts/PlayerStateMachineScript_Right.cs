@@ -6,16 +6,16 @@ public class PlayerStateMachine_Right : IStateMachine
 {
     public void OnStateEnter(AnimationData state)
     {
-        Debug.Log("Start Moving Right");
+        //Debug.Log("Start Moving Right");
     }
     public void OnStateUpdate(AnimationData state)
     {
-        Debug.Log("Moving Right");
+        //Debug.Log("Moving Right");
     }
 
     public void OnStateExit(AnimationData state)
     {
-        Debug.Log("Stop Moving Right");
+        //Debug.Log("Stop Moving Right");
     }
 }
 

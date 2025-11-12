@@ -22,24 +22,21 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
         {
             var buffer = bufferLookup[entity];
             var origin = gridLookup[gridCoordLookup[entity].CurrentGrid];
+            buffer.Clear();
             for (int i = 1; i <= Mathf.RoundToInt(detectablity.radius); i++)
             {
                 foreach (var neighbour in GridData.neighbourGridPosition)
                 {
                     var offset = neighbour * i;
                     var detectGrid = origin.gridPosition + offset;
-                    if (GridCooridnateCollecttion.coordination.TryGetValue(detectGrid, out var list))
+                    if (!GridCooridnateCollecttion.coordination.TryGetValue(detectGrid, out var list)) continue;
+                    foreach (var item in list)
                     {
-                        foreach (var item in list)
-                        {
-                            if (!colliderLookup.HasComponent(item)) continue;
-                            var collider = colliderLookup[item];
-                            var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
-                            if (PhysicLayerUtils.HasLayer(layerMask, detectablity.targetLayer))
-                            {
-                                buffer.Add(new DetectBuffer() { entity = item });
-                            }
-                        }
+                        if (!colliderLookup.HasComponent(item)) continue;
+                        var collider = colliderLookup[item];
+                        var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
+                        if (!PhysicLayerUtils.HasLayer(layerMask, detectablity.targetLayer)) continue;
+                        buffer.Add(new DetectBuffer() { entity = item });
                     }
                 }
             }
@@ -73,7 +70,6 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
             gridLookup = gridLookup,
             bufferLookup = detectBufferLookup
         };
-
         state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 

@@ -18,7 +18,7 @@ public class GridSpawner : MonoBehaviour
 #if UNITY_EDITOR
     private static GridAuthoring[] allGrid;
 
-    private void Awake()
+    public static void Init()
     {
         allGrid = FindObjectsOfType<GridAuthoring>();
     }
@@ -32,7 +32,7 @@ public class GridSpawner : MonoBehaviour
             {
                 if (allGrid[i].position == item.gridPosition)
                 {
-                    allGrid[i].GetComponent<SpriteRenderer>().color = Color.red;
+                    allGrid[i].GetComponentInChildren<SpriteRenderer>().color = Color.red;
                 }
             }
         }
@@ -43,7 +43,7 @@ public class GridSpawner : MonoBehaviour
         if(allGrid == null || allGrid.Length == 0) allGrid = FindObjectsOfType<GridAuthoring>();
         foreach (var item in allGrid)
         {
-            if(item.position == position) item.GetComponent<SpriteRenderer>().color = Color.red;
+            if(item.position == position) item.GetComponentInChildren<SpriteRenderer>().color = Color.red;
         }
     }
 
@@ -52,7 +52,7 @@ public class GridSpawner : MonoBehaviour
         var allGrid = FindObjectsOfType<GridAuthoring>();
         foreach (var item in allGrid)
         {
-            item.GetComponent<SpriteRenderer>().color = Color.white;
+            item.GetComponentInChildren<SpriteRenderer>().color = Color.white;
         }
     }
 #endif

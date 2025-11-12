@@ -1,8 +1,21 @@
-﻿using Unity.Burst;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+
+public static class PathFindingHelper
+{
+    public static Queue<(Entity, Entity)> pathFindingQueue = new Queue<(Entity, Entity)>();
+    
+    public static void RegisterPathFinding(Entity start, Entity end)
+    {
+        if (pathFindingQueue.Contains((start, end))) return;
+        pathFindingQueue.Enqueue((start, end));
+    }
+}
 
 public partial struct PathFindingSystem : ISystem
 {
@@ -61,26 +74,56 @@ public partial struct PathFindingSystem : ISystem
         gridCoordination.Update(ref state);
         gridLookup.Update(ref state);
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (PathFindingHelper.pathFindingQueue.Count <= 0) return;
+
+        ExecutePathFinding(ref state);
+
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    var player = SystemAPI.GetSingletonEntity<Player>();
+        //    var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
+        //    var playerGrid = GridData.Instance.GetGridCoordination_Entity(playerTransform.ValueRO.Position);
+        //    var mapSize = state.EntityManager.GetSharedComponentManaged<MapSizeData>(player);
+        //    //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
+
+        //    var job = new PathFindingJob()
+        //    {
+        //        End = playerGrid,
+        //        PathBufferLookup = pathBufferLookup,
+        //        transformLookup = transformLookup,
+        //        neibourLookup = neighbourLookup,
+        //        gridCoordination = gridCoordination,
+        //        gridLookup = gridLookup,
+        //        mapSize = mapSize.value
+        //    };
+
+        //    state.Dependency = job.ScheduleParallel(state.Dependency);
+        //}
+    }
+
+    private void ExecutePathFinding(ref SystemState state)
+    {
+        if (PathFindingHelper.pathFindingQueue.Count <= 0) return;
+
+        var (start, end) = PathFindingHelper.pathFindingQueue.Peek();
+
+        var endTransform = SystemAPI.GetComponentRO<LocalTransform>(end);
+        var endGGrid = GridData.Instance.GetGridCoordination_Entity(endTransform.ValueRO.Position);
+        var mapSize = state.EntityManager.GetSharedComponentManaged<MapSizeData>(end);
+        //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
+
+        var job = new PathFindingJob()
         {
-            var player = SystemAPI.GetSingletonEntity<Player>();
-            var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
-            var playerGrid = GridData.Instance.GetGridCoordination_Entity(playerTransform.ValueRO.Position);
-            var mapSize = state.EntityManager.GetSharedComponentManaged<MapSizeData>(player);
-            //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
+            End = endGGrid,
+            PathBufferLookup = pathBufferLookup,
+            transformLookup = transformLookup,
+            neibourLookup = neighbourLookup,
+            gridCoordination = gridCoordination,
+            gridLookup = gridLookup,
+            mapSize = mapSize.value
+        };
 
-            var job = new PathFindingJob()
-            {
-                End = playerGrid,
-                PathBufferLookup = pathBufferLookup,
-                transformLookup = transformLookup,
-                neibourLookup = neighbourLookup,
-                gridCoordination = gridCoordination,
-                gridLookup = gridLookup,
-                mapSize = mapSize.value
-            };
-
-            state.Dependency = job.ScheduleParallel(state.Dependency);
-        }
+        PathFindingHelper.pathFindingQueue.Dequeue();
+        state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 }

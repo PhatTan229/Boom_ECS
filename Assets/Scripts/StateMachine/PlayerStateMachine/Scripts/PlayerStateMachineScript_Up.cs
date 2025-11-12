@@ -7,16 +7,16 @@ public class PlayerStateMachine_Up : IStateMachine
 {
     public void OnStateEnter(AnimationData state)
     {
-        Debug.Log("Start Moving Up");
+        //Debug.Log("Start Moving Up");
     }
     public void OnStateUpdate(AnimationData state)
     {
-        Debug.Log("Moving Up");
+        //Debug.Log("Moving Up");
     }
 
     public void OnStateExit(AnimationData state)
     {
-        Debug.Log("Stop Moving Up");
+        //Debug.Log("Stop Moving Up");
     }
 }
 
