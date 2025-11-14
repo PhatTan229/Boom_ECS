@@ -11,6 +11,13 @@ using UnityEngine;
 
 public static class Utils
 {
+    public static readonly float3[] Directions = new float3[]
+    {
+        Direction.Up,
+        Direction.Down,
+        Direction.Left,
+        Direction.Right,
+    };
     public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
     public static FixedString32Bytes FixString32_Emty => new FixedString32Bytes();
 

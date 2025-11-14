@@ -23,13 +23,13 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
             var buffer = bufferLookup[entity];
             var origin = gridLookup[gridCoordLookup[entity].CurrentGrid];
             buffer.Clear();
-            for (int i = 1; i <= Mathf.RoundToInt(detectablity.radius); i++)
+            var radius = Mathf.RoundToInt(detectablity.radius);
+            for (int x = -radius; x <= radius; x++)
             {
-                foreach (var neighbour in GridData.neighbourGridPosition)
+                for (int y = -radius; y <= radius; y++)
                 {
-                    var offset = neighbour * i;
-                    var detectGrid = origin.gridPosition + offset;
-                    if (!GridCooridnateCollecttion.coordination.TryGetValue(detectGrid, out var list)) continue;
+                    var gridPos = new GridPosition(x, y) + origin.gridPosition;
+                    if (!GridCooridnateCollecttion.coordination.TryGetValue(gridPos, out var list)) continue;
                     foreach (var item in list)
                     {
                         if (!colliderLookup.HasComponent(item)) continue;
@@ -39,6 +39,20 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
                         buffer.Add(new DetectBuffer() { entity = item });
                     }
                 }
+                //foreach (var neighbour in GridData.neighbourGridPosition)
+                //{
+                //    var offset = neighbour * x;
+                //    var detectGrid = origin.gridPosition + offset;
+                //    if (!GridCooridnateCollecttion.coordination.TryGetValue(detectGrid, out var list)) continue;
+                //    foreach (var item in list)
+                //    {
+                //        if (!colliderLookup.HasComponent(item)) continue;
+                //        var collider = colliderLookup[item];
+                //        var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
+                //        if (!PhysicLayerUtils.HasLayer(layerMask, detectablity.targetLayer)) continue;
+                //        buffer.Add(new DetectBuffer() { entity = item });
+                //    }
+                //}
             }
         }
     }
@@ -70,6 +84,7 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
             gridLookup = gridLookup,
             bufferLookup = detectBufferLookup
         };
+
         state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 

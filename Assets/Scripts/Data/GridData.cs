@@ -26,16 +26,16 @@ public class GridData : IDisposable
     };
 
     public static readonly GridPosition[] neighbourGridPosition = new GridPosition[]
-{
+    {
+        new GridPosition(-1, -1),
         new GridPosition(0, 1),
-        new GridPosition (1,1),
         new GridPosition(1, 0),
         new GridPosition(1,-1),
         new GridPosition(0, -1),
-        new GridPosition(-1, -1),
         new GridPosition(-1, 0),
-        new GridPosition(-1,1)
-};
+        new GridPosition(-1,1),
+        new GridPosition (1,1),
+    };
 
     public int MapSize => cellEntities.Count();
 
