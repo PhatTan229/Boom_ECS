@@ -77,28 +77,6 @@ public partial struct PathFindingSystem : ISystem
         if (PathFindingHelper.pathFindingQueue.Count <= 0) return;
 
         ExecutePathFinding(ref state);
-
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    var player = SystemAPI.GetSingletonEntity<Player>();
-        //    var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(player);
-        //    var playerGrid = GridData.Instance.GetGridCoordination_Entity(playerTransform.ValueRO.Position);
-        //    var mapSize = state.EntityManager.GetSharedComponentManaged<MapSizeData>(player);
-        //    //DebugUtils.Log($"Player Grid {Utils.EntityManager.GetComponentData<Grid>(playerGrid).gridPosition}");
-
-        //    var job = new PathFindingJob()
-        //    {
-        //        End = playerGrid,
-        //        PathBufferLookup = pathBufferLookup,
-        //        transformLookup = transformLookup,
-        //        neibourLookup = neighbourLookup,
-        //        gridCoordination = gridCoordination,
-        //        gridLookup = gridLookup,
-        //        mapSize = mapSize.value
-        //    };
-
-        //    state.Dependency = job.ScheduleParallel(state.Dependency);
-        //}
     }
 
     private void ExecutePathFinding(ref SystemState state)

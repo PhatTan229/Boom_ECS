@@ -19,11 +19,25 @@ public struct SpriteAnimationUpdate : IComponentData
 public struct SpriteAnimation : IComponentData
 {
     public UnityObjectRef<Material> material;
-    public FixedString32Bytes currentSate;
+    private FixedString32Bytes currentSate;
     public readonly int row;
     public readonly int col;
     public int index;
-    public float elapsedTime;
+    public double elapsedTime;
+
+    public FixedString32Bytes CurrentSate
+    {
+        get => currentSate;
+        set
+        {
+            if(value != currentSate)
+            {
+                elapsedTime = 0;
+                index = 0;
+            }
+            currentSate = value;
+        }
+    }
 
     public SpriteAnimation(Material material, int row, int col)
     {
@@ -35,10 +49,10 @@ public struct SpriteAnimation : IComponentData
         index = 0;
     }
 
-    public void UpdateAnimation(ref AnimationData data, float deltaTime)
+    public void UpdateAnimation(ref AnimationData data, double deltaTime)
     {
         index = data.currentFrame;
-        currentSate = data.name;
+        CurrentSate = data.name;
         var interval = 1 / data.fps;
         elapsedTime += deltaTime;
         if (elapsedTime < interval) return;

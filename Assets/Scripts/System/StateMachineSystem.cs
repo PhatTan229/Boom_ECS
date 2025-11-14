@@ -29,23 +29,23 @@ public partial struct StateMachineSystem : ISystem, ISystemStartStop
         {
             if (!currentStatesMap.ContainsKey(entity)) AddState(ref system, entity);
             var state = currentStatesMap[entity];
-            if (state != animation.ValueRW.currentSate)
+            if (state != animation.ValueRW.CurrentSate)
             {
                 var exitState = stateMachine.stateMachines[state];
                 var exitData = statesBuffer.GetBufferElement(x => x.state.name == state);
                 exitState.OnStateExit(exitData.state);
 
-                var enterState = stateMachine.stateMachines[animation.ValueRW.currentSate];
-                var enterData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.currentSate);
+                var enterState = stateMachine.stateMachines[animation.ValueRW.CurrentSate];
+                var enterData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.CurrentSate);
                 enterState.OnStateEnter(exitData.state);
             }
             else
             {
-                var currentState = stateMachine.stateMachines[animation.ValueRW.currentSate];
-                var updateData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.currentSate);
+                var currentState = stateMachine.stateMachines[animation.ValueRW.CurrentSate];
+                var updateData = statesBuffer.GetBufferElement(x => x.state.name == animation.ValueRW.CurrentSate);
                 currentState.OnStateUpdate(updateData.state);
             }
-            currentStatesMap[entity] = animation.ValueRW.currentSate;
+            currentStatesMap[entity] = animation.ValueRW.CurrentSate;
         }
     }
 
@@ -53,7 +53,7 @@ public partial struct StateMachineSystem : ISystem, ISystemStartStop
     {
         var state = SystemAPI.GetComponentRO<SpriteAnimation>(entity);
         if (currentStatesMap.Count >= currentStatesMap.Capacity) IncreaseSize(ref system);
-        currentStatesMap.Add(entity, state.ValueRO.currentSate);
+        currentStatesMap.Add(entity, state.ValueRO.CurrentSate);
     }
 
     private void IncreaseSize(ref SystemState state)

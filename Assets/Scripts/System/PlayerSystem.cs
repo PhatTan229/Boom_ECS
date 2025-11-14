@@ -6,56 +6,56 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+[BurstCompile]
+partial struct SetAnimationJob : IJobEntity
+{
+    public Entity entity;
+    [NativeDisableParallelForRestriction] public BufferLookup<AnimationStateBuffer> stateLookup;
+    [NativeDisableParallelForRestriction] public ComponentLookup<SpriteAnimation> animaitonLookup;
+    [ReadOnly] public BufferLookup<Child> childLookup;
+    public FixedString32Bytes stateName;
+    public double deltaTime;
+    //[NativeDisableParallelForRestriction] public NativeHashMap<FixedString32Bytes, AnimationData> outputData;
+
+    void Execute([ChunkIndexInQuery] int index)
+    {
+        for (int i = 0; i < childLookup[entity].Length; i++)
+        {
+            var child = childLookup[entity][i].Value;
+            if (animaitonLookup.HasComponent(child))
+            {
+                PlayAnimation(child, animaitonLookup[child], stateName);
+                return;
+            }
+        }
+    }
+
+    private void PlayAnimation(Entity entity, SpriteAnimation animation, FixedString32Bytes stateName)
+    {
+        var allState = stateLookup[entity];
+        for (int i = 0; i < allState.Length; i++)
+        {
+            if (allState[i].state.name == stateName || (stateName == Utils.FixString32_Emty && allState[i].state.isDefault))
+            {
+                var data = allState[i];
+                animation.UpdateAnimation(ref data.state, deltaTime);
+                allState[i] = data;
+            }
+            //outputData[allState[i].state.name] = allState[i].state;
+        }
+        animaitonLookup[entity] = animation;
+    }
+}
+
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 [BurstCompile]
 public partial struct PlayerSystem : ISystem, ISystemStartStop
 {
-    [BurstCompile]
-    partial struct SetAnimationJob : IJobEntity
-    {
-        public Entity player;
-        [NativeDisableParallelForRestriction] public BufferLookup<AnimationStateBuffer> stateLookup;
-        [NativeDisableParallelForRestriction] public ComponentLookup<SpriteAnimation> animaitonLookup;
-        [ReadOnly] public BufferLookup<Child> childLookup;
-        public FixedString32Bytes stateName;
-        public float deltaTime;
-        [NativeDisableParallelForRestriction] public NativeHashMap<FixedString32Bytes, AnimationData> outputData;
-
-        void Execute([ChunkIndexInQuery] int index)
-        {
-            for (int i = 0; i < childLookup[player].Length; i++)
-            {
-                var child = childLookup[player][i].Value;
-                if (animaitonLookup.HasComponent(child))
-                {
-                    PlayAnimation(child, animaitonLookup[child], stateName);
-                    return;
-                }
-            }
-        }
-
-        private void PlayAnimation(Entity entity, SpriteAnimation animation, FixedString32Bytes stateName)
-        {
-            var allState = stateLookup[entity];
-            for (int i = 0; i < allState.Length; i++)
-            {
-                if(allState[i].state.name == stateName || (stateName == Utils.FixString32_Emty && allState[i].state.isDefault))
-                {
-                    var data = allState[i];
-                    animation.UpdateAnimation(ref data.state, deltaTime);
-                    allState[i] = data;
-                }
-                outputData[allState[i].state.name] = allState[i].state;
-            }
-            animaitonLookup[entity] = animation;
-        }
-    }
-
     private Entity player;
     private BufferLookup<AnimationStateBuffer> stateLookup;
     private BufferLookup<Child> childLookup;
     private ComponentLookup<SpriteAnimation> animaitonLookup;
-    private NativeHashMap<FixedString32Bytes, AnimationData> data;
+    //private NativeHashMap<FixedString32Bytes, AnimationData> data;
 
     public void OnStartRunning(ref SystemState state)
     {
@@ -64,17 +64,17 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
         stateLookup = SystemAPI.GetBufferLookup<AnimationStateBuffer>();
         childLookup = SystemAPI.GetBufferLookup<Child>();
         animaitonLookup = SystemAPI.GetComponentLookup<SpriteAnimation>();
-        var states = Utils.GetBufferInChildren(player, childLookup, stateLookup);
-        data = new NativeHashMap<FixedString32Bytes, AnimationData>(states.Length, Allocator.Persistent);
+        //var states = Utils.GetBufferInChildren(player, childLookup, stateLookup);
+        //data = new NativeHashMap<FixedString32Bytes, AnimationData>(states.Length, Allocator.Persistent);
         var job = new SetAnimationJob()
         {
-            player = player,
+            entity = player,
             stateLookup = stateLookup,
             animaitonLookup = animaitonLookup,
             childLookup = childLookup,
             deltaTime = SystemAPI.Time.DeltaTime,
             stateName = Utils.FixString32_Emty,
-            outputData = data
+            //outputData = data
 
         };
         state.Dependency = job.ScheduleParallel(state.Dependency);
@@ -103,13 +103,13 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
         var job = new SetAnimationJob()
         {
-            player = player,
+            entity = player,
             stateLookup = stateLookup,
             animaitonLookup = animaitonLookup,
             childLookup = childLookup,
             deltaTime = SystemAPI.Time.DeltaTime,
             stateName = stateName,
-            outputData = data
+            //outputData = data
         };
 
         state.Dependency = job.ScheduleParallel(state.Dependency);  
@@ -117,7 +117,7 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnStopRunning(ref SystemState state)
     {
-        return;
-        data.Dispose();
+        //return;
+        //data.Dispose();
     }
 }
