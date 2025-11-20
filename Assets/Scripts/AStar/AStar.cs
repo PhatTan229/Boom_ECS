@@ -172,30 +172,59 @@ public static class AStar
 
     public static NativeList<Entity> GetTravelableGrids(GridPosition position, Allocator allocator = Allocator.Temp)
     {
-        var travelable = new NativeList<Entity>(allocator);
-        CheckNeighbourGrids(position, travelable);
-        return travelable;
-    }
+        var result = new NativeList<Entity>(allocator);
+        var visited = new NativeHashSet<Entity>(100, allocator);
+        var queue = new NativeQueue<GridPosition>(allocator);
 
-    private static void CheckNeighbourGrids(GridPosition position, NativeList<Entity> travelable)
-    {
-        var startGrid = GridData.Instance.GetCellAt(position).Value;
+        queue.Enqueue(position);
 
-        foreach (var item in GridData.ajectionNeighbourGridPosition)
+        while (queue.TryDequeue(out var pos))
         {
-            var neighbour = position + item;
-            var grid = GridData.Instance.GetCellAt(neighbour);
-            if (grid.HasValue && grid.Value.travelable)
+            var cellOpt = GridData.Instance.GetCellAt(pos);
+            if (!cellOpt.HasValue) continue;
+
+            var cell = cellOpt.Value;
+            if (!cell.travelable) continue;
+
+            var entity = GridData.Instance.GetCellEntityAt(pos);
+
+            if (!visited.Add(entity))
+                continue;
+
+            result.Add(entity);
+
+            foreach (var offset in GridData.ajectionNeighbourGridPosition)
             {
-                var gridEntity = GridData.Instance.GetCellEntityAt(neighbour);
-                if (!travelable.Contains(gridEntity))
-                {
-                    travelable.Add(gridEntity);
-                    CheckNeighbourGrids(neighbour, travelable);
-                }
+                var next = pos + offset;
+                queue.Enqueue(next);
             }
         }
+
+        visited.Dispose();
+        queue.Dispose();
+
+        return result;
     }
+
+    //private static void CheckNeighbourGrids(GridPosition position, NativeList<Entity> travelable)
+    //{
+    //    var startGrid = GridData.Instance.GetCellAt(position).Value;
+
+    //    foreach (var item in GridData.ajectionNeighbourGridPosition)
+    //    {
+    //        var neighbour = position + item;
+    //        var grid = GridData.Instance.GetCellAt(neighbour);
+    //        if (grid.HasValue && grid.Value.travelable)
+    //        {
+    //            var gridEntity = GridData.Instance.GetCellEntityAt(neighbour);
+    //            if (!travelable.Contains(gridEntity))
+    //            {
+    //                travelable.Add(gridEntity);
+    //                CheckNeighbourGrids(neighbour, travelable);
+    //            }
+    //        }
+    //    }
+    //}
 
     private static Entity GetConnection(Entity currentEntity)
     {

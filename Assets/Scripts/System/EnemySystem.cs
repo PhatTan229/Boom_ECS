@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -37,25 +38,54 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         foreach (var (detector, enemy, coord, pathfinding, path, stat, velocity, entity) in SystemAPI.Query<DynamicBuffer<DetectBuffer>, RefRW<Enemy>, RefRO<GridCoordination>, RefRW<PathFinding>, DynamicBuffer<Path>, RefRO<StatData>, RefRO<PhysicsVelocity>>().WithEntityAccess())
         {
             UpdateAnimation(ref state, entity, path, coord);
-            if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value) continue;
-
-            var target = Entity.Null;
-            foreach (var item in detector)
+            if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value)
             {
-                if (!playerLookup.HasComponent(item.entity)) continue;
-                if (stat.ValueRO.currentStat.HP > 0)
-                {
-                    target = item.entity;
-                }
+                if(IsPathDirty(ref state, path)) PathFindingHelper.RegisterClearPath(entity);
+                continue;
             }
-            if (target != Entity.Null)
+
+            var currentGrid = SystemAPI.GetComponentRO<Grid>(coord.ValueRO.CurrentGrid);
+            var travelable = AStar.GetTravelableGrids(currentGrid.ValueRO.gridPosition);
+
+            var target = FindTarget(ref state, detector, stat);
+            if (target == Entity.Null)
+            {
+                Patrol(ref state, coord, pathfinding, entity);
+                continue;
+            }
+            var targetGrid = SystemAPI.GetComponentRO<Grid>(target);
+            if (travelable.Contains(GridData.Instance.GetCellEntityAt(targetGrid.ValueRO.gridPosition)))
             {
                 pathfinding.ValueRW.currentIndex = 0;
                 PathFindingHelper.RegisterPathFinding(entity, target);
             }
             else Patrol(ref state, coord, pathfinding, entity);
-
         }
+    }
+
+    private bool IsPathDirty(ref SystemState state, DynamicBuffer<Path> path)
+    {
+        foreach (var item in path)
+        {
+            var grid = state.EntityManager.GetComponentData<Grid>(item.value);
+            if (!grid.travelable) return true;
+        }
+        return false;
+    }
+
+    private Entity FindTarget(ref SystemState state, DynamicBuffer<DetectBuffer> detector, RefRO<StatData> stat)
+    {
+        var target = Entity.Null;
+        foreach (var item in detector)
+        {
+            if (!playerLookup.HasComponent(item.entity)) continue;
+            if (stat.ValueRO.currentStat.HP > 0)
+            {
+                target = item.entity;
+            }
+        }
+
+        return target;
     }
 
     private void UpdateAnimation(ref SystemState state, Entity entity, DynamicBuffer<Path> path, RefRO<GridCoordination> coord)
@@ -70,7 +100,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
             if (currentGrid == grid)
             {
                 index = i;
-                if (i < path.Length - 1) index++; 
+                if (i < path.Length - 1) index++;
                 break;
             }
         }
@@ -85,7 +115,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         var childs = SystemAPI.GetBuffer<Child>(entity);
         foreach (var item in childs)
         {
-            if(animaitonLookup.HasComponent(item.Value))
+            if (animaitonLookup.HasComponent(item.Value))
             {
                 currentState = animaitonLookup[item.Value].CurrentSate;
             }

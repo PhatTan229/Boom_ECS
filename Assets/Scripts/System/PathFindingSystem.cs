@@ -4,16 +4,25 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public static class PathFindingHelper
 {
     public static Queue<(Entity, Entity)> pathFindingQueue = new Queue<(Entity, Entity)>();
+    public static Queue<Entity> clearPathQueue = new Queue<Entity>();
     
     public static void RegisterPathFinding(Entity start, Entity end)
     {
         if (pathFindingQueue.Contains((start, end))) return;
         pathFindingQueue.Enqueue((start, end));
+    }
+
+    public static void RegisterClearPath(Entity entity)
+    {
+        if (clearPathQueue.Contains(entity)) return;
+        clearPathQueue.Enqueue(entity);
     }
 }
 
@@ -74,9 +83,23 @@ public partial struct PathFindingSystem : ISystem
         gridCoordination.Update(ref state);
         gridLookup.Update(ref state);
 
-        if (PathFindingHelper.pathFindingQueue.Count <= 0) return;
-
+        ExecuteClearPath(ref state);
         ExecutePathFinding(ref state);
+    }
+
+    private void ExecuteClearPath(ref SystemState state)
+    {
+        if (PathFindingHelper.clearPathQueue.Count <= 0) return;
+        var entity = PathFindingHelper.clearPathQueue.Peek();
+        var coord = gridCoordination[entity];
+        var path = pathBufferLookup[entity];
+
+        for (int i = path.Length - 1; i >= 0; i--)
+        {
+            if (coord.CurrentGrid == path[i].value) break;
+            path.RemoveAt(i);
+        }
+        PathFindingHelper.clearPathQueue.Dequeue();
     }
 
     private void ExecutePathFinding(ref SystemState state)
