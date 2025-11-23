@@ -37,13 +37,13 @@ public partial struct SpriteAnimationSystem : ISystem, ISystemStartStop
 
     public void OnStartRunning(ref SystemState state)
     {
-        query = state.GetEntityQuery(ComponentType.ReadWrite<SpriteAnimationUpdate>(), ComponentType.ReadOnly<SpriteAnimation>());
         updateHandler = state.GetComponentTypeHandle<SpriteAnimationUpdate>();
         animationHandler = state.GetComponentTypeHandle<SpriteAnimation>(true);
     }
 
     public void OnUpdate(ref SystemState state)
     {
+        query = state.GetEntityQuery(ComponentType.ReadWrite<SpriteAnimationUpdate>(), ComponentType.ReadOnly<SpriteAnimation>());
         updateHandler.Update(ref state);
         animationHandler.Update(ref state);
 

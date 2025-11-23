@@ -29,30 +29,21 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
                 for (int y = -radius; y <= radius; y++)
                 {
                     var gridPos = new GridPosition(x, y) + origin.gridPosition;
-                    if (!GridCooridnateCollecttion.coordination.TryGetValue(gridPos, out var list)) continue;
-                    foreach (var item in list)
-                    {
-                        if (!colliderLookup.HasComponent(item)) continue;
-                        var collider = colliderLookup[item];
-                        var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
-                        if (!PhysicLayerUtils.HasLayer(layerMask, detectablity.targetLayer)) continue;
-                        buffer.Add(new DetectBuffer() { entity = item });
-                    }
+                    CheckGrid(detectablity.targetLayer, ref buffer, gridPos);
                 }
-                //foreach (var neighbour in GridData.neighbourGridPosition)
-                //{
-                //    var offset = neighbour * x;
-                //    var detectGrid = origin.gridPosition + offset;
-                //    if (!GridCooridnateCollecttion.coordination.TryGetValue(detectGrid, out var list)) continue;
-                //    foreach (var item in list)
-                //    {
-                //        if (!colliderLookup.HasComponent(item)) continue;
-                //        var collider = colliderLookup[item];
-                //        var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
-                //        if (!PhysicLayerUtils.HasLayer(layerMask, detectablity.targetLayer)) continue;
-                //        buffer.Add(new DetectBuffer() { entity = item });
-                //    }
-                //}
+            }
+        }
+
+        private void CheckGrid(PhysicsCategory targetLayer, ref DynamicBuffer<DetectBuffer> buffer, GridPosition gridPos)
+        {
+            if (!GridCooridnateCollecttion.coordination.TryGetValue(gridPos, out var list)) return;
+            foreach (var item in list)
+            {
+                if (!colliderLookup.HasComponent(item)) continue;
+                var collider = colliderLookup[item];
+                var layerMask = collider.Value.Value.GetCollisionFilter().BelongsTo;
+                if (!PhysicLayerUtils.HasLayer(layerMask, targetLayer)) continue;
+                buffer.Add(new DetectBuffer() { entity = item });
             }
         }
     }
@@ -62,6 +53,7 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
     private ComponentLookup<Grid> gridLookup;
     private BufferLookup<DetectBuffer> detectBufferLookup;
 
+    [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
         colliderLookup = state.GetComponentLookup<PhysicsCollider>();
@@ -70,6 +62,7 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
         detectBufferLookup = state.GetBufferLookup<DetectBuffer>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         colliderLookup.Update(ref state);
@@ -88,6 +81,7 @@ public partial struct DetectSystem : ISystem, ISystemStartStop
         state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 
+    [BurstCompile]
     public void OnStopRunning(ref SystemState state)
     {
     }

@@ -10,6 +10,11 @@ public struct DetectBuffer : IBufferElementData
     public Entity entity;
 }
 
+public struct DetectGridBuffer : IBufferElementData
+{
+    public GridPosition gridPosition;
+}
+
 public struct Detectablity : IComponentData
 {
     public float radius;
@@ -19,6 +24,7 @@ public struct Detectablity : IComponentData
 public class DetectAuthoring : MonoBehaviour
 {
     public float radius;
+    public GridPosition[] additions;
     public PhysicsCategory targetLayer;
 
     class DetectAuthoringBaker : Baker<DetectAuthoring>
@@ -32,7 +38,11 @@ public class DetectAuthoring : MonoBehaviour
                 targetLayer = authoring.targetLayer
             });
             AddBuffer<DetectBuffer>(entity);
-
+            var buffer = AddBuffer<DetectGridBuffer>(entity);
+            foreach (var item in authoring.additions)
+            {
+                buffer.Add(new DetectGridBuffer() { gridPosition = item });
+            }
         }
     }
 }

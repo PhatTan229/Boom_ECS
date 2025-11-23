@@ -113,6 +113,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
 
         var currentState = Utils.FixString32_Emty;
         var childs = SystemAPI.GetBuffer<Child>(entity);
+
         foreach (var item in childs)
         {
             if (animaitonLookup.HasComponent(item.Value))

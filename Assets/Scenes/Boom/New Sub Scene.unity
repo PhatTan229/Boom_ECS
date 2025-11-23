@@ -11831,7 +11831,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0315656984535b34a9a79408ca9eaaf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 3
+  radius: 5
+  additions: []
   targetLayer: 1
 --- !u!1 &1220202248
 GameObject:
@@ -13450,6 +13451,7 @@ GameObject:
   - component: {fileID: 1416231554}
   - component: {fileID: 1416231556}
   - component: {fileID: 1416231555}
+  - component: {fileID: 1416231557}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -13522,6 +13524,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 4300000, guid: c88f4a81fd3d62f4699188a031872c7e, type: 2}
   material: {fileID: 2100000, guid: 3687508188addb24c8b9bc873cb5ef86, type: 2}
+--- !u!114 &1416231557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416231553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca5dcf4c68095d4fbc231f7c9aafd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteAuthoring: {fileID: 1416231556}
+  fadeColor: {r: 0.8962264, g: 0.47297648, b: 0.114142045, a: 0}
 --- !u!1 &1416425193
 GameObject:
   m_ObjectHideFlags: 0
