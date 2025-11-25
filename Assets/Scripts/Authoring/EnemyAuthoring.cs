@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+
 
 [Serializable]
 public struct PathFindingStat
@@ -18,6 +21,7 @@ public struct Enemy : IComponentData
 
 public class EnemyAuthoring : MonoBehaviour
 {
+    public string name = "";
     public StatValue stat;
     public PathFindingStat pathFindingStat;
 
@@ -27,7 +31,7 @@ public class EnemyAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new Enemy() { pathFindingStat = authoring.pathFindingStat});
-            AddComponent(entity, new StatData(authoring.stat));
+            AddComponent(entity, new StatData(authoring.stat, authoring.name));
         }
     }
 }

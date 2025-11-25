@@ -10,8 +10,9 @@ public struct StatData : IComponentData
     public readonly StatValue baseStat;
     public StatValue currentStat;
 
-    public StatData(StatValue value)
+    public StatData(StatValue value, string name)
     {
+        value.name = Utils.FixString64(name);
         baseStat = value;
         currentStat = value;
     }
@@ -24,6 +25,7 @@ public struct Player : IComponentData
 
 public class PlayerAuthoring : MonoBehaviour
 {
+    public string name = "";
     public StatValue stat;
     class PlayerAuthoringBaker : Baker<PlayerAuthoring>
     {
@@ -31,7 +33,7 @@ public class PlayerAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<Player>(entity);
-            AddComponent(entity, new StatData(authoring.stat));
+            AddComponent(entity, new StatData(authoring.stat, authoring.name));
         }
     }
 }

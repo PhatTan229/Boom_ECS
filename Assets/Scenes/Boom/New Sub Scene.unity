@@ -3688,7 +3688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &401090107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4103,6 +4103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8f3c25bda80a147ac1ed25a6575fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Player
   stat:
     name:
       utf8LengthInBytes: 0
@@ -11372,6 +11373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa86ddaba0bea64e888b6abc02b2900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Bat
   stat:
     name:
       utf8LengthInBytes: 0

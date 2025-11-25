@@ -53,6 +53,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
     private ComponentLookup<PhysicsMass> massLookup;
     private ComponentLookup<PhysicsCollider> colliderLookup;
     private ComponentLookup<Bomb> bombLookup;
+    private ComponentLookup<Killable> killableLookup;
+    private ComponentLookup<StatData> statLookup;
     private BufferLookup<InTrigger> inTriggerLookup;
 
     public void OnStartRunning(ref SystemState state)
@@ -61,6 +63,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         colliderLookup = SystemAPI.GetComponentLookup<PhysicsCollider>();
         inTriggerLookup = SystemAPI.GetBufferLookup<InTrigger>();
         bombLookup = SystemAPI.GetComponentLookup<Bomb>();
+        statLookup = SystemAPI.GetComponentLookup<StatData>();
+        killableLookup = SystemAPI.GetComponentLookup<Killable>();
 
         var playerLookup = SystemAPI.GetComponentLookup<Player>();
         var enemyLookup = SystemAPI.GetComponentLookup<Enemy>();
@@ -73,6 +77,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         colliderLookup.Update(ref state);
         inTriggerLookup.Update(ref state);
         bombLookup.Update(ref state);
+        statLookup.Update(ref state);
+        killableLookup.Update(ref state);
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var explosion = new NativeList<float3>(Allocator.TempJob);
@@ -84,7 +90,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             {
                 chainedBomb.Add(entity);
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, ref explosion, ref chainedBomb);
+                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, killableLookup, statLookup, ref explosion, ref chainedBomb);
             }
         }
 

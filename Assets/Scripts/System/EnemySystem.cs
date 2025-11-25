@@ -38,6 +38,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         foreach (var (detector, enemy, coord, pathfinding, path, stat, velocity, entity) in SystemAPI.Query<DynamicBuffer<DetectBuffer>, RefRW<Enemy>, RefRO<GridCoordination>, RefRW<PathFinding>, DynamicBuffer<Path>, RefRO<StatData>, RefRO<PhysicsVelocity>>().WithEntityAccess())
         {
             UpdateAnimation(ref state, entity, path, coord);
+            continue;
             if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value)
             {
                 if(IsPathDirty(ref state, path)) PathFindingHelper.RegisterClearPath(entity);

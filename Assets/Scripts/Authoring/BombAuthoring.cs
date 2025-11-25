@@ -44,7 +44,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         inTriggers.Clear();
     }
 
-    public void Explode(float3 position, ExplosionRange range, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
+    public void Explode(float3 position, ExplosionRange range, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ComponentLookup<Killable> killableLookup, ComponentLookup<StatData> statLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
     {
         ecb.SetEnabled(entity, false);
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
@@ -86,7 +86,13 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
                     //bom.currentLifeTime = 0f;
                     //ecb.SetComponent(hitData.hits[i], bom);
                     var bomb = bombLookup.GetRefRW(hitData.hits[i]);
-                    bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, ref explosion, ref chainedBomb);
+                    bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, killableLookup, statLookup, ref explosion, ref chainedBomb);
+                }
+                else if(killableLookup.HasComponent(hitData.hits[i]))
+                {
+                    var killable = killableLookup[hitData.hits[i]];
+                    var stat = statLookup.GetRefRW(hitData.hits[i]);
+                    killable.TakeDamge(stat, 1f);
                 }
             }
         }

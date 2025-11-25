@@ -59,7 +59,6 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnStartRunning(ref SystemState state)
     {
-        return;
         player = SystemAPI.GetSingletonEntity<Player>();
         stateLookup = SystemAPI.GetBufferLookup<AnimationStateBuffer>();
         childLookup = SystemAPI.GetBufferLookup<Child>();
@@ -87,7 +86,6 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnUpdate(ref SystemState state)
     {
-        return;
         var input = SystemAPI.GetSingletonRW<InputStorage>();
         if (math.all(input.ValueRO.direction == float3.zero)) return;
 
