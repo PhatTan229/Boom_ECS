@@ -82,9 +82,6 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
                     chainedBomb.Add(hitData.hits[i]);
                     var exploseRange = entityManager.GetComponentObject<ExplosionRange>(hitData.hits[i]);
                     var bombPosition = entityManager.GetComponentData<LocalTransform>(hitData.hits[i]).Position;
-                    //var bom = entityManager.GetComponentData<Bomb>(hitData.hits[i]);
-                    //bom.currentLifeTime = 0f;
-                    //ecb.SetComponent(hitData.hits[i], bom);
                     var bomb = bombLookup.GetRefRW(hitData.hits[i]);
                     bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, killableLookup, statLookup, ref explosion, ref chainedBomb);
                 }
@@ -93,6 +90,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
                     var killable = killableLookup[hitData.hits[i]];
                     var stat = statLookup.GetRefRW(hitData.hits[i]);
                     killable.TakeDamge(stat, 1f);
+                    TintColorHelper.RegisterTint(hitData.hits[i]);
                 }
             }
         }
