@@ -72,5 +72,9 @@ public partial struct TriggerSystem : ISystem, ISystemStartStop
 
     public void OnStopRunning(ref SystemState state)
     {
+        var data = state.EntityManager.GetComponentDataRW<OnTriggerData>(state.SystemHandle);
+        data.ValueRW._enter.Dispose();
+        data.ValueRW._current.Dispose();
+        data.ValueRW._previous.Dispose();
     }
 }

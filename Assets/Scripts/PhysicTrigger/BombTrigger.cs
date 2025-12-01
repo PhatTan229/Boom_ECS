@@ -39,8 +39,6 @@ public class BombTrigger : IOnTrigger
 
     public void OnStay(ref SystemState state, PhysicEntityPair entityPair)
     {
-        Debug.Log(entityPair.EntityA);
-        Debug.Log(entityPair.EntityB);
     }
 
     public void OnExit(ref SystemState state, PhysicEntityPair entityPair)

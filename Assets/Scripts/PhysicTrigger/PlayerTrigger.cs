@@ -34,11 +34,11 @@ public class PlayerTrigger : IOnTrigger
 
     public void OnStay(ref SystemState state, PhysicEntityPair entityPair)
     {
-        Debug.Log("Stay");
+        //Debug.Log("Stay");
     }
 
     public void OnExit(ref SystemState state, PhysicEntityPair entityPair)
     {
-        Debug.Log("Exit");
+        //Debug.Log("Exit");
     }
 }
