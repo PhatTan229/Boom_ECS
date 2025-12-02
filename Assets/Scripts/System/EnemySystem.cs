@@ -34,11 +34,17 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         playerLookup.Update(ref state);
 
         detectPlayer.Clear();
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (detector, enemy, coord, pathfinding, path, stat, velocity, entity) in SystemAPI.Query<DynamicBuffer<DetectBuffer>, RefRW<Enemy>, RefRO<GridCoordination>, RefRW<PathFinding>, DynamicBuffer<Path>, RefRO<StatData>, RefRO<PhysicsVelocity>>().WithEntityAccess())
         {
+            if(stat.ValueRO.currentStat.HP <= 0)
+            {
+                ecb.SetEnabled(entity, false);
+                continue;
+            }
+
             UpdateAnimation(ref state, entity, path, coord);
-            continue;
             if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value)
             {
                 if(IsPathDirty(ref state, path)) PathFindingHelper.RegisterClearPath(entity);
@@ -54,7 +60,9 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
                 Patrol(ref state, coord, pathfinding, entity);
                 continue;
             }
-            var targetGrid = SystemAPI.GetComponentRO<Grid>(target);
+
+            var gridEntity = SystemAPI.GetComponentRO<GridCoordination>(target).ValueRO.CurrentGrid;
+            var targetGrid = SystemAPI.GetComponentRO<Grid>(gridEntity);
             if (travelable.Contains(GridData.Instance.GetCellEntityAt(targetGrid.ValueRO.gridPosition)))
             {
                 pathfinding.ValueRW.currentIndex = 0;
@@ -62,6 +70,8 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
             }
             else Patrol(ref state, coord, pathfinding, entity);
         }
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 
     private bool IsPathDirty(ref SystemState state, DynamicBuffer<Path> path)

@@ -183,7 +183,8 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             var killable = killableLookup[item];
             var stat = statLookup.GetRefRW(item);
             killable.TakeDamge(stat, 1f);
-            TintColorHelper.RegisterTint(item);
+            if (stat.ValueRO.currentStat.HP <= 0) DissolveAnimationHelper.RegisterDissolve(item);
+            else TintColorHelper.RegisterTint(item);
         }
     }
 

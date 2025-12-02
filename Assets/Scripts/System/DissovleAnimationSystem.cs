@@ -28,19 +28,12 @@ public partial struct DissovleAnimationSystem : ISystem, ISystemStartStop
         [NativeDisableParallelForRestriction] public NativeList<Entity> dissovleEntities;
         [NativeDisableParallelForRestriction] public ComponentLookup<DissovleFade> dissovleLookup;
         [ReadOnly] public ComponentLookup<DissovleModifier> modifierLookup;
-        [ReadOnly] public BufferLookup<Child> childsLookup;
         public float detaTime;
 
         public void Execute(int index)
         {
             var item = dissovleEntities[index];
             ActivateDissolve(item);
-            if (!childsLookup.HasBuffer(item)) return;
-            foreach (var child in childsLookup[item])
-            {
-                if (!dissovleEntities.Contains(item)) dissovleEntities.Add(item);
-                ActivateDissolve(child.Value);
-            }
         }
 
         private void ActivateDissolve(Entity entity)
@@ -49,7 +42,7 @@ public partial struct DissovleAnimationSystem : ISystem, ISystemStartStop
             var modifier = modifierLookup.GetRefRO(entity);
             var dissovle = dissovleLookup.GetRefRW(entity);
             var value = dissovle.ValueRO.Value + detaTime * modifier.ValueRO.dissovleSpeed;
-            dissovle.ValueRW.Value = Mathf.Min(1f, value);
+            dissovle.ValueRW.Value = value;
         }
     }
 
@@ -75,6 +68,16 @@ public partial struct DissovleAnimationSystem : ISystem, ISystemStartStop
         foreach (var item in DissolveAnimationHelper.dissolveEntity)
         {
             dissovleEntities.Add(item);
+            if (!childLookup.HasBuffer(item)) continue;
+            foreach (var child in childLookup[item])
+            {
+                dissovleEntities.Add(child.Value);
+            }
+        }
+
+        foreach (var item in dissovleEntities)
+        {
+            if (!DissolveAnimationHelper.dissolveEntity.Contains(item)) DissolveAnimationHelper.RegisterDissolve(item);
         }
 
         var job = new DissovleJob()
@@ -82,21 +85,20 @@ public partial struct DissovleAnimationSystem : ISystem, ISystemStartStop
             dissovleEntities = dissovleEntities,
             dissovleLookup = dissovleLookup,
             modifierLookup = modifierLookup,
-            childsLookup = childLookup,
             detaTime = SystemAPI.Time.DeltaTime
         };
 
         state.Dependency = job.ScheduleByRef(dissovleEntities.Length, 128, state.Dependency);
         state.Dependency.Complete();
 
-        foreach (var item in dissovleEntities)
-        {
-            if (!DissolveAnimationHelper.dissolveEntity.Contains(item)) DissolveAnimationHelper.dissolveEntity.Add(item);
-        }
-
         for (int i = DissolveAnimationHelper.dissolveEntity.Count - 1; i >= 0; i--)
         {
             var e = DissolveAnimationHelper.dissolveEntity[i];
+            if (!dissovleLookup.HasComponent(e))
+            {
+                DissolveAnimationHelper.dissolveEntity.Remove(e);
+                continue;
+            }
             var fade = dissovleLookup.GetRefRO(e);
             if (fade.ValueRO.Value >= 1f) DissolveAnimationHelper.dissolveEntity.Remove(e);
         }

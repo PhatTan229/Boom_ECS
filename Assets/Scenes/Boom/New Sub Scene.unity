@@ -11443,7 +11443,7 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
-    HP: 10
+    HP: 1
     speed: 2
   pathFindingStat:
     interval: 5
@@ -13540,7 +13540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteAuthoring: {fileID: 1416231556}
-  fadeColor: {r: 0.8962264, g: 0.47297648, b: 0.114142045, a: 1}
+  dissovleSpeed: 1
 --- !u!114 &1416231558
 MonoBehaviour:
   m_ObjectHideFlags: 0
