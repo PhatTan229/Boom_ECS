@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 2783832338313429678}
   - component: {fileID: 7316472530401783823}
   - component: {fileID: 1784003938878051815}
+  - component: {fileID: 2918629641448558739}
+  - component: {fileID: 3716068476424259770}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -4943,6 +4945,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd2e80dae6b990478ed2b226bf25ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifeTime: 0.35
+--- !u!114 &2918629641448558739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78620282070850928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f97c02f8687c98f418d5addd09dbe17b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3716068476424259770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78620282070850928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbcc9eef661437439e74cfd4b17113e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 0.35
+  targetLayer: 2
 --- !u!1 &5032841125766448135
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,6 +122,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
 
         if (explosion.Length > 0)
         {
+            ExplosionUnitHelper.RegisterDealDamge(explosion);
             foreach (var item in query)
             {
                 if (!state.EntityManager.IsEnabled(item)) inactiveExplosion.Add(item);

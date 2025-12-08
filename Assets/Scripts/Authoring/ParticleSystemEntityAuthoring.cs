@@ -40,6 +40,7 @@ public class ParticleSystemRef : IComponentData
 [RequireComponent(typeof(ParticleSystem))]
 public class ParticleSystemEntityAuthoring : MonoBehaviour
 {
+    public float lifeTime;
     class ParticleSystemEntityBaker : Baker<ParticleSystemEntityAuthoring>
     {
         public override void Bake(ParticleSystemEntityAuthoring authoring)
@@ -47,12 +48,12 @@ public class ParticleSystemEntityAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             var particle = authoring.GetComponent<ParticleSystem>();
             AddComponentObject(entity, new ParticleSystemRef(particle));
-            var lifeTime = 0f;
+            authoring.lifeTime = 0f;
             foreach (var item in particle.GetComponentsInChildren<ParticleSystem>())
             {
-                lifeTime += item.main.duration;
+                authoring.lifeTime += item.main.duration;
             }
-            AddComponent(entity, new ParticleData(lifeTime));
+            AddComponent(entity, new ParticleData(authoring.lifeTime));
         }
     }
 }
