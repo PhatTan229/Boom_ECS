@@ -45,6 +45,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
             }
 
             UpdateAnimation(ref state, entity, path, coord);
+            continue;
             if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value)
             {
                 if(IsPathDirty(ref state, path)) PathFindingHelper.RegisterClearPath(entity);

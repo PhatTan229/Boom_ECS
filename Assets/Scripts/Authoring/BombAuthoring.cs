@@ -87,7 +87,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
                 }
                 else if(killableLookup.HasComponent(hitData.hits[i]))
                 {
-                    if (!killables.Contains(hitData.hits[i])) killables.Add(hitData.hits[0]);
+                    if (!killables.Contains(hitData.hits[i])) killables.Add(hitData.hits[i]);
                 }
             }
         }

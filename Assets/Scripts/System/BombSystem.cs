@@ -5,6 +5,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using UnityEngine;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct BombSystem : ISystem, ISystemStartStop
