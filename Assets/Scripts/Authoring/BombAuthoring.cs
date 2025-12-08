@@ -44,7 +44,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         inTriggers.Clear();
     }
 
-    public void Explode(float3 position, ExplosionRange range, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ComponentLookup<Killable> killableLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb, ref NativeList<Entity> killables)
+    public void Explode(float3 position, ExplosionRange range, NativeHashMap<GridPosition, NativeList<Entity>> coordination, EntityCommandBuffer ecb, EntityManager entityManager, ComponentLookup<Bomb> bombLookup, ComponentLookup<Killable> killableLookup, ref NativeList<float3> explosion, ref NativeList<Entity> chainedBomb)
     {
         ecb.SetEnabled(entity, false);
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
@@ -59,6 +59,7 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
         var grid = entityManager.GetComponentData<Grid>(gridEntity);
         grid.travelable = true;
         ecb.SetComponent(gridEntity, grid);
+
 
         explosion.Add(position);
         using (var hitData = range.CheckRange(entity, position, coordination, ecb, entityManager, (uint)targetLayer, length, Allocator.Temp))
@@ -83,12 +84,9 @@ public struct Bomb : IComponentData, IEquatable<Bomb>
                     var exploseRange = entityManager.GetComponentObject<ExplosionRange>(hitData.hits[i]);
                     var bombPosition = entityManager.GetComponentData<LocalTransform>(hitData.hits[i]).Position;
                     var bomb = bombLookup.GetRefRW(hitData.hits[i]);
-                    bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, killableLookup, ref explosion, ref chainedBomb, ref killables);
+                    bomb.ValueRW.Explode(bombPosition, exploseRange, coordination, ecb, entityManager, bombLookup, killableLookup, ref explosion, ref chainedBomb);
                 }
-                else if(killableLookup.HasComponent(hitData.hits[i]))
-                {
-                    if (!killables.Contains(hitData.hits[i])) killables.Add(hitData.hits[i]);
-                }
+ 
             }
         }
     }

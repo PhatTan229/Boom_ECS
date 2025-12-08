@@ -6,10 +6,12 @@ using UnityEngine;
 
 public struct EntityInfo : IComponentData
 {
+    public Entity entity;
     public FixedString64Bytes ID;
     public FixedString64Bytes Name;
+    public FixedString64Bytes Tag;
     public int layer;
-    public Entity entity;
+
 }
 
 [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
@@ -24,7 +26,8 @@ public class EntityInfoAuthoring : MonoBehaviour
             {
                 ID = new FixedString64Bytes(authoring.gameObject.GetInstanceID().ToString()),
                 Name = new FixedString64Bytes(authoring.gameObject.name),
-                entity = entity
+                entity = entity,
+                Tag = authoring.gameObject.tag
             });
         }
     }

@@ -1,11 +1,28 @@
-﻿using Unity.Burst;
+﻿using System;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
-using UnityEngine;
+
+public struct ExplodeInfo : IDisposable
+{
+    public NativeList<float3> explosion;
+    public float lifeTime;
+
+    public ExplodeInfo(Allocator allocator, float lifeTime)
+    {
+        explosion = new NativeList<float3>(allocator);
+        this.lifeTime = lifeTime;
+    }
+
+    public void Dispose()
+    {
+        explosion.Dispose();
+    }
+}
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct BombSystem : ISystem, ISystemStartStop
@@ -84,7 +101,6 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var explosion = new NativeList<float3>(Allocator.TempJob);
         var chainedBomb = new NativeList<Entity>(Allocator.Temp);
-        var killables = new NativeList<Entity>(Allocator.Temp);
         foreach (var (bomb, collider, triggers, transform, range, entity) in SystemAPI.Query<RefRW<Bomb>, RefRW<PhysicsCollider>, DynamicBuffer<InTrigger>, RefRO<LocalTransform>, ExplosionRange>().WithEntityAccess())
         {
             bomb.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
@@ -92,14 +108,11 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             {
                 chainedBomb.Add(entity);
                 var position = transform.ValueRO.Position;
-                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, killableLookup, ref explosion, ref chainedBomb, ref killables);
+                bomb.ValueRW.Explode(position, range, GridCooridnateCollecttion.coordination, ecb, state.EntityManager, bombLookup, killableLookup, ref explosion, ref chainedBomb);
             }
         }
 
         chainedBomb.Dispose();
-
-        DealDamge(ref state, killables);
-        killables.Dispose();
 
         JobHandle spawnJobHandle = new JobHandle();
         var spawn = false;

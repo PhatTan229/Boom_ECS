@@ -73,7 +73,6 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
             {
                 if (entityManager.HasComponent<Killable>(item))
                 {
-                    collection.Item1.Add(item);
                     stop = true;
                 }
             }
