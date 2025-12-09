@@ -40,15 +40,16 @@ public partial struct ExplosionUnitMonitorSystem : ISystem, ISystemStartStop
         killableLookup.Update(ref state);
         var buffer = SystemAPI.GetSingletonBuffer<ExplosionUnitMonitorBuffer>();
 
-        foreach (var (unit, coord) in SystemAPI.Query<RefRW<ExplosionUnit>, RefRO<GridCoordination>>().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
+        foreach (var (unit, coord, entity) in SystemAPI.Query<RefRW<ExplosionUnit>, RefRO<GridCoordination>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
         {
             var currentGrid = SystemAPI.GetComponent<Grid>(coord.ValueRO.CurrentGrid).gridPosition;
-            if (unit.ValueRO.lifeTime <= 0)
+            if (unit.ValueRO.currentLifeTime <= 0)
             {
+                if (!state.EntityManager.IsEnabled(entity)) unit.ValueRW.ResetLifeTime();
                 RemoveCluster(ref state, buffer, currentGrid);
                 continue;
             }
-            unit.ValueRW.lifeTime -= SystemAPI.Time.DeltaTime;
+            unit.ValueRW.currentLifeTime -= SystemAPI.Time.DeltaTime;
             var entities = GridCooridnateCollecttion.coordination[currentGrid];
             foreach (var e in entities)
             {

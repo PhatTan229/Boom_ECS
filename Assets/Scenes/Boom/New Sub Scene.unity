@@ -11443,7 +11443,7 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
-    HP: 1
+    HP: 3
     speed: 2
   pathFindingStat:
     interval: 5
