@@ -125,6 +125,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
             //ExplosionUnitHelper.RegisterDealDamge(explosion);
             var damageBuffer = SystemAPI.GetSingletonBuffer<ExplosionUnitMonitorBuffer>();
             damageBuffer.Add(new ExplosionUnitMonitorBuffer() { hitClusters = ExplosionUnitHelper.CreateBufferElement(explosion) });
+
             foreach (var item in query)
             {
                 if (!state.EntityManager.IsEnabled(item)) inactiveExplosion.Add(item);

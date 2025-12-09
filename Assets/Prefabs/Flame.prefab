@@ -4971,7 +4971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 0.35
-  targetLayer: 2
+  targetLayer: 19
 --- !u!1 &5032841125766448135
 GameObject:
   m_ObjectHideFlags: 0
