@@ -1,11 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public partial struct ParticleMonitorSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)

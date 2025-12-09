@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 [BurstCompile]
 public partial struct SpriteAnimationSystem : ISystem, ISystemStartStop

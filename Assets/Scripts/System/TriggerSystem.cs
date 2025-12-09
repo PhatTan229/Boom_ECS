@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Unity.Burst;
+﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
-using UnityEngine;
 
 public struct OnTriggerData : IComponentData
 {

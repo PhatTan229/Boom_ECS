@@ -1,15 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Principal;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
-using UnityEngine;
-using static UnityEditor.PlayerSettings;
-
 public struct ExplosionUnitMonitorBuffer : IBufferElementData
 {
     public (NativeList<GridPosition>, NativeList<Entity>) hitClusters;
@@ -48,7 +42,7 @@ public partial struct ExplosionUnitMonitorSystem : ISystem, ISystemStartStop
 
         var buffer = SystemAPI.GetSingletonBuffer<ExplosionUnitMonitorBuffer>();
 
-        foreach (var (unit, coord, entity) in SystemAPI.Query<RefRW<ExplosionUnit>, RefRO<GridCoordination>>().WithEntityAccess())
+        foreach (var (unit, coord) in SystemAPI.Query<RefRW<ExplosionUnit>, RefRO<GridCoordination>>())
         {
             var currentGrid = SystemAPI.GetComponent<Grid>(coord.ValueRO.CurrentGrid).gridPosition;
 
@@ -65,8 +59,6 @@ public partial struct ExplosionUnitMonitorSystem : ISystem, ISystemStartStop
                     DealDamge(ref state, e, hitTime, killable);
                 }
             }
-
-            
         }
 
         foreach (var (unit, coord, entity) in SystemAPI.Query<RefRW<ExplosionUnit>, RefRO<GridCoordination>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
