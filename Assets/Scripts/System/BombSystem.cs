@@ -73,6 +73,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
     private ComponentLookup<Bomb> bombLookup;
     private ComponentLookup<Killable> killableLookup;
     private ComponentLookup<StatData> statLookup;
+    private ComponentLookup<ParticleData> particleLookup;
     private BufferLookup<InTrigger> inTriggerLookup;
 
     public void OnStartRunning(ref SystemState state)
@@ -83,6 +84,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         bombLookup = SystemAPI.GetComponentLookup<Bomb>();
         statLookup = SystemAPI.GetComponentLookup<StatData>();
         killableLookup = SystemAPI.GetComponentLookup<Killable>();
+        particleLookup = state.GetComponentLookup<ParticleData>();
 
         var playerLookup = SystemAPI.GetComponentLookup<Player>();
         var enemyLookup = SystemAPI.GetComponentLookup<Enemy>();
@@ -97,6 +99,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         bombLookup.Update(ref state);
         statLookup.Update(ref state);
         killableLookup.Update(ref state);
+        particleLookup.Update(ref state);
 
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var explosion = new NativeList<float3>(Allocator.TempJob);
@@ -147,7 +150,7 @@ public partial struct BombSystem : ISystem, ISystemStartStop
                 {
                     explodePosition = explosion,
                     inactiveExplosion = inactiveExplosion,
-                    particleLookup = state.GetComponentLookup<ParticleData>()
+                    particleLookup = particleLookup
                 };
 
                 spawnJobHandle = spawnExplodeJob.ScheduleByRef(explosion.Length, 32, state.Dependency);
