@@ -33,7 +33,7 @@ public class MapEditor : Editor
             authoring.material = themeData.tileMaterial;
             authoring.mesh = themeData.mesh;
             authoring.transform.eulerAngles = new Vector3(90, 0, 0);
-            authoring.transform.localPosition = new Vector3(authoring.transform.localPosition.x, 0, authoring.transform.localPosition.z);
+            if (!r.TryGetComponent<TileAuthoring>(out _)) r.AddComponent<TileAuthoring>();
         }
     }
 }
