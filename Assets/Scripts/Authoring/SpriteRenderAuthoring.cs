@@ -9,6 +9,7 @@ public struct SpriteRenderInfo : IComponentData
 {
     public UnityObjectRef<Material> material;
     public UnityObjectRef<Mesh> mesh;
+
     public int materialIndex;
     public int meshIndex;
 }

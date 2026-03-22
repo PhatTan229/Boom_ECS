@@ -131,14 +131,13 @@ public class GridSpawner : MonoBehaviour
         }
     }
 
-    [ContextMenu("Test")]
+    [ContextMenu("Disable SpriteRenderer")]
     public void Test()
     {
-        var category = (PhysicsCategory[])Enum.GetValues(typeof(PhysicsCategory));
-
-        foreach (var item in category)
+        var spriteRenders = parent.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var item in spriteRenders) 
         {
-            Debug.Log($"Name {item.ToString()} : {(uint)item}");
+            item.enabled = false;
         }
     }
 }
