@@ -72,7 +72,7 @@ public class GridSpawner : MonoBehaviour
                 cell.position = gridPos;
                 gridPos.y += 1;
                 pos.y -= 1f;
-                cell.travelable = true;
+                cell.gridType = GridType.Travelable;
                 if (sprite == null) continue;
                 var renderer = gameObj.AddComponent<SpriteRenderer>();
                 renderer.sprite = sprite;
@@ -107,7 +107,7 @@ public class GridSpawner : MonoBehaviour
                 gridPos.y += 1;
                 pos.y = 0;
                 pos.z -= 1f;
-                cell.travelable = true;
+                cell.gridType = GridType.Travelable;
                 if (sprite == null) continue;
                 var child = new GameObject("Sprite", typeof (SpriteRenderer));
                 child.transform.SetParent(gameObj.transform);

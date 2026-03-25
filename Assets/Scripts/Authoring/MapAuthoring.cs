@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
@@ -13,13 +14,14 @@ public struct MapInfo : IComponentData
     }
 }
 
-public class Map : MonoBehaviour
+public class MapAuthoring : MonoBehaviour
 {
     public ThemeData theme;
+    public TextAsset mapBlueprint;
 
-    class MapBaker : Baker<Map>
+    class MapBaker : Baker<MapAuthoring>
     {
-        public override void Bake(Map authoring)
+        public override void Bake(MapAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.None);
             var col = authoring.theme.tileMaterial.GetFloat("_Collum");

@@ -7,6 +7,13 @@ using Unity.Entities;
 using Unity.Collections;
 using System;
 
+public enum GridType
+{
+    Travelable = 0,
+    Wall = 1,
+    SpawnPoint = 2,
+}
+
 public struct GridNeighbour : IBufferElementData
 {
     public Entity value;
@@ -20,14 +27,17 @@ public struct GridConnect : IComponentData
 public struct Grid : IComponentData, IEquatable<Grid>
 {
     public GridPosition gridPosition;
-    public bool travelable;
+    public GridType gridType;
     public float g;
     public float h;
+    public bool travelable;
+
     public float f => g + h;
 
-    public Grid(GridPosition position, bool travelable)
+    public Grid(GridPosition position, GridType gridType)
     {
-        this.travelable = travelable;
+        this.gridType = gridType;
+        travelable = gridType != GridType.Wall;
         gridPosition = position;
         g = 0;
         h = 0;
@@ -59,15 +69,15 @@ public struct Grid : IComponentData, IEquatable<Grid>
 public class GridAuthoring : MonoBehaviour
 {
     public GridPosition position;
-    public bool travelable;
+    public GridType gridType;
 
     class GridAuthoringBaker : Baker<GridAuthoring>
     {
         public override void Bake(GridAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            var grid = new Grid(authoring.position, authoring.travelable);
-            AddComponent(entity, new Grid(authoring.position, authoring.travelable));
+            var grid = new Grid(authoring.position, authoring.gridType);
+            AddComponent(entity, new Grid(authoring.position, authoring.gridType));
             AddComponent(entity, new GridConnect() { value = Entity.Null });
             AddBuffer<GridNeighbour>(entity);
         }

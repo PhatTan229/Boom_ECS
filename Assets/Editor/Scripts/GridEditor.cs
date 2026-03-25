@@ -22,7 +22,7 @@ public class GridEditor : Editor
     private void OnSceneGUI()
     {
         var target = (GridAuthoring)this.target;
-        if(target.travelable) target.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+        if(target.gridType != GridType.Wall) target.GetComponentInChildren<SpriteRenderer>().color = Color.white;
         else target.GetComponentInChildren<SpriteRenderer>().color = Color.gray;
     }
 }
