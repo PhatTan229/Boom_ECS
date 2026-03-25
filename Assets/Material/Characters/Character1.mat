@@ -82,7 +82,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _Fade: 0
     - _Index: 0
-    - _QueueControl: 0
+    - _QueueControl: 1
     - _QueueOffset: 50
     - _Row: 4
     - _TintPercent: 0

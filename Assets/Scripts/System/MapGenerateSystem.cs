@@ -11,7 +11,7 @@ public partial struct MapGenerateSystem : ISystem, ISystemStartStop
     public void OnStartRunning(ref SystemState state)
     {
         var mapInfo = SystemAPI.GetSingleton<MapInfo>();
-        foreach (var item in SystemAPI.Query<RefRW<TileIndex>>())
+        foreach (var item in SystemAPI.Query<RefRW<SpriteIndex>>())
         {
             item.ValueRW.Value = Random.Range(0, mapInfo.tileCount);
         }

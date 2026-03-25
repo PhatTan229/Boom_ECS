@@ -5,6 +5,12 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
+[MaterialProperty("_Index")]
+public struct SpriteIndex : IComponentData
+{
+    public float Value;
+}
+
 public struct SpriteRenderInfo : IComponentData
 {
     public UnityObjectRef<Material> material;
@@ -18,6 +24,7 @@ public class SpriteRenderAuthoring : MonoBehaviour
 {
     public Mesh mesh;
     public Material material;
+    public int index;
 
     class SpriteRenderAuthoringBaker : Baker<SpriteRenderAuthoring>
     {
@@ -29,6 +36,7 @@ public class SpriteRenderAuthoring : MonoBehaviour
                 material = authoring.material,
                 mesh = authoring.mesh,
             });
+            AddComponent(entity, new SpriteIndex() { Value = authoring.index });
         }
     }
 }
