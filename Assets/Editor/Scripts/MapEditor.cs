@@ -7,11 +7,13 @@ using UnityEngine;
 [CustomEditor(typeof(MapAuthoring))]
 public class MapEditor : Editor
 {
+    private MapAuthoring map;
     private ThemeData themeData;
     private TextAsset blueprint;
     private MapGenerateInfo infoPopup;
     private void OnEnable()
     {
+        map = (MapAuthoring)target;
         themeData = (ThemeData)serializedObject.FindProperty("theme").objectReferenceValue;
         blueprint = (TextAsset)serializedObject.FindProperty("mapBlueprint").objectReferenceValue;
         infoPopup = new MapGenerateInfo();
@@ -28,6 +30,14 @@ public class MapEditor : Editor
 
     private void SetupMap()
     {
+        foreach(var item in themeData.walls)
+        {
+            var holder = new GameObject($"{item.key} Prefab Holder", typeof(PrefabAuthoring));
+            var prefabAuthoring = holder.GetComponent<PrefabAuthoring>();
+            prefabAuthoring.prefab = item.prefab;
+            holder.transform.SetParent(map.transform);
+        }
+
         var grids = target.GetComponentsInChildren<GridAuthoring>();
         var bytes = DecomposeBlueprint(blueprint);
         foreach (var g in grids)

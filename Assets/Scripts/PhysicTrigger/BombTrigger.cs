@@ -5,7 +5,7 @@ public class BombTrigger : IOnTrigger
 {
     private ComponentLookup<Player> playerLookup;
     private ComponentLookup<Enemy> enemyLookup;
-  
+
     public BombTrigger(ComponentLookup<Player> playerLookup, ComponentLookup<Enemy> enemyLookup)
     {
         this.playerLookup = playerLookup;
@@ -19,6 +19,7 @@ public class BombTrigger : IOnTrigger
 
         if (playerLookup.HasComponent(entityPair.EntityA) || enemyLookup.HasComponent(entityPair.EntityA))
         {
+            if (!state.EntityManager.HasBuffer<InTrigger>(entityPair.EntityB)) return;
             var buffer = state.EntityManager.GetBuffer<InTrigger>(entityPair.EntityB);
             var otherTrigger = new InTrigger() { value = entityPair.EntityA };
             if (!buffer.ContainsEx(otherTrigger))
@@ -26,8 +27,9 @@ public class BombTrigger : IOnTrigger
                 buffer.Add(otherTrigger);
             }
         }
-        else if(playerLookup.HasComponent(entityPair.EntityB) || enemyLookup.HasComponent(entityPair.EntityB))
+        else if (playerLookup.HasComponent(entityPair.EntityB) || enemyLookup.HasComponent(entityPair.EntityB))
         {
+            if (!state.EntityManager.HasBuffer<InTrigger>(entityPair.EntityA)) return;
             var buffer = state.EntityManager.GetBuffer<InTrigger>(entityPair.EntityA);
             var otherTrigger = new InTrigger() { value = entityPair.EntityB };
             if (!buffer.ContainsEx(otherTrigger))
@@ -48,6 +50,7 @@ public class BombTrigger : IOnTrigger
 
         if (playerLookup.HasComponent(entityPair.EntityA) || enemyLookup.HasComponent(entityPair.EntityA))
         {
+            if (!state.EntityManager.HasBuffer<InTrigger>(entityPair.EntityB)) return;
             var buffer = state.EntityManager.GetBuffer<InTrigger>(entityPair.EntityB);
             var otherTrigger = new InTrigger() { value = entityPair.EntityA };
             if (buffer.ContainsEx(otherTrigger, out var index))
@@ -57,6 +60,7 @@ public class BombTrigger : IOnTrigger
         }
         else if (playerLookup.HasComponent(entityPair.EntityB) || enemyLookup.HasComponent(entityPair.EntityB))
         {
+            if (!state.EntityManager.HasBuffer<InTrigger>(entityPair.EntityA)) return;
             var buffer = state.EntityManager.GetBuffer<InTrigger>(entityPair.EntityA);
             var otherTrigger = new InTrigger() { value = entityPair.EntityB };
             if (buffer.ContainsEx(otherTrigger, out var index))

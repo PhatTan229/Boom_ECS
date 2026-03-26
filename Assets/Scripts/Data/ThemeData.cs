@@ -7,4 +7,6 @@ public class ThemeData : ScriptableObject
 {
     public Material tileMaterial;
     public Mesh mesh;
+
+    public PrefabData[] walls;
 }

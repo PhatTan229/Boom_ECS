@@ -8,7 +8,6 @@ using Unity.Rendering;
 using Unity.Scenes;
 using Unity.Transforms;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 //class này chạy trên mainthread
 //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
@@ -20,10 +19,10 @@ public partial class GameSystem : SystemBase
     {
         ecbSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
 
-        var query = SystemAPI.QueryBuilder()
+        var prefabRef = SystemAPI.QueryBuilder()
            .WithAll<PrefabReference>()
            .WithNone<PrefabLoadResult>().Build();
-        EntityManager.AddComponent<RequestEntityPrefabLoaded>(query);
+        EntityManager.AddComponent<RequestEntityPrefabLoaded>(prefabRef);
 
         PoolData.Init();
     }
@@ -34,15 +33,6 @@ public partial class GameSystem : SystemBase
         {
             var prefabInfo = SystemAPI.GetComponentRO<EntityInfo>(info.value);
             PoolData.RegisterPrefab(prefabInfo.ValueRO);
-        }
-
-        var mousePosition = Input.mousePosition;
-
-        foreach (var mousePos in SystemAPI.Query<RefRW<MousePosition>>())
-        {
-            var pos = Camera.main.ScreenToWorldPoint(mousePosition);
-            pos.y = 0;
-            mousePos.ValueRW.value = pos;
         }
         ecbSystem.Update();
     }

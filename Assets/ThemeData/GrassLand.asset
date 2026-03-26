@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileMaterial: {fileID: 2100000, guid: c4e53b85fdead684ab8f7f2d8572ed14, type: 2}
   mesh: {fileID: 4300000, guid: c88f4a81fd3d62f4699188a031872c7e, type: 2}
+  walls:
+  - key: Wall
+    prefab: {fileID: 2885137907188150669, guid: 43857828ba8cfa8458149339a662c402, type: 3}
+  - key: Destroyable
+    prefab: {fileID: 2885137907188150669, guid: 2e1c04132ecb0fd498e62cb0329978ab, type: 3}

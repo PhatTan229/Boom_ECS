@@ -372,7 +372,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 8
-  travelable: 1
+  gridType: 2
 --- !u!114 &13236569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -834,7 +834,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &41578931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1042,7 +1042,7 @@ Transform:
   m_LocalScale: {x: 1.5243902, y: 3.0487804, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 307407924}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -90}
 --- !u!1 &54298551
 GameObject:
@@ -1093,7 +1093,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &54298554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1284,11 +1284,11 @@ Transform:
   m_GameObject: {fileID: 68116366}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.2534, y: -0, z: 9.94}
-  m_LocalScale: {x: 1.5243902, y: 3.0487804, z: 1}
+  m_LocalPosition: {x: 0.2534, y: 0, z: 9.94}
+  m_LocalScale: {x: 1.5243902, y: 3.0487807, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 307407924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &74563054
 GameObject:
@@ -1439,7 +1439,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &98558250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1501,7 +1501,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &107501077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1563,7 +1563,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &132080027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1625,7 +1625,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &132080732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1787,7 +1787,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &141237871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2049,7 +2049,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &156923001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2111,7 +2111,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &157486223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2173,7 +2173,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &157689560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2276,7 +2276,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2297,7 +2297,6 @@ GameObject:
   - component: {fileID: 161581633}
   - component: {fileID: 161581635}
   - component: {fileID: 161581634}
-  - component: {fileID: 161581636}
   m_Layer: 0
   m_Name: Grids
   m_TagString: Untagged
@@ -2313,7 +2312,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161581632}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2454,7 +2453,7 @@ Transform:
   - {fileID: 1691502532}
   - {fileID: 1541766965}
   - {fileID: 901284440}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 307407924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &161581634
 MonoBehaviour:
@@ -2650,19 +2649,6 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
---- !u!114 &161581636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161581632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8d05fb83395dc34191630a224b1bc3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  theme: {fileID: 11400000, guid: 69070abb965fe634e916a0b552542676, type: 2}
 --- !u!1 &171891356
 GameObject:
   m_ObjectHideFlags: 0
@@ -2712,7 +2698,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &171891359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2974,7 +2960,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &210854938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3377,7 +3363,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3536,7 +3522,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &252210615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3698,7 +3684,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &257088822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3760,7 +3746,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &270864482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3822,7 +3808,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &276271100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4035,6 +4021,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &307407921
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 307407924}
+  - component: {fileID: 307407923}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &307407923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307407921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d05fb83395dc34191630a224b1bc3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  theme: {fileID: 11400000, guid: 69070abb965fe634e916a0b552542676, type: 2}
+  mapBlueprint: {fileID: 4900000, guid: 0162ab611efca3e479aeaa8773007329, type: 3}
+--- !u!4 &307407924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307407921}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 161581633}
+  - {fileID: 68116368}
+  - {fileID: 1979977295}
+  - {fileID: 50813629}
+  - {fileID: 679467910}
+  - {fileID: 649795485}
+  - {fileID: 938569826}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &307529530
 GameObject:
   m_ObjectHideFlags: 0
@@ -4084,7 +4123,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &307529533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4346,7 +4385,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &323752588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4608,7 +4647,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &351185448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4870,7 +4909,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &362172021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4973,7 +5012,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5032,7 +5071,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &370745790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5192,7 +5231,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &377787206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5254,7 +5293,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &381253257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5316,7 +5355,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &398766816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5378,7 +5417,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &400385016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5438,7 +5477,7 @@ Transform:
   m_GameObject: {fileID: 401090105}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: 0, z: -1.5}
+  m_LocalPosition: {x: -4, y: 0, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5598,7 +5637,7 @@ MonoBehaviour:
         Category01: 0
         Category02: 1
         Category03: 1
-        Category04: 0
+        Category04: 1
         Category05: 0
         Category06: 0
         Category07: 0
@@ -5778,7 +5817,7 @@ MonoBehaviour:
         Category01: 1
         Category02: 0
         Category03: 1
-        Category04: 0
+        Category04: 1
         Category05: 0
         Category06: 0
         Category07: 0
@@ -5976,7 +6015,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 8
-  travelable: 1
+  gridType: 2
 --- !u!114 &405141660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6238,7 +6277,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &434548164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6300,7 +6339,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &435394272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6562,7 +6601,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &467056689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6824,7 +6863,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &473564487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6886,7 +6925,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &478872151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6989,7 +7028,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7148,7 +7187,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &500324438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7310,7 +7349,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &533072167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7372,7 +7411,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &533521611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7434,7 +7473,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &537444423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7496,7 +7535,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &541382667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7999,7 +8038,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -8258,7 +8297,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &585545115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8420,7 +8459,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &591393301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8582,7 +8621,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 8
-  travelable: 1
+  gridType: 2
 --- !u!114 &597861850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8744,7 +8783,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &612363350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8906,7 +8945,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &629436207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8919,6 +8958,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7476c7b66443bc54bb9004572aafc2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &649795484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649795485}
+  - component: {fileID: 649795486}
+  m_Layer: 0
+  m_Name: Wall Prefab Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &649795485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649795484}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 307407924}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &649795486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649795484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ea2705142f997b47bd7cc5a917cb6f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 2885137907188150669, guid: 43857828ba8cfa8458149339a662c402, type: 3}
 --- !u!1 &653462516
 GameObject:
   m_ObjectHideFlags: 0
@@ -8968,7 +9052,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 7
-  travelable: 1
+  gridType: 2
 --- !u!114 &653462519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9330,7 +9414,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &673548815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9392,7 +9476,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &675301534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9454,7 +9538,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &675660894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9544,12 +9628,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 679467908}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: -0.26, y: 0, z: -5.29}
-  m_LocalScale: {x: 1.5243902, y: 3.0487804, z: 1}
+  m_LocalScale: {x: 1.5243903, y: 3.0487807, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 307407924}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 180}
 --- !u!1 &693647405
 GameObject:
@@ -9800,7 +9884,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &709692814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9862,7 +9946,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &712073631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9924,7 +10008,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &712631720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9986,7 +10070,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &713333268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10148,7 +10232,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 7
-  travelable: 1
+  gridType: 2
 --- !u!114 &739772072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10210,7 +10294,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &742915637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10272,7 +10356,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &762386848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10334,7 +10418,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &769342986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10396,7 +10480,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &769917493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10458,7 +10542,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &780411164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10720,7 +10804,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &812218869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10782,7 +10866,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &813261255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10988,7 +11072,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &832361143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11591,7 +11675,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11650,7 +11734,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &872525949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11712,7 +11796,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &873669151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11874,7 +11958,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &893976770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11936,7 +12020,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 1
-  travelable: 1
+  gridType: 2
 --- !u!114 &901284442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12098,7 +12182,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &915301833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12160,7 +12244,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &937490104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12173,6 +12257,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7476c7b66443bc54bb9004572aafc2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &938569825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 938569826}
+  - component: {fileID: 938569827}
+  m_Layer: 0
+  m_Name: Destroyable Prefab Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &938569826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938569825}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 307407924}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &938569827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938569825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ea2705142f997b47bd7cc5a917cb6f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 2885137907188150669, guid: 2e1c04132ecb0fd498e62cb0329978ab, type: 3}
 --- !u!1 &940235211
 GameObject:
   m_ObjectHideFlags: 0
@@ -12222,7 +12351,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &940235214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12384,7 +12513,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 2
-  travelable: 1
+  gridType: 2
 --- !u!114 &957191916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12546,7 +12675,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 2
-  travelable: 1
+  gridType: 0
 --- !u!114 &973283786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12908,7 +13037,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1012948433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12970,7 +13099,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1029628653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13032,7 +13161,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &1037117772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13194,7 +13323,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1051492886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13597,7 +13726,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -13656,7 +13785,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &1085615584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13818,7 +13947,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1092083924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13880,7 +14009,7 @@ MonoBehaviour:
   position:
     x: 6
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1092112564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14142,7 +14271,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1100264959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14304,7 +14433,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &1119966856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14607,7 +14736,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -14666,7 +14795,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1162014546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14928,7 +15057,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1189877498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14990,7 +15119,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1192367632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15152,7 +15281,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1211328500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15214,7 +15343,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &1214215897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15352,7 +15481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1217658498
 Transform:
   m_ObjectHideFlags: 0
@@ -15917,7 +16046,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1217831918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15979,7 +16108,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1233100303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16582,7 +16711,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1240985144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16644,7 +16773,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1271123576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16706,7 +16835,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1273944056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16768,7 +16897,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &1311736749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16830,7 +16959,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &1312684728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16892,7 +17021,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &1316180154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16954,7 +17083,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &1319068199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17116,7 +17245,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1321989042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17278,7 +17407,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1328132661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17340,7 +17469,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1331117681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17402,7 +17531,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1341687370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17964,7 +18093,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1400577531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18026,7 +18155,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &1406521851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18088,7 +18217,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 1
-  travelable: 1
+  gridType: 2
 --- !u!114 &1407033982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18250,7 +18379,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1414603409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18425,7 +18554,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 8
-  travelable: 1
+  gridType: 1
 --- !u!114 &1416489828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18687,7 +18816,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1437346855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18749,7 +18878,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1448313516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18811,7 +18940,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &1451572488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18873,7 +19002,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 1
-  travelable: 1
+  gridType: 2
 --- !u!114 &1451753190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18935,7 +19064,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1459125359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19597,7 +19726,7 @@ MonoBehaviour:
   position:
     x: 7
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &1520132700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19759,7 +19888,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1531049233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19921,7 +20050,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 2
-  travelable: 1
+  gridType: 2
 --- !u!114 &1541766967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19983,7 +20112,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &1541786314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20045,7 +20174,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &1552642487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20107,7 +20236,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 4
-  travelable: 1
+  gridType: 0
 --- !u!114 &1559584556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20269,7 +20398,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1568758355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20431,7 +20560,7 @@ MonoBehaviour:
   position:
     x: 12
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &1602063091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20734,7 +20863,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8a993eca31dab044e88a29c28a8a6e51, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -20793,7 +20922,7 @@ MonoBehaviour:
   position:
     x: 16
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1629836526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20955,7 +21084,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &1648615332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21117,7 +21246,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1691502534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21327,7 +21456,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1733554261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21389,7 +21518,7 @@ MonoBehaviour:
   position:
     x: 17
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1738438649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21751,7 +21880,7 @@ MonoBehaviour:
   position:
     x: 5
     y: 6
-  travelable: 1
+  gridType: 0
 --- !u!114 &1783517915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21913,7 +22042,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1791150046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22075,7 +22204,7 @@ MonoBehaviour:
   position:
     x: 9
     y: 7
-  travelable: 1
+  gridType: 0
 --- !u!114 &1828207536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22137,7 +22266,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 6
-  travelable: 1
+  gridType: 1
 --- !u!114 &1834944489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22199,7 +22328,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &1835607630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22261,7 +22390,7 @@ MonoBehaviour:
   position:
     x: 13
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &1837257783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22523,7 +22652,7 @@ MonoBehaviour:
   position:
     x: 14
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &1870261333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22685,7 +22814,7 @@ MonoBehaviour:
   position:
     x: 3
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &1922879078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22747,7 +22876,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1931526851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22809,7 +22938,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 1
-  travelable: 1
+  gridType: 2
 --- !u!114 &1936787169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22871,7 +23000,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 5
-  travelable: 1
+  gridType: 0
 --- !u!114 &1938929380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22933,7 +23062,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 4
-  travelable: 1
+  gridType: 1
 --- !u!114 &1947992680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22995,7 +23124,7 @@ MonoBehaviour:
   position:
     x: 10
     y: 3
-  travelable: 1
+  gridType: 0
 --- !u!114 &1971831504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23090,7 +23219,7 @@ Transform:
   m_LocalScale: {x: 1.5243902, y: 3.0487804, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 307407924}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
 --- !u!1 &1991845874
 GameObject:
@@ -23341,7 +23470,7 @@ MonoBehaviour:
   position:
     x: 1
     y: 8
-  travelable: 1
+  gridType: 2
 --- !u!114 &2009190697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23603,7 +23732,7 @@ MonoBehaviour:
   position:
     x: 15
     y: 8
-  travelable: 1
+  gridType: 0
 --- !u!114 &2033688381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24465,7 +24594,7 @@ MonoBehaviour:
   position:
     x: 2
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &2101351594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24627,7 +24756,7 @@ MonoBehaviour:
   position:
     x: 4
     y: 2
-  travelable: 1
+  gridType: 1
 --- !u!114 &2111438798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24689,7 +24818,7 @@ MonoBehaviour:
   position:
     x: 8
     y: 1
-  travelable: 1
+  gridType: 0
 --- !u!114 &2116914858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24910,9 +25039,5 @@ SceneRoots:
   - {fileID: 1233526000}
   - {fileID: 401090109}
   - {fileID: 1708986500}
-  - {fileID: 161581633}
-  - {fileID: 68116368}
-  - {fileID: 1979977295}
-  - {fileID: 50813629}
-  - {fileID: 679467910}
+  - {fileID: 307407924}
   - {fileID: 825711694}
