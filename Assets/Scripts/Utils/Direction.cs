@@ -2,6 +2,11 @@
 
 public class Direction
 {
+    public static readonly float3[] Directions = new float3[]
+    {
+        Up, Down, Left, Right,
+    };
+
     public static readonly float3 None = new float3(0, 0, 0);
     public static readonly float3 Right = new float3(1, 0, 0);
     public static readonly float3 Left = new float3(-1, 0, 0);

@@ -22,46 +22,46 @@ public partial struct MapGenerateSystem : ISystem, ISystemStartStop
         SpawnWall(ref state, mapInfo);
     }
 
-    public void OnStopRunning(ref SystemState state)
-    {
-    }
-
     private void SpawnWall(ref SystemState state, MapInfo mapInfo)
     {
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         var textureSize = int2.zero;
         var enable = true;
+        var wallIndex = UnityEngine.Random.Range(0, mapInfo.wallTextureSize.x * mapInfo.wallTextureSize.y);
+        var destroyableIndexes = Utils.GetUniqueRandomNumbers(0, mapInfo.destroyableTextureSize.x * mapInfo.wallTextureSize.y, 2);
+        SpriteIndex spriteIndex = new SpriteIndex();
         foreach (var (wall, entity) in SystemAPI.Query<RefRO<Wall>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
         {
             switch (wall.ValueRO.wallType)
             {
                 case WallType.Wall:
                     textureSize = mapInfo.wallTextureSize;
+                    spriteIndex = new SpriteIndex() { Value = wallIndex };
+                    enable = true;
                     break;
                 case WallType.Destroyable:        
                     var rate = UnityEngine.Random.Range(0f, 1f);
                     enable = rate < 0.7f;
                     ecb.SetEnabled(entity, enable);
                     textureSize = mapInfo.destroyableTextureSize;
+                    spriteIndex = new SpriteIndex() { Value = destroyableIndexes[UnityEngine.Random.Range(0, destroyableIndexes.Count)] };
                     break;
             }
 
-            var childs = state.EntityManager.GetBuffer<Child>(entity);
-            foreach (var e in childs)
+            Utils.SetComponentDataInChildren(entity, spriteIndex, state.EntityManager, (child) =>
             {
-                if(!enable)
+                if (!enable)
                 {
-                    ecb.SetEnabled(e.Value, false);
-                    continue;
+                    ecb.SetEnabled(child, false);
                 }
-                if (state.EntityManager.HasComponent<SpriteIndex>(e.Value))
-                {
-                    state.EntityManager.SetComponentData(e.Value, new SpriteIndex() { Value = UnityEngine.Random.Range(0, textureSize.x * textureSize.y) });
-                }
-            }
+            });
 
         }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();    
+    }
+
+    public void OnStopRunning(ref SystemState state)
+    {
     }
 }

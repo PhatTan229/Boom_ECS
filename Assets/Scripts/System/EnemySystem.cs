@@ -34,12 +34,6 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
 
         foreach (var (detector, enemy, coord, pathfinding, path, stat, velocity, entity) in SystemAPI.Query<DynamicBuffer<DetectBuffer>, RefRW<Enemy>, RefRO<GridCoordination>, RefRW<PathFinding>, DynamicBuffer<Path>, RefRO<StatData>, RefRO<PhysicsVelocity>>().WithEntityAccess())
         {
-            if(stat.ValueRO.currentStat.HP <= 0)
-            {
-                ecb.SetEnabled(entity, false);
-                continue;
-            }
-
             UpdateAnimation(ref state, entity, path, coord);
 
             if (path.Length != 0 && coord.ValueRO.CurrentGrid != path[path.Length - 1].value)
