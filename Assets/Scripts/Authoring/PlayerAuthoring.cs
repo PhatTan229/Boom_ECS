@@ -5,35 +5,24 @@ using Unity.Entities;
 using Unity.Physics;
 using UnityEngine;
 
-public struct StatData : IComponentData
-{
-    public readonly StatValue baseStat;
-    public StatValue currentStat;
-
-    public StatData(StatValue value, string name)
-    {
-        value.name = Utils.FixString64(name);
-        baseStat = value;
-        currentStat = value;
-    }
-}
-
-
 public struct Player : IComponentData
 {
 }
 
+[RequireComponent(typeof(StatAuthoring))]
 public class PlayerAuthoring : MonoBehaviour
 {
     public string name = "";
-    public StatValue stat;
     class PlayerAuthoringBaker : Baker<PlayerAuthoring>
     {
         public override void Bake(PlayerAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<Player>(entity);
-            AddComponent(entity, new StatData(authoring.stat, authoring.name));
+            var statAuth = GetComponent<StatAuthoring>();
+            var stat = statAuth.stat;
+            stat.name = Utils.FixString64(authoring.name);
+            statAuth.stat = stat;
         }
     }
 }

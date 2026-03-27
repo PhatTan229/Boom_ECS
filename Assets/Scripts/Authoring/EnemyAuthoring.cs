@@ -19,10 +19,10 @@ public struct Enemy : IComponentData
     public PathFindingStat pathFindingStat;
 }
 
+[RequireComponent(typeof(StatAuthoring))]
 public class EnemyAuthoring : MonoBehaviour
 {
     public string name = "";
-    public StatValue stat;
     public PathFindingStat pathFindingStat;
 
     class EnemyAthoringBaker : Baker<EnemyAuthoring>
@@ -31,7 +31,6 @@ public class EnemyAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new Enemy() { pathFindingStat = authoring.pathFindingStat});
-            AddComponent(entity, new StatData(authoring.stat, authoring.name));
         }
     }
 }

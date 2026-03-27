@@ -15,6 +15,7 @@ public struct Killable : IComponentData
     //}
 }
 
+[RequireComponent(typeof(StatAuthoring))]
 public class KillableAuthoring : MonoBehaviour
 {
     class KillableAuthoringBaker : Baker<KillableAuthoring>
