@@ -131,13 +131,19 @@ public class GridSpawner : MonoBehaviour
         }
     }
 
-    [ContextMenu("Disable SpriteRenderer")]
-    public void Test()
+    public void SpawnGrid3D(int col, int row)
     {
-        var spriteRenders = parent.GetComponentsInChildren<SpriteRenderer>();
-        foreach (var item in spriteRenders) 
+        MAX_COL = col;
+        MAX_ROW = row;
+        SpawnGrid3D();
+    }
+
+    public void ClearGrid()
+    {
+        var grids = parent.GetComponentsInChildren<GridAuthoring>(true);
+        for (int i = 0; i < grids.Length; i++)
         {
-            item.enabled = false;
+            DestroyImmediate(grids[i].gameObject);
         }
     }
 }

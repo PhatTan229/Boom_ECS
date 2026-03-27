@@ -11,8 +11,6 @@ using UnityEngine.UIElements;
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct MapGenerateSystem : ISystem, ISystemStartStop
 {
-    struct WallTag : IComponentData { }
-
     public void OnStartRunning(ref SystemState state)
     {
         var mapInfo = SystemAPI.GetSingleton<MapInfo>();
@@ -31,31 +29,39 @@ public partial struct MapGenerateSystem : ISystem, ISystemStartStop
     private void SpawnWall(ref SystemState state, MapInfo mapInfo)
     {
         var ecb = new EntityCommandBuffer(Allocator.Temp);
-
-        foreach(var (grid, transform) in SystemAPI.Query<RefRO<Grid>, RefRO<LocalTransform>>())
+        var textureSize = int2.zero;
+        var enable = true;
+        foreach (var (wall, entity) in SystemAPI.Query<RefRO<Wall>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
         {
-            switch(grid.ValueRO.gridType)
+            switch (wall.ValueRO.wallType)
             {
-                case GridType.Wall:
-                    var newEntity = PoolData.GetEntity(new FixedString64Bytes("Wall") , transform.ValueRO.Position, ecb, state.EntityManager);
-                    ecb.AddComponent(newEntity, new WallTag());
+                case WallType.Wall:
+                    textureSize = mapInfo.wallTextureSize;
+                    break;
+                case WallType.Destroyable:        
+                    var rate = UnityEngine.Random.Range(0f, 1f);
+                    enable = rate < 0.7f;
+                    ecb.SetEnabled(entity, enable);
+                    textureSize = mapInfo.destroyableTextureSize;
                     break;
             }
-        }
 
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
-
-        foreach (var (_, entity) in SystemAPI.Query<RefRO<WallTag>>().WithEntityAccess())
-        {
-            var childs = state.EntityManager.GetBuffer<LinkedEntityGroup>(entity);
+            var childs = state.EntityManager.GetBuffer<Child>(entity);
             foreach (var e in childs)
             {
+                if(!enable)
+                {
+                    ecb.SetEnabled(e.Value, false);
+                    continue;
+                }
                 if (state.EntityManager.HasComponent<SpriteIndex>(e.Value))
                 {
-                    state.EntityManager.SetComponentData(e.Value, new SpriteIndex() { Value = UnityEngine.Random.Range(0, mapInfo.wallTextureSize.x * mapInfo.wallTextureSize.y) });
+                    state.EntityManager.SetComponentData(e.Value, new SpriteIndex() { Value = UnityEngine.Random.Range(0, textureSize.x * textureSize.y) });
                 }
             }
+
         }
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();    
     }
 }

@@ -197,18 +197,6 @@ public partial struct BombSystem : ISystem, ISystemStartStop
         GameSystem.ecbSystem.AddJobHandleForProducer(state.Dependency);
     }
 
-    private void DealDamge(ref SystemState state, NativeList<Entity> killables)
-    {
-        foreach (var item in killables)
-        {
-            var killable = killableLookup[item];
-            var stat = statLookup.GetRefRW(item);
-            killable.TakeDamge(stat, 1f);
-            if (stat.ValueRO.currentStat.HP <= 0) DissolveAnimationHelper.RegisterDissolve(item);
-            else TintColorHelper.RegisterTint(item);
-        }
-    }
-
     public void OnStopRunning(ref SystemState state)
     {
     }
