@@ -44,7 +44,7 @@ public partial struct MapGenerateSystem : ISystem, ISystemStartStop
                     enable = rate < 0.7f;
                     ecb.SetEnabled(entity, enable);
                     textureSize = mapInfo.destroyableTextureSize;
-                    spriteIndex = new SpriteIndex() { Value = destroyableIndexes[UnityEngine.Random.Range(0, destroyableIndexes.Count)] };
+                    spriteIndex = new SpriteIndex() { Value = destroyableIndexes[UnityEngine.Random.Range(0, destroyableIndexes.Length)] };
                     break;
             }
 

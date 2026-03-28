@@ -47,5 +47,5 @@ public static partial class Utils
     public static bool ContainsEx<T>(this DynamicBuffer<T> buffer, T element, out int index) where T : unmanaged, IBufferElementData => DynamicBufferUtils.ContainsEx(buffer, element, out index);
     
     //Common
-    public static List<int> GetUniqueRandomNumbers(int min, int max, int n) => CommonUtils.GetUniqueRandomNumbers(min, max, n);
+    public static int[] GetUniqueRandomNumbers(int min, int max, int n) => CommonUtils.GetUniqueRandomNumbers(min, max, n);
 }

@@ -11,7 +11,8 @@ public enum GridType
 {
     Travelable = 0,
     Wall = 1,
-    SpawnPoint = 2,
+    SafeZone = 2,
+    SpawnPoint = 3,
 }
 
 public struct GridNeighbour : IBufferElementData

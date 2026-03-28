@@ -206,26 +206,6 @@ public static class AStar
         return result;
     }
 
-    //private static void CheckNeighbourGrids(GridPosition position, NativeList<Entity> travelable)
-    //{
-    //    var startGrid = GridData.Instance.GetCellAt(position).Value;
-
-    //    foreach (var item in GridData.ajectionNeighbourGridPosition)
-    //    {
-    //        var neighbour = position + item;
-    //        var grid = GridData.Instance.GetCellAt(neighbour);
-    //        if (grid.HasValue && grid.Value.travelable)
-    //        {
-    //            var gridEntity = GridData.Instance.GetCellEntityAt(neighbour);
-    //            if (!travelable.Contains(gridEntity))
-    //            {
-    //                travelable.Add(gridEntity);
-    //                CheckNeighbourGrids(neighbour, travelable);
-    //            }
-    //        }
-    //    }
-    //}
-
     private static Entity GetConnection(Entity currentEntity)
     {
         return Utils.EntityManager.GetComponentData<GridConnect>(currentEntity).value;

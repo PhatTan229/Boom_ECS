@@ -44,36 +44,43 @@ public struct GridPosition : IEquatable<GridPosition>
         return string.Format ("({0}, {1})", x.ToString (format, formatProvider), y.ToString (format, formatProvider));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static GridPosition operator +(GridPosition l, GridPosition r)
     {
         return new GridPosition(l.x + r.x, l.y + r.y);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static GridPosition operator -(GridPosition l, GridPosition r)
     {
         return new GridPosition(l.x - r.x, l.y - r.y);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static GridPosition operator *(GridPosition grid, int num)
     {
         return new GridPosition(grid.x * num, grid.y * num);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(GridPosition l, GridPosition r)
     {
         return l.x == r.x && l.y == r.y;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(GridPosition l, GridPosition r)
     {
         return l.x != r.x || l.y != r.y;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object obj)
     {
         return obj is GridPosition other && this == other;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
         unchecked
@@ -85,6 +92,7 @@ public struct GridPosition : IEquatable<GridPosition>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(GridPosition other)
     {
         return this == other;   

@@ -37,22 +37,31 @@ public static class MapBlueprintGeneratorTool
             {
                 int value;
 
-                // Chỉ 4 góc = 2
                 bool isCorner =
                     (row == 0 && col == 0) ||
+                    (row == 0 && col == width - 1) ||
+                    (row == height - 1 && col == 0) ||
+                    (row == height - 1 && col == width - 1);
+
+                bool isSafeZone =
+                    //(row == 0 && col == 0) ||
                     (row == 0 && col == 1) ||
                     (row == 1 && col == 0) ||
                     (row == 1 && col == width - 1) ||
-                    (row == 0 && col == width - 1) ||
+                    //(row == 0 && col == width - 1) ||
                     (row == 0 && col == width - 2) ||
-                    (row == height - 1 && col == 0) ||
+                    //(row == height - 1 && col == 0) ||
                     (row == height - 1 && col == 1) ||
                     (row == height - 2 && col == width - 1) ||
                     (row == height - 2 && col == 0) ||
-                    (row == height - 1 && col == width - 1) ||
+                    //(row == height - 1 && col == width - 1) ||
                     (row == height - 1 && col == width - 2);
 
-                if (isCorner)
+                if(isCorner)
+                {
+                    value = 3;
+                }
+                else if (isSafeZone)
                 {
                     value = 2;
                 }
@@ -81,17 +90,4 @@ public static class MapBlueprintGeneratorTool
 
         return sb.ToString();
     }
-
-    private static string ReplaceAt(string input, int index, char newChar)
-    {
-        if (string.IsNullOrEmpty(input) || index < 0 || index >= input.Length)
-        {
-            throw new ArgumentException("Invalid input or index");
-        }
-
-        char[] chars = input.ToCharArray();
-        chars[index] = newChar;
-        return new string(chars);
-    }
-
 }

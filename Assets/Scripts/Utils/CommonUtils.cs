@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static partial class Utils
 {
     static class CommonUtils
     {
-        public static List<int> GetUniqueRandomNumbers(int min, int max, int n)
+        public static int[] GetUniqueRandomNumbers(int min, int max, int n)
         {
             if (n <= 0 || n > (max - min + 1))
                 throw new ArgumentException("Invalid n");
 
             HashSet<int> result = new HashSet<int>();
-            System.Random rand = new System.Random();
+            Random rand = new Random();
 
             while (result.Count < n)
             {
@@ -19,7 +20,7 @@ public static partial class Utils
                 result.Add(value);
             }
 
-            return new List<int>(result);
+            return result.ToArray();
         }
     }
 }

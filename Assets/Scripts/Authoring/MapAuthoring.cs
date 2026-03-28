@@ -3,10 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using TreeEditor;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEditor.PackageManager;
 using UnityEngine;
+
+public struct SpawnPointBuffer : IBufferElementData
+{
+    public GridPosition spawnPoint;
+}
 
 public struct MapInfo : IComponentData
 {
@@ -47,6 +52,7 @@ public class MapAuthoring : MonoBehaviour
 {
     public ThemeData theme;
     public TextAsset mapBlueprint;
+    public List<GridPosition> spawnPoints;
 
     class MapBaker : Baker<MapAuthoring>
     {
@@ -56,6 +62,11 @@ public class MapAuthoring : MonoBehaviour
             var col = authoring.theme.tileMaterial.GetFloat("_Collum");
             var row = authoring.theme.tileMaterial.GetFloat("_Row");
             AddComponent(entity, new MapInfo(authoring.theme));
+            var spawnPointBuffer = AddBuffer<SpawnPointBuffer>(entity);
+            foreach (var item in authoring.spawnPoints)
+            {
+                spawnPointBuffer.Add(new SpawnPointBuffer() { spawnPoint = item });
+            }
         }
     }
 }

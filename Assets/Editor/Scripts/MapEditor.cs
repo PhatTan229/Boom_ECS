@@ -37,6 +37,7 @@ public class MapEditor : Editor
         {
             DestroyImmediate(map.transform.GetChild(i).gameObject);
         }
+        map.spawnPoints.Clear();
 
         if(map.GetComponentInChildren<GridSpawner>(true) == null)
         {
@@ -113,7 +114,8 @@ public class MapEditor : Editor
                 destroyable.transform.position = grid.transform.position;
                 break;
             case GridType.SpawnPoint:
-                return;
+                map.spawnPoints.Add(grid.position);
+                break;
         }
     }
 }

@@ -58,6 +58,7 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnStartRunning(ref SystemState state)
     {
+        state.RequireForUpdate<MapInfo>();
         player = SystemAPI.GetSingletonEntity<Player>();
         stateLookup = SystemAPI.GetBufferLookup<AnimationStateBuffer>();
         childLookup = SystemAPI.GetBufferLookup<Child>();
@@ -76,6 +77,8 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
         };
         state.Dependency = job.ScheduleParallel(state.Dependency);
+
+        SetPosition(ref state);
 
         var enemyLookup = SystemAPI.GetComponentLookup<Enemy>();
         var killableLookup = SystemAPI.GetComponentLookup<Killable>();
@@ -116,5 +119,16 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
     {
         //return;
         //data.Dispose();
+    }
+
+    private void SetPosition(ref SystemState state)
+    {
+        var spawnPointsBuffer = SystemAPI.GetSingletonBuffer<SpawnPointBuffer>();
+        var randomIndex = UnityEngine.Random.Range(0, spawnPointsBuffer.Length);
+        var spawnPoint = spawnPointsBuffer[randomIndex];
+        var grid = GridData.Instance.GetCellEntityAt(spawnPoint.spawnPoint);
+        var position = state.EntityManager.GetComponentData<LocalTransform>(grid);
+        state.EntityManager.SetComponentData(player, LocalTransform.FromPosition(position.Position));
+        spawnPointsBuffer.RemoveAt(randomIndex);
     }
 }
