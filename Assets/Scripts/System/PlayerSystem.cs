@@ -50,6 +50,8 @@ partial struct SetAnimationJob : IJobEntity
 [BurstCompile]
 public partial struct PlayerSystem : ISystem, ISystemStartStop
 {
+    private const float DEAD_HIGHT = 0.2f;
+
     private Entity player;
     private BufferLookup<AnimationStateBuffer> stateLookup;
     private BufferLookup<Child> childLookup;
@@ -88,6 +90,36 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     public void OnUpdate(ref SystemState state)
     {
+        var playerTransform = SystemAPI.GetComponentRW<LocalTransform>(player);
+        var position = playerTransform.ValueRO.Position;
+        if (position.y > DEAD_HIGHT)
+        {
+            position.y = 0f;
+            state.EntityManager.SetComponentData(player, LocalTransform.FromPosition(position));
+        }
+
+        ExecuteInput(ref state);
+    }
+
+    public void OnStopRunning(ref SystemState state)
+    {
+        //return;
+        //data.Dispose();
+    }
+
+    private void SetPosition(ref SystemState state)
+    {
+        var spawnPointsBuffer = SystemAPI.GetSingletonBuffer<SpawnPointBuffer>();
+        var randomIndex = UnityEngine.Random.Range(0, spawnPointsBuffer.Length);
+        var spawnPoint = spawnPointsBuffer[randomIndex];
+        var grid = GridData.Instance.GetCellEntityAt(spawnPoint.spawnPoint);
+        var position = state.EntityManager.GetComponentData<LocalTransform>(grid);
+        state.EntityManager.SetComponentData(player, LocalTransform.FromPosition(position.Position));
+        spawnPointsBuffer.RemoveAt(randomIndex);
+    }
+
+    private void ExecuteInput(ref SystemState state)
+    {
         var input = SystemAPI.GetSingletonRW<InputStorage>();
         if (math.all(input.ValueRO.direction == float3.zero)) return;
 
@@ -112,23 +144,6 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
             //outputData = data
         };
 
-        state.Dependency = job.ScheduleParallel(state.Dependency);  
-    }
-
-    public void OnStopRunning(ref SystemState state)
-    {
-        //return;
-        //data.Dispose();
-    }
-
-    private void SetPosition(ref SystemState state)
-    {
-        var spawnPointsBuffer = SystemAPI.GetSingletonBuffer<SpawnPointBuffer>();
-        var randomIndex = UnityEngine.Random.Range(0, spawnPointsBuffer.Length);
-        var spawnPoint = spawnPointsBuffer[randomIndex];
-        var grid = GridData.Instance.GetCellEntityAt(spawnPoint.spawnPoint);
-        var position = state.EntityManager.GetComponentData<LocalTransform>(grid);
-        state.EntityManager.SetComponentData(player, LocalTransform.FromPosition(position.Position));
-        spawnPointsBuffer.RemoveAt(randomIndex);
+        state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 }
