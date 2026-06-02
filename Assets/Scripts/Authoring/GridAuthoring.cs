@@ -29,19 +29,19 @@ public struct Grid : IComponentData, IEquatable<Grid>
 {
     public GridPosition gridPosition;
     public GridType gridType;
-    public float g;
-    public float h;
+    //public float g;
+    //public float h;
     public bool travelable;
 
-    public float f => g + h;
+    //public float f => g + h;
 
     public Grid(GridPosition position, GridType gridType)
     {
         this.gridType = gridType;
         travelable = gridType != GridType.Wall;
         gridPosition = position;
-        g = 0;
-        h = 0;
+        //g = 0;
+        //h = 0;
     }
     
     public int GetDistance(Grid neighbour)

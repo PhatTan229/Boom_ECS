@@ -13,6 +13,11 @@ public struct SpawnPointBuffer : IBufferElementData
     public GridPosition spawnPoint;
 }
 
+public struct WallBuffer : IBufferElementData
+{
+    public Entity wall;
+}
+
 public struct MapInfo : IComponentData
 {
     public int2 mapSize;
@@ -66,6 +71,14 @@ public class MapAuthoring : MonoBehaviour
             foreach (var item in authoring.spawnPoints)
             {
                 spawnPointBuffer.Add(new SpawnPointBuffer() { spawnPoint = item });
+            }
+            var wallBuffer = AddBuffer<WallBuffer>(entity);
+            var walls = authoring.GetComponentsInChildren<WallAuthoring>(true);
+            foreach (var wall in walls)
+            {
+                if (wall.type != WallType.Destroyable) continue;
+                var e = GetEntity(wall.gameObject, TransformUsageFlags.Dynamic);
+                wallBuffer.Add(new WallBuffer() { wall = e});
             }
         }
     }

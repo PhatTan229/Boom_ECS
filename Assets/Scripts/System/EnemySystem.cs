@@ -57,7 +57,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
             if (travelable.Contains(GridData.Instance.GetCellEntityAt(targetGrid.ValueRO.gridPosition)))
             {
                 pathfinding.ValueRW.currentIndex = 0;
-                PathFindingHelper.RegisterPathFinding(entity, target);
+                PathFindingHelper.RegisterPathFinding(entity, entity, target);
             }
             else Patrol(ref state, coord, pathfinding, entity);
         }
@@ -152,7 +152,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         var travelable = AStar.GetTravelableGrids(currentGrid.ValueRO.gridPosition);
         var destination = travelable[UnityEngine.Random.Range(0, travelable.Length)];
         pathfinding.ValueRW.currentIndex = 0;
-        PathFindingHelper.RegisterPathFinding(entity, destination);
+        PathFindingHelper.RegisterPathFinding(entity, entity, destination);
         travelable.Dispose();
     }
 

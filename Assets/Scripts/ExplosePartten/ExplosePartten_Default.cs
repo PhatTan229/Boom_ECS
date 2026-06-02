@@ -15,7 +15,7 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
     {
         var fireLength = length;
         var collider = entityManager.GetComponentData<PhysicsCollider>(entity);
-        var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
+        //var hits = new NativeList<Unity.Physics.RaycastHit>(Allocator.Temp);
         var killables = new NativeList<Entity>(allocator);
         var grids = new NativeList<Entity>(allocator);
 
@@ -63,6 +63,11 @@ public struct ExploseRange_Default : IExploseRange, IDisposable
                 {
                     if (entityManager.HasComponent<Bomb>(item) && item != entity)
                     {
+                        collection.Item1.Add(item);
+                    }
+                    else if (entityManager.HasComponent<Killable>(item))
+                    {
+                        collection.Item2.Add(gridEntity);
                         collection.Item1.Add(item);
                     }
                 }

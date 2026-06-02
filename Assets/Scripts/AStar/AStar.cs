@@ -5,89 +5,11 @@ using System.Linq;
 using Unity.Entities;
 using Unity.Collections;
 using Unity.Transforms;
+using Mono.Cecil;
 
 public static class AStar
 {
-    public static void FindPath(Entity start, Entity end, NativeList<Entity> path)
-    {
-        var searching = new NativeList<Entity>(Allocator.Temp);
-        var processed = new NativeHashSet<Entity>(128, Allocator.Temp);
-
-        searching.Add(start);
-        while (searching.Length > 0)
-        {
-            var current = searching[0];
-            var currentGrid = Utils.EntityManager.GetComponentData<Grid>(searching[0]);
-            foreach (var item in searching)
-            {
-                var grid = Utils.EntityManager.GetComponentData<Grid>(item);
-                if (grid.f < currentGrid.f || grid.f == currentGrid.f && grid.h < currentGrid.h) current = item;
-            }
-            searching.RemoveAtSwapBack(searching.IndexOf(current));
-            processed.Add(current);
-
-            if (current.Equals(end))
-            {
-                var currentCell = end;
-                while (!currentCell.Equals(start))
-                {
-                    var connectedGrid = GetConnection(currentCell);
-                    //var connect = GridUtils.Instance.GetCellEntityAt(connectedGrid.gridPosition);
-                    path.Add(connectedGrid);
-                    currentCell = connectedGrid;
-                }
-
-                for (int i = 0, j = path.Length - 1; i < j; i++, j--)
-                {
-                    var temp = path[i];
-                    path[i] = path[j];
-                    path[j] = temp;
-                }
-                path.Add(end);
-                //path.Reverse();
-                searching.Dispose();
-                processed.Dispose();
-                var str = string.Empty;
-                foreach (var item in path)
-                {
-                    var position = Utils.EntityManager.GetComponentData<Grid>(item).gridPosition;
-                    str += position.ToString() + "\n";
-                }
-                DebugUtils.Log(str);
-                return;
-            }
-
-            var neighbours = Utils.EntityManager.GetBuffer<GridNeighbour>(current);
-            foreach (var item in neighbours)
-            {
-                /*.Where(x => x.travelable && !processed.Contains(x))*/
-                var grid = Utils.EntityManager.GetComponentData<Grid>(item.value);
-
-                if (!grid.travelable) continue;
-                if (processed.Contains(item.value)) continue;
-
-                var hasSearch = searching.Contains(item.value);
-                var costToNextCell = currentGrid.g + currentGrid.GetDistance(grid);
-
-                if (!hasSearch || costToNextCell < grid.g)
-                {
-                    grid.g = costToNextCell;
-                    SetConnection(item.value, current);
-
-                    if (!hasSearch)
-                    {
-                        grid.h = grid.GetDistance(Utils.EntityManager.GetComponentData<Grid>(end));
-                        searching.Add(item.value);
-                    }
-                    Utils.EntityManager.SetComponentData(item.value, grid);
-                }
-            }
-        }
-        searching.Dispose();
-        processed.Dispose();
-    }
-
-    public static void FindPath(Entity start, Entity end, NativeList<Entity> path, ref BufferLookup<GridNeighbour> neibourLookup, ref ComponentLookup<Grid> gridLookup, ref NativeHashMap<Entity, Entity> connections)
+    public static void FindPath(Entity start, Entity end, NativeList<Entity> path, ref BufferLookup<GridNeighbour> neibourLookup, ref ComponentLookup<Grid> gridLookup, ref NativeHashMap<Entity, Entity> connections, ref NativeParallelHashMap<Entity, PathNodeInfo> nodeInfos)
     {
         var searching = new NativeList<Entity>(Allocator.Temp);
         var processed = new NativeHashSet<Entity>(128, Allocator.Temp);
@@ -97,11 +19,13 @@ public static class AStar
         {
             var current = searching[0];
             var currentGrid = gridLookup[searching[0]];
+            var currentNodeInfo = nodeInfos[current];
             //var currentGrid = Utils.EntityManager.GetComponentData<Grid>(searching[0]);
             foreach (var item in searching)
             {
                 var grid = gridLookup[item];
-                if (grid.f < currentGrid.f || grid.f == currentGrid.f && grid.h < currentGrid.h) current = item;
+                var gridNodeInfo = nodeInfos[item];
+                if (gridNodeInfo.f < currentNodeInfo.f || gridNodeInfo.f == currentNodeInfo.f && gridNodeInfo.h < currentNodeInfo.h) current = item;
             }
             searching.RemoveAtSwapBack(searching.IndexOf(current));
             processed.Add(current);
@@ -143,23 +67,24 @@ public static class AStar
             {
                 /*.Where(x => x.travelable && !processed.Contains(x))*/
                 var grid = gridLookup[item.value];
+                var gridNodeInfo = nodeInfos[item.value];
                 //var grid = Utils.EntityManager.GetComponentData<Grid>(item.value);
 
                 if (!grid.travelable) continue;
                 if (processed.Contains(item.value)) continue;
 
                 var hasSearch = searching.Contains(item.value);
-                var costToNextCell = currentGrid.g + currentGrid.GetDistance(grid);
+                var costToNextCell = currentNodeInfo.g + currentGrid.GetDistance(grid);
 
-                if (!hasSearch || costToNextCell < grid.g)
+                if (!hasSearch || costToNextCell < gridNodeInfo.g)
                 {
-                    grid.g = costToNextCell;
+                    gridNodeInfo.g = costToNextCell;
                     //SetConnection(item.value, current);
                     connections[item.value] = current;
 
                     if (!hasSearch)
                     {
-                        grid.h = grid.GetDistance(gridLookup[end]);
+                        gridNodeInfo.h = grid.GetDistance(gridLookup[end]);
                         searching.Add(item.value);
                     }
                     gridLookup[item.value] = grid;

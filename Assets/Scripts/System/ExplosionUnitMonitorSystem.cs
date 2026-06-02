@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using UnityEngine;
 public struct ExplosionUnitMonitorBuffer : IBufferElementData
 {
     public (NativeList<GridPosition>, NativeList<Entity>) hitClusters;
@@ -72,14 +73,19 @@ public partial struct ExplosionUnitMonitorSystem : ISystem, ISystemStartStop
         }
     }
 
-    private void DealDamge(ref SystemState state, Entity e, int hitTime, Killable killable)
+    private void DealDamge(ref SystemState state, Entity victim, int hitTime, Killable killable)
     {
-        var stat = SystemAPI.GetComponentRW<StatData>(e);
+        var stat = SystemAPI.GetComponentRW<StatData>(victim);
         for (int i = 0; i < hitTime; i++)
         {
+            if(SystemAPI.HasComponent<Wall>(victim))
+            {
+                var wall = SystemAPI.GetComponentRO<Wall>(victim);
+                Debug.Log(wall.ValueRO.gridPosition);
+            }
             killable.TakeDamge(stat, 1f);
-            if (stat.ValueRO.currentStat.HP > 0) TintColorHelper.RegisterTint(e);
-            else DissolveAnimationHelper.RegisterDissolve(e);
+            if (stat.ValueRO.currentStat.HP > 0) TintColorHelper.RegisterTint(victim);
+            else DissolveAnimationHelper.RegisterDissolve(victim);
         }
     }
 

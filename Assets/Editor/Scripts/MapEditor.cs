@@ -107,11 +107,13 @@ public class MapEditor : Editor
                 var wallPrefab = themeData.walls.FirstOrDefault(x => x.key == "Wall");
                 var wall = (GameObject)PrefabUtility.InstantiatePrefab(wallPrefab.prefab, parent);
                 wall.transform.position = grid.transform.position;
+                wall.GetComponent<WallAuthoring>().gridPosition = grid.position;
                 break;
             case GridType.Travelable:
                 var destroyablePrefab = themeData.walls.FirstOrDefault(x => x.key == "Destroyable");
                 var destroyable = (GameObject)PrefabUtility.InstantiatePrefab(destroyablePrefab.prefab, parent);
                 destroyable.transform.position = grid.transform.position;
+                destroyable.GetComponent<WallAuthoring>().gridPosition = grid.position;
                 break;
             case GridType.SpawnPoint:
                 map.spawnPoints.Add(grid.position);
