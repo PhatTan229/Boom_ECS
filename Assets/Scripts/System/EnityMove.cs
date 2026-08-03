@@ -24,11 +24,6 @@ public partial struct EnityMove : ISystem
     }
 
     [BurstCompile]
-    public void OnCreate(ref SystemState state)
-    {
-    }
-
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var mousePos = MousePosition(ref state);

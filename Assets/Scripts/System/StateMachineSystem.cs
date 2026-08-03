@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Serialization;
 using UnityEngine;
 
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
@@ -11,7 +12,7 @@ using UnityEngine;
 public partial struct StateMachineSystem : ISystem, ISystemStartStop
 {
     private const int DEFAULT_CAPACITY = 256;
-    private NativeHashMap<Entity, FixedString32Bytes> currentStatesMap;
+    [DontSerialize] private NativeHashMap<Entity, FixedString32Bytes> currentStatesMap;
 
     public void OnStartRunning(ref SystemState state)
     {

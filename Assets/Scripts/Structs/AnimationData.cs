@@ -1,10 +1,11 @@
 ﻿using System;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Serialization;
 
 public struct AnimationData
 {
-    public FixedString32Bytes name;
+    [DontSerialize] public FixedString32Bytes name;
     public readonly int startFrame;
     public readonly int endFrame;
     public int currentFrame;

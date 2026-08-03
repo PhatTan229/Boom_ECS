@@ -18,6 +18,7 @@ public struct MapHelpRequest
 [UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct MapSystem : ISystem, ISystemStartStop
 {
+    private const float WALL_DESTROYABLE_RATE = 0.7f;
     private NativeList<Entity> disabledWalls;
 
     public void OnStartRunning(ref SystemState state)
@@ -53,7 +54,7 @@ public partial struct MapSystem : ISystem, ISystemStartStop
                     break;
                 case WallType.Destroyable:        
                     var rate = UnityEngine.Random.Range(0f, 1f);
-                    enable = rate < 0.7f;
+                    enable = rate < WALL_DESTROYABLE_RATE;
                     ecb.SetEnabled(entity, enable);
                     textureSize = mapInfo.destroyableTextureSize;
                     spriteIndex = new SpriteIndex() { Value = destroyableIndexes[UnityEngine.Random.Range(0, destroyableIndexes.Length)] };

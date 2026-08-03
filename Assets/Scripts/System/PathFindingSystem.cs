@@ -38,7 +38,7 @@ public static class PathFindingHelper
     }
 }
 
-public partial struct PathFindingSystem : ISystem
+public partial struct PathFindingSystem : ISystem, ISystemStartStop
 {
     [BurstCompile]
     public partial struct PathFindingJob : IJobEntity
@@ -81,7 +81,8 @@ public partial struct PathFindingSystem : ISystem
     private ComponentLookup<GridCoordination> gridCoordination;
     private NativeParallelHashMap<Entity, NativeParallelHashMap<Entity, PathNodeInfo>> entityPathNodes;
 
-    public void OnCreate(ref SystemState state)
+
+    public void OnStartRunning(ref SystemState state)
     {
         pathBufferLookup = state.GetBufferLookup<Path>();
         transformLookup = state.GetComponentLookup<LocalTransform>(true);
@@ -165,7 +166,8 @@ public partial struct PathFindingSystem : ISystem
         state.Dependency = job.ScheduleParallel(state.Dependency);
     }
 
-    public void OnDestroy(ref SystemState state)
+
+    public void OnStopRunning(ref SystemState state)
     {
         foreach (var item in entityPathNodes)
         {

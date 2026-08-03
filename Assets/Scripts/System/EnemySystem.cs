@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+using UnityEngine;
 
 public partial struct EnemySystem : ISystem, ISystemStartStop
 {
@@ -20,6 +21,7 @@ public partial struct EnemySystem : ISystem, ISystemStartStop
         animaitonLookup = SystemAPI.GetComponentLookup<SpriteAnimation>();
         playerLookup = state.GetComponentLookup<Player>();
         detectPlayer = new NativeList<Entity>(Allocator.Persistent);
+        Debug.Log("EnemySystem started");
     }
 
     public void OnUpdate(ref SystemState state)

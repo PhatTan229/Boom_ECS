@@ -3,6 +3,7 @@ using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
+using Unity.Serialization;
 using UnityEngine;
 
 public struct AnimationStateBuffer : IBufferElementData
@@ -19,12 +20,13 @@ public struct SpriteAnimationUpdate : IComponentData
 public struct SpriteAnimation : IComponentData
 {
     public UnityObjectRef<Material> material;
-    private FixedString32Bytes currentSate;
+    [DontSerialize] private FixedString32Bytes currentSate;
     public readonly int row;
     public readonly int col;
     public int index;
     public double elapsedTime;
 
+    [DontSerialize]
     public FixedString32Bytes CurrentSate
     {
         get => currentSate;

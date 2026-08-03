@@ -24,9 +24,9 @@ public struct InputStorage : IComponentData
 
 [BurstCompile]
 [UpdateInGroup(typeof(SimulationSystemGroup))]
-public partial struct InputSystem : ISystem
+public partial struct InputSystem : ISystem, ISystemStartStop
 {
-    public void OnCreate(ref SystemState state)
+    public void OnStartRunning(ref SystemState state)
     {
         Utils.CreateSingleton<InputStorage>(state.EntityManager, "InputStorage");
     }
@@ -36,5 +36,9 @@ public partial struct InputSystem : ISystem
         var storage = SystemAPI.GetSingletonRW<InputStorage>();
         storage.ValueRW.UpdateInput();
         storage.ValueRW.pressBomb = Input.GetKeyDown(KeyConfig.BomButton);
+    }
+
+    public void OnStopRunning(ref SystemState state)
+    {
     }
 }

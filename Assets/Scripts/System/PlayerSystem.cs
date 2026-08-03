@@ -3,7 +3,9 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Serialization;
 using Unity.Transforms;
+using UnityEngine;
 
 [BurstCompile]
 partial struct SetAnimationJob : IJobEntity
@@ -12,7 +14,7 @@ partial struct SetAnimationJob : IJobEntity
     [NativeDisableParallelForRestriction] public BufferLookup<AnimationStateBuffer> stateLookup;
     [NativeDisableParallelForRestriction] public ComponentLookup<SpriteAnimation> animaitonLookup;
     [ReadOnly] public BufferLookup<Child> childLookup;
-    public FixedString32Bytes stateName;
+    [DontSerialize] public FixedString32Bytes stateName;
     public double deltaTime;
     //[NativeDisableParallelForRestriction] public NativeHashMap<FixedString32Bytes, AnimationData> outputData;
 
@@ -109,6 +111,7 @@ public partial struct PlayerSystem : ISystem, ISystemStartStop
 
     private void SetPosition(ref SystemState state)
     {
+        Debug.Log("SetPosition");
         var spawnPointsBuffer = SystemAPI.GetSingletonBuffer<SpawnPointBuffer>();
         var randomIndex = UnityEngine.Random.Range(0, spawnPointsBuffer.Length);
         var spawnPoint = spawnPointsBuffer[randomIndex];

@@ -30,16 +30,12 @@ public partial struct SpriteAnimationSystem : ISystem, ISystemStartStop
     private ComponentTypeHandle<SpriteAnimationUpdate> updateHandler;
     private ComponentTypeHandle<SpriteAnimation> animationHandler;
 
-    public void OnCreate(ref SystemState state)
-    {
-        query = state.GetEntityQuery(ComponentType.ReadWrite<SpriteAnimationUpdate>(), ComponentType.ReadOnly<SpriteAnimation>());
-    }
 
-    [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
         updateHandler = state.GetComponentTypeHandle<SpriteAnimationUpdate>();
         animationHandler = state.GetComponentTypeHandle<SpriteAnimation>(true);
+        query = state.GetEntityQuery(ComponentType.ReadWrite<SpriteAnimationUpdate>(), ComponentType.ReadOnly<SpriteAnimation>());
     }
 
     public void OnUpdate(ref SystemState state)

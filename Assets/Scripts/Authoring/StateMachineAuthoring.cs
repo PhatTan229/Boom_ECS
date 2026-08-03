@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Serialization;
 using UnityEngine;
 
 public abstract class StateMachineScript : ScriptableObject
@@ -12,7 +13,7 @@ public abstract class StateMachineScript : ScriptableObject
 
 public class StateMachine : IComponentData
 {
-    public Dictionary<FixedString32Bytes, IStateMachine> stateMachines;
+    [DontSerialize] public Dictionary<FixedString32Bytes, IStateMachine> stateMachines;
 }
 
 [RequireComponent(typeof(SpriteAnimationAuthoring))]

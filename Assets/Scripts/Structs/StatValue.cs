@@ -1,10 +1,11 @@
 ﻿using System;
 using Unity.Collections;
+using Unity.Serialization;
 
 [Serializable]
 public struct StatValue
 {
-    public FixedString64Bytes name;
+    [DontSerializeAttribute] public FixedString64Bytes name;
     public float HP;
     public float speed;
 

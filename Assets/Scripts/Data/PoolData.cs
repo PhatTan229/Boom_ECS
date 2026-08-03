@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Serialization;
 using Unity.Transforms;
 using UnityEngine;
 
 public struct PoolEnity : IComponentData 
 {
-    public FixedString64Bytes name;
+    [DontSerializeAttribute] public FixedString64Bytes name;
     public Entity entity;
 }
 

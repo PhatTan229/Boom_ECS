@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Serialization;
 using UnityEngine;
 
 public struct EntityInfo : IComponentData
 {
     public Entity entity;
-    public FixedString64Bytes ID;
-    public FixedString64Bytes Name;
-    public FixedString64Bytes Tag;
+    [DontSerialize] public FixedString64Bytes ID;
+    [DontSerialize] public FixedString64Bytes Name;
+    [DontSerialize] public FixedString64Bytes Tag;
     public int layer;
 
 }

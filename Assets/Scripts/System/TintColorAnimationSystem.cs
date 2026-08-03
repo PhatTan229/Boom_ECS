@@ -46,16 +46,12 @@ public partial struct TintColorAnimationSystem : ISystem, ISystemStartStop
     private ComponentTypeHandle<TintColor> tintColorHandler;
     private ComponentTypeHandle<Tintable> tintableHandler;
 
-    public void OnCreate(ref SystemState state)
-    {
-        query = state.GetEntityQuery(ComponentType.ReadWrite<TintColor>(), ComponentType.ReadOnly<Tintable>());
-    }
 
-    [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
         tintColorHandler = state.GetComponentTypeHandle<TintColor>();
         tintableHandler = state.GetComponentTypeHandle<Tintable>();
+        query = state.GetEntityQuery(ComponentType.ReadWrite<TintColor>(), ComponentType.ReadOnly<Tintable>());
     }
 
     public void OnUpdate(ref SystemState state)
