@@ -8,7 +8,7 @@ using UnityEngine;
 public struct EntityInfo : IComponentData
 {
     public Entity entity;
-    [DontSerialize] public FixedString64Bytes ID;
+    [DontSerialize] public int ID;
     [DontSerialize] public FixedString64Bytes Name;
     [DontSerialize] public FixedString64Bytes Tag;
     public int layer;
@@ -25,7 +25,7 @@ public class EntityInfoAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new EntityInfo()
             {
-                ID = new FixedString64Bytes(authoring.gameObject.GetInstanceID().ToString()),
+                ID = authoring.gameObject.GetInstanceID(),
                 Name = new FixedString64Bytes(authoring.gameObject.name),
                 entity = entity,
                 Tag = authoring.gameObject.tag

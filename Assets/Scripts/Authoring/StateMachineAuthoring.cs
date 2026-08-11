@@ -11,10 +11,21 @@ public abstract class StateMachineScript : ScriptableObject
     public abstract IStateMachine StateMachine { get; }
 }
 
-public class StateMachine : IComponentData
+public struct StateMachineData
 {
-    [DontSerialize] public Dictionary<FixedString32Bytes, IStateMachine> stateMachines;
+    public int id;
+    public UnityObjectRef<StateMachineScript> stateMachineScript;
 }
+
+public struct StateMachineBuffer : IBufferElementData
+{
+    public StateMachineData StateMachineData;
+}
+
+//public class StateMachine : IComponentData
+//{
+//    public Dictionary<FixedString32Bytes, IStateMachine> stateMachines;
+//}
 
 [RequireComponent(typeof(SpriteAnimationAuthoring))]
 public class StateMachineAuthoring : MonoBehaviour
@@ -26,13 +37,20 @@ public class StateMachineAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             if (authoring.spriteAnimation == null) authoring.spriteAnimation = authoring.GetComponent<SpriteAnimationAuthoring>();
-            var stateMachines = new Dictionary<FixedString32Bytes, IStateMachine>();
+            var buffer = AddBuffer<StateMachineBuffer>(entity);
+            //var stateMachines = new Dictionary<FixedString32Bytes, IStateMachine>();
             foreach (var item in authoring.spriteAnimation.animationStates)
             {
                 if (item.stateMachinescript == null) continue;
-                stateMachines.Add(Utils.FixString32(item.stateName), item.stateMachinescript.StateMachine);
+                //stateMachines.Add(Utils.FixString32(item.stateName), item.stateMachinescript.StateMachine);
+                var data = new StateMachineData()
+                {
+                    id = Utils.FNV1aHash(item.stateName),
+                    stateMachineScript = item.stateMachinescript
+                };
+                buffer.Add(new StateMachineBuffer() { StateMachineData = data });
             }
-            AddComponentObject(entity, new StateMachine() { stateMachines = stateMachines });
+            //AddComponentObject(entity, new StateMachine() { stateMachines = stateMachines });
         }
     }
 }

@@ -51,22 +51,22 @@ public static partial class Utils
     //Common
     public static int[] GetUniqueRandomNumbers(int min, int max, int n) => CommonUtils.GetUniqueRandomNumbers(min, max, n);
 
-    public static Guid ConvertToGuid(string input)
+    public static int FNV1aHash(string text)
     {
-        byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-        byte[] hashBytes;
-
-        // 1. Create the SHA256 instance for older .NET compatibility
-        using (SHA256 sha256 = SHA256.Create())
+        unchecked
         {
-            hashBytes = sha256.ComputeHash(inputBytes);
+            const uint offset = 2166136261;
+            const uint prime = 16777619;
+
+            uint hash = offset;
+
+            foreach (char c in text)
+            {
+                hash ^= c;
+                hash *= prime;
+            }
+
+            return (int)hash;
         }
-
-        // 2. A Guid requires exactly 16 bytes (SHA256 produces 32 bytes)
-        byte[] guidBytes = new byte[16];
-        Array.Copy(hashBytes, guidBytes, 16);
-
-        // 3. Construct and return the Guid object
-        return new Guid(guidBytes);
     }
 }

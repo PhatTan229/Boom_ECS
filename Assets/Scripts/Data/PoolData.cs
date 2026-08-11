@@ -10,7 +10,7 @@ using UnityEngine;
 
 public struct PoolEnity : IComponentData 
 {
-    [DontSerializeAttribute] public FixedString64Bytes name;
+    [DontSerialize] public FixedString64Bytes name;
     public Entity entity;
 }
 
